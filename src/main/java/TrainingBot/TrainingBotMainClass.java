@@ -4,9 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-
-public class ReefCareMainClass {
+public class TrainingBotMainClass {
     public static void main(String[] args) {
-        SpringApplication.run(ReefCareMainClass.class, args);
+        SpringApplication.run(TrainingBotMainClass.class, args);
     }
 }
