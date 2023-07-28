@@ -13,7 +13,13 @@ import javax.persistence.Id;
 public class User {
     @Id
     private Long id;
-    private String username;
+    private String name;
+    private String lastname;
+    private String phone;
+    private String city;
+    private String gallery;
+    private String rate;
+    private boolean master = false;
 
 
 }

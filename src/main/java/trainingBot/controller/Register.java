@@ -20,7 +20,7 @@ public class Register {
             User user = new User();
 
             user.setId(chatId);
-            user.setUsername(chat.getUserName());
+            user.setName(chat.getUserName());
 
             userRepository.save(user);
         }
