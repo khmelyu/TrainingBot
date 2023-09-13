@@ -1,9 +1,9 @@
-package trainingBot.controller.MessageService;
+package trainingBot.controller.messageService;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.core.TrainingBot;
+
 @Component
 public interface TriggerAction {
-    void execute(Update update, TrainingBot trainingBot);
+     void execute(Update update);
 }

@@ -1,11 +1,10 @@
-package trainingBot.controller.MessageService.messageActions.mainMenuAction;
+package trainingBot.controller.messageAction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.MessageService.TriggerAction;
-import trainingBot.core.TrainingBot;
-import trainingBot.view.Sendler;
+import trainingBot.controller.messageService.TriggerAction;
+import trainingBot.controller.Sendler;
 
 @Component
 public class StartAction implements TriggerAction {
@@ -17,8 +16,7 @@ public class StartAction implements TriggerAction {
     }
 
     @Override
-    public void execute(Update update, TrainingBot trainingBot) {
+    public void execute(Update update) {
         sendler.sendMainMenu(update.getMessage().getChatId());
     }
 }
-

@@ -9,4 +9,3 @@ public class TrainingBotMainClass {
         SpringApplication.run(TrainingBotMainClass.class, args);
     }
 }
-

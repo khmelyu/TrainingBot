@@ -1,23 +1,22 @@
-package trainingBot.controller.MessageService.messageActions.mainMenuAction;
+package trainingBot.controller.messageAction.mainMenuAction;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.MessageService.TriggerAction;
-import trainingBot.core.TrainingBot;
-import trainingBot.view.Sendler;
-
+import trainingBot.controller.Sendler;
+import trainingBot.controller.messageService.TriggerAction;
 @Component
 public class DocumentsAction implements TriggerAction {
     private final Sendler sendler;
 
-    @Autowired
+
     public DocumentsAction(Sendler sendler) {
         this.sendler = sendler;
     }
 
     @Override
-    public void execute(Update update, TrainingBot trainingBot) {
+    public void execute(Update update) {
         sendler.sendDocumentsMenu(update.getMessage().getChatId());
     }
 }
+

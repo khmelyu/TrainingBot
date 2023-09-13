@@ -1,4 +1,5 @@
-package trainingBot.view;
+package trainingBot.controller;
+
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
