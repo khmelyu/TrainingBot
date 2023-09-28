@@ -18,6 +18,7 @@ public class Sendler {
         this.trainingBot = trainingBot;
     }
 
+
     public void sendTextMessage(Long who, String what) {
         SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).build();
         try {
@@ -58,6 +59,16 @@ public class Sendler {
 
     public void sendWorkNotesMenu(Long who) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.workNotesMenu();
-        sendMessageWithKeyboard(who, "Выбери рабочую тетрадь", replyKeyboardMarkup);
+        sendMessageWithKeyboard(who, "Выбери уровень", replyKeyboardMarkup);
+    }
+
+    public void sendPatternsMenu(Long who) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.patternsMenu();
+        sendMessageWithKeyboard(who, "Выбери шаблон или заявление", replyKeyboardMarkup);
+    }
+
+    public void sendCertificatesMenu(Long who) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.certificatesMenu();
+        sendMessageWithKeyboard(who, "Выбери группу сертификатов", replyKeyboardMarkup);
     }
 }

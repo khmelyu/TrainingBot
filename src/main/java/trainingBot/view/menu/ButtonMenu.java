@@ -6,13 +6,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import trainingBot.core.triggers.TextTriggers;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Component
 public class ButtonMenu {
+
     public static ReplyKeyboardMarkup mainMenu() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -22,36 +22,25 @@ public class ButtonMenu {
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton(TextTriggers.SEARCH_CZ.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.SEARCH_INFO.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.SEARCH_CONTACTS.getTriggerText()));
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.SEARCH_C.getTriggerText()));
-
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton(TextTriggers.SEARCH_INFO.getTriggerText()));
-
-        KeyboardRow keyboardFourthRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.TRAININGS.getTriggerText()));
-
-        KeyboardRow keyboardFifthRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton(TextTriggers.SEARCH_CONTACTS.getTriggerText()));
-
-        KeyboardRow keyboardSixthRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.DOCUMENTS.getTriggerText()));
 
-        KeyboardRow keyboardSeventhRow = new KeyboardRow();
-        keyboardSeventhRow.add(new KeyboardButton(TextTriggers.FEEDBACK.getTriggerText()));
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton(TextTriggers.FEEDBACK.getTriggerText()));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
         keyboard.add(keyboardThirdRow);
-        keyboard.add(keyboardFourthRow);
-        keyboard.add(keyboardFifthRow);
-        keyboard.add(keyboardSixthRow);
-        keyboard.add(keyboardSeventhRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
+
     public static ReplyKeyboardMarkup documentsMenu() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -61,28 +50,20 @@ public class ButtonMenu {
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton(TextTriggers.WORK_NOTE.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.CERTIFICATES.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.COMPETENCIES.getTriggerText()));
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.PATTERNS.getTriggerText()));
-
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton(TextTriggers.CERTIFICATES.getTriggerText()));
-
-        KeyboardRow keyboardFourthRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton(TextTriggers.COMPETENCIES.getTriggerText()));
-
-        KeyboardRow keyboardFifthRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.BACK.getTriggerText()));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
-        keyboard.add(keyboardFourthRow);
-        keyboard.add(keyboardFifthRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
+
     public static ReplyKeyboardMarkup workNotesMenu() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -91,33 +72,69 @@ public class ButtonMenu {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("Стажерская"));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.INTERN.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.SECOND_LEVEL.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.THIRD_LEVEL.getTriggerText()));
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("2 уровень"));
-
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("3 уровень"));
-
-        KeyboardRow keyboardFourthRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("4 уровень"));
-
-        KeyboardRow keyboardFifthRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("5 уровень"));
-
-        KeyboardRow keyboardSixthRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("Назад"));
-
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.FOURTH_LEVEL.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.FIFTH_LEVEL.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.BACK.getTriggerText()));
 
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
-        keyboard.add(keyboardFourthRow);
-        keyboard.add(keyboardFifthRow);
-        keyboard.add(keyboardSixthRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup patternsMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.ACCOUNTIGS.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.SCHEDULE.getTriggerText()));
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.DECLARATION.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.BACK.getTriggerText()));
+
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+    public static ReplyKeyboardMarkup certificatesMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.TEA.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.COFFEE.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.CANDY.getTriggerText()));
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.PACKAGE.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.ACCESSORIES.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.CHOKOSTYLE.getTriggerText()));
+
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton(TextTriggers.HOUSEHOLD_GOODS.getTriggerText()));
+        keyboardThirdRow.add(new KeyboardButton(TextTriggers.BACK.getTriggerText()));
+
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
 }

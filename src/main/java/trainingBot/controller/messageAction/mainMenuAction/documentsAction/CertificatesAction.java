@@ -4,19 +4,17 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.Sendler;
 import trainingBot.controller.messageService.TriggerAction;
-
 @Component
-public class WorkNoteAction implements TriggerAction {
+public class CertificatesAction implements TriggerAction {
     private final Sendler sendler;
 
 
-    public WorkNoteAction(Sendler sendler) {
+    public CertificatesAction(Sendler sendler) {
         this.sendler = sendler;
     }
 
     @Override
     public void execute(Update update) {
-        sendler.sendWorkNotesMenu(update.getMessage().getChatId());
+        sendler.sendCertificatesMenu(update.getMessage().getChatId());
     }
 }
-
