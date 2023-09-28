@@ -1,6 +1,5 @@
 package trainingBot;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -13,8 +12,11 @@ import trainingBot.core.TrainingBot;
 @Component
 public class BotInitializer {
 
-    @Autowired
-    private TrainingBot bot;
+    private final TrainingBot bot;
+
+    public BotInitializer(TrainingBot bot) {
+        this.bot = bot;
+    }
 
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {
