@@ -12,12 +12,9 @@ import trainingBot.controller.messageAction.StartAction;
 import trainingBot.controller.messageAction.mainMenuAction.BotFeedBackAction;
 import trainingBot.controller.messageAction.mainMenuAction.DocumentsAction;
 import trainingBot.controller.messageAction.mainMenuAction.documentsAction.CertificatesAction;
+import trainingBot.controller.messageAction.mainMenuAction.documentsAction.CompetenciesAction;
 import trainingBot.controller.messageAction.mainMenuAction.documentsAction.PatternsAction;
 import trainingBot.controller.messageAction.mainMenuAction.documentsAction.WorkNoteAction;
-import trainingBot.controller.messageAction.mainMenuAction.documentsAction.patterns.AccountingsAction;
-import trainingBot.controller.messageAction.mainMenuAction.documentsAction.patterns.DeclarationAction;
-import trainingBot.controller.messageAction.mainMenuAction.documentsAction.patterns.SchedulingAction;
-import trainingBot.controller.messageAction.mainMenuAction.documentsAction.workNote.*;
 import trainingBot.controller.messageService.TriggerAction;
 import trainingBot.core.triggers.TextTriggers;
 
@@ -52,21 +49,38 @@ public class UpdateReceiver {
         triggerActions.put(TextTriggers.WORK_NOTE.getTriggerText(), new WorkNoteAction(sendler));
         triggerActions.put(TextTriggers.PATTERNS.getTriggerText(), new PatternsAction(sendler));
         triggerActions.put(TextTriggers.CERTIFICATES.getTriggerText(), new CertificatesAction(sendler));
-        triggerActions.put(TextTriggers.COMPETENCIES.getTriggerText(), new StartAction(sendler));
+        triggerActions.put(TextTriggers.COMPETENCIES.getTriggerText(), new CompetenciesAction(sendler));
 
         //WorkNote menu//
 
-        triggerActions.put(TextTriggers.INTERN.getTriggerText(), new InternAction(sendler));
-        triggerActions.put(TextTriggers.SECOND_LEVEL.getTriggerText(), new WorkNoteSecondLevel(sendler));
-        triggerActions.put(TextTriggers.THIRD_LEVEL.getTriggerText(), new WorkNoteThirdLevel(sendler));
-        triggerActions.put(TextTriggers.FOURTH_LEVEL.getTriggerText(), new WorkNoteFourthLevel(sendler));
-        triggerActions.put(TextTriggers.FIFTH_LEVEL.getTriggerText(), new WorkNoteFifthLevel(sendler));
+        triggerActions.put(TextTriggers.INTERN.getTriggerText(), new WorkNoteAction(sendler));
+        triggerActions.put(TextTriggers.SECOND_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
+        triggerActions.put(TextTriggers.THIRD_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
+        triggerActions.put(TextTriggers.FOURTH_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
+        triggerActions.put(TextTriggers.FIFTH_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
 
         //Pattern menu//
 
-        triggerActions.put(TextTriggers.ACCOUNTIGS.getTriggerText(), new AccountingsAction(sendler));
-        triggerActions.put(TextTriggers.SCHEDULE.getTriggerText(), new SchedulingAction(sendler));
-        triggerActions.put(TextTriggers.DECLARATION.getTriggerText(), new DeclarationAction(sendler));
+        triggerActions.put(TextTriggers.ACCOUNTIGS.getTriggerText(), new PatternsAction(sendler));
+        triggerActions.put(TextTriggers.SCHEDULE.getTriggerText(), new PatternsAction(sendler));
+        triggerActions.put(TextTriggers.DECLARATION.getTriggerText(), new PatternsAction(sendler));
+
+        //Certificates menu//
+
+        triggerActions.put(TextTriggers.TEA.getTriggerText(), new CertificatesAction(sendler));
+        triggerActions.put(TextTriggers.COFFEE.getTriggerText(), new CertificatesAction(sendler));
+        triggerActions.put(TextTriggers.WRAP.getTriggerText(), new CertificatesAction(sendler));
+        triggerActions.put(TextTriggers.CANDY.getTriggerText(), new CertificatesAction(sendler));
+        triggerActions.put(TextTriggers.ACCESSORIES.getTriggerText(), new CertificatesAction(sendler));
+        triggerActions.put(TextTriggers.HOUSEHOLD_GOODS.getTriggerText(), new CertificatesAction(sendler));
+        triggerActions.put(TextTriggers.CHOKOSTYLE.getTriggerText(), new CertificatesAction(sendler));
+
+        //Competencies menu//
+
+        triggerActions.put(TextTriggers.CORPORATE.getTriggerText(), new CompetenciesAction(sendler));
+        triggerActions.put(TextTriggers.CONSULTANT.getTriggerText(), new CompetenciesAction(sendler));
+        triggerActions.put(TextTriggers.MANAGER.getTriggerText(), new CompetenciesAction(sendler));
+        triggerActions.put(TextTriggers.CURATOR.getTriggerText(), new CompetenciesAction(sendler));
     }
 
     public void handle(Update update) {

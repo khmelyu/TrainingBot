@@ -71,4 +71,8 @@ public class Sendler {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.certificatesMenu();
         sendMessageWithKeyboard(who, "Выбери группу сертификатов", replyKeyboardMarkup);
     }
+    public void sendCompetenciesMenu(Long who) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.competenciesMenu();
+        sendMessageWithKeyboard(who, "Выбери компетенции", replyKeyboardMarkup);
+    }
 }

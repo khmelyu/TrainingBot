@@ -40,11 +40,18 @@ public enum TextTriggers {
 
     TEA("Чай"),
     COFFEE("Кофе"),
-    PACKAGE("ПУ"),
+    WRAP("ПУ"),
     CANDY("Cладости"),
     ACCESSORIES("Аксессуары"),
     HOUSEHOLD_GOODS("Хозтовары"),
-    CHOKOSTYLE("Шокостайл");
+    CHOKOSTYLE("Шокостайл"),
+
+    //Competencies menu//
+
+    CORPORATE("Копроративные компетенции"),
+    CONSULTANT("Компетенции консультанта"),
+    MANAGER("Компетенции управляющего"),
+    CURATOR("Компетенции куратора");
 
 
 

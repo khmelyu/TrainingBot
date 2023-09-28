@@ -122,7 +122,7 @@ public class ButtonMenu {
         keyboardFirstRow.add(new KeyboardButton(TextTriggers.CANDY.getTriggerText()));
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton(TextTriggers.PACKAGE.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.WRAP.getTriggerText()));
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.ACCESSORIES.getTriggerText()));
         keyboardSecondRow.add(new KeyboardButton(TextTriggers.CHOKOSTYLE.getTriggerText()));
 
@@ -137,4 +137,32 @@ public class ButtonMenu {
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
+    public static ReplyKeyboardMarkup competenciesMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.CORPORATE.getTriggerText()));
+        keyboardFirstRow.add(new KeyboardButton(TextTriggers.CONSULTANT.getTriggerText()));
+
+
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.CURATOR.getTriggerText()));
+        keyboardSecondRow.add(new KeyboardButton(TextTriggers.MANAGER.getTriggerText()));
+
+
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton(TextTriggers.BACK.getTriggerText()));
+
+        keyboard.add(keyboardFirstRow);
+        keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
 }
