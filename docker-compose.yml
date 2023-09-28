@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  # Сервис для вашего приложения Training Bot
+  training_bot:
+    container_name: training_bot
+    build: .
+    restart: always
+    networks:
+      - my_network
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - TZ=Europe/Moscow
+
+  # Сервис для PostgreSQL
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: "ReefCare"
+      POSTGRES_USER: "khmelyu"
+      POSTGRES_PASSWORD: "ReefCareBotDB"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" 
+    networks:
+      - my_network
+
+  # Сервис для Redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    volumes:
+      - ./config:/etc/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - my_network
+
+volumes:
+  postgres:
+  redis_data:
+
+networks:
+  my_network:
