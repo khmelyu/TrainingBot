@@ -11,7 +11,6 @@ import trainingBot.core.TrainingBot;
 
 @Component
 public class BotInitializer {
-
     private final TrainingBot bot;
 
     public BotInitializer(TrainingBot bot) {

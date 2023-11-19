@@ -4,6 +4,8 @@ package trainingBot.core;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.Sendler;
@@ -16,23 +18,25 @@ import trainingBot.controller.messageAction.mainMenuAction.documentsAction.Compe
 import trainingBot.controller.messageAction.mainMenuAction.documentsAction.PatternsAction;
 import trainingBot.controller.messageAction.mainMenuAction.documentsAction.WorkNoteAction;
 import trainingBot.controller.messageService.TriggerAction;
+import trainingBot.controller.service.redis.UserStateService;
 import trainingBot.core.triggers.TextTriggers;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 import static trainingBot.controller.RegisterUser.registerUser;
 
 @Component
 public class UpdateReceiver {
     private final Map<String, TriggerAction> triggerActions = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
+
+
     @Autowired
     @Lazy
-    public UpdateReceiver(Sendler sendler) {
+    public UpdateReceiver(Sendler sendler, UserStateService userStateService) {
         triggerActions.put(TextTriggers.START.getTriggerText(), new StartAction(sendler));
-        triggerActions.put(TextTriggers.BACK.getTriggerText(), new BackAction(sendler));
-
+        triggerActions.put(TextTriggers.BACK.getTriggerText(), new BackAction(sendler, userStateService));
 
         //Main menu//
 
@@ -41,29 +45,29 @@ public class UpdateReceiver {
         triggerActions.put(TextTriggers.SEARCH_C.getTriggerText(), new StartAction(sendler));
         triggerActions.put(TextTriggers.SEARCH_INFO.getTriggerText(), new StartAction(sendler));
         triggerActions.put(TextTriggers.SEARCH_CONTACTS.getTriggerText(), new StartAction(sendler));
-        triggerActions.put(TextTriggers.DOCUMENTS.getTriggerText(), new DocumentsAction(sendler));
+        triggerActions.put(TextTriggers.DOCUMENTS.getTriggerText(), new DocumentsAction(sendler, userStateService));
         triggerActions.put(TextTriggers.TRAININGS.getTriggerText(), new StartAction(sendler));
 
         //Documents menu//
 
-        triggerActions.put(TextTriggers.WORK_NOTE.getTriggerText(), new WorkNoteAction(sendler));
-        triggerActions.put(TextTriggers.PATTERNS.getTriggerText(), new PatternsAction(sendler));
+        triggerActions.put(TextTriggers.WORK_NOTE.getTriggerText(), new WorkNoteAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.PATTERNS.getTriggerText(), new PatternsAction(sendler, userStateService));
         triggerActions.put(TextTriggers.CERTIFICATES.getTriggerText(), new CertificatesAction(sendler));
         triggerActions.put(TextTriggers.COMPETENCIES.getTriggerText(), new CompetenciesAction(sendler));
 
         //WorkNote menu//
 
-        triggerActions.put(TextTriggers.INTERN.getTriggerText(), new WorkNoteAction(sendler));
-        triggerActions.put(TextTriggers.SECOND_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
-        triggerActions.put(TextTriggers.THIRD_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
-        triggerActions.put(TextTriggers.FOURTH_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
-        triggerActions.put(TextTriggers.FIFTH_LEVEL.getTriggerText(), new WorkNoteAction(sendler));
+        triggerActions.put(TextTriggers.INTERN.getTriggerText(), new WorkNoteAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.SECOND_LEVEL.getTriggerText(), new WorkNoteAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.THIRD_LEVEL.getTriggerText(), new WorkNoteAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.FOURTH_LEVEL.getTriggerText(), new WorkNoteAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.FIFTH_LEVEL.getTriggerText(), new WorkNoteAction(sendler, userStateService));
 
         //Pattern menu//
 
-        triggerActions.put(TextTriggers.ACCOUNTIGS.getTriggerText(), new PatternsAction(sendler));
-        triggerActions.put(TextTriggers.SCHEDULE.getTriggerText(), new PatternsAction(sendler));
-        triggerActions.put(TextTriggers.DECLARATION.getTriggerText(), new PatternsAction(sendler));
+        triggerActions.put(TextTriggers.ACCOUNTIGS.getTriggerText(), new PatternsAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.SCHEDULE.getTriggerText(), new PatternsAction(sendler, userStateService));
+        triggerActions.put(TextTriggers.DECLARATION.getTriggerText(), new PatternsAction(sendler, userStateService));
 
         //Certificates menu//
 
@@ -89,25 +93,20 @@ public class UpdateReceiver {
         if (update.hasMessage()) {
             handleTextMessage(update);
         }
-        if (update.getMessage().hasPhoto()){
-        }
-        if (update.hasCallbackQuery()) {
-        }
+
     }
 
     private void handleTextMessage(Update update) {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             String text = message.getText();
+            logger.info("User: " + update.getMessage().getChatId() + " Received message: {}", text);
             TriggerAction action = triggerActions.get(text);
             if (action != null) {
+                logger.info("User: " + update.getMessage().getChatId() + " Executing action for trigger: {}", text);
                 action.execute(update);
             }
         }
     }
-//    private void handlePhotoMessage(Update update) {
-//        Message message = update.getMessage();
-//        PhotoSize photoSize = message.getPhoto().get(0);
-//
-//    }
+
 }
