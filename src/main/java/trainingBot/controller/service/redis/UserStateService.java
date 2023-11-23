@@ -15,16 +15,21 @@ public class UserStateService {
     }
 
 
-    public void saveUserState(String userId, UserState state) {
-        redisTemplate.opsForValue().set(USER_STATE_PREFIX + userId, state);
+    public void setUserState(Long userId, UserState state) {
+        redisTemplate.opsForValue().set(userId + USER_STATE_PREFIX, state);
     }
 
-    public UserState getUserState(String userId) {
-        return (UserState) redisTemplate.opsForValue().get(USER_STATE_PREFIX + userId);
+    public UserState getUserState(Long userId) {
+        Object stateObject = redisTemplate.opsForValue().get(userId + USER_STATE_PREFIX);
+        if (stateObject instanceof String) {
+            String stateString = stateObject.toString();
+            return UserState.valueOf(stateString);
+        }
+        return null;
     }
 
-    public void clearUserState(String userId) {
-        redisTemplate.delete(USER_STATE_PREFIX + userId);
+
+    public void clearUserState(Long userId) {
+        redisTemplate.delete(userId + USER_STATE_PREFIX);
     }
 }
-

@@ -1,6 +1,6 @@
 package trainingBot.controller;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.model.entity.UserInfo;
@@ -12,14 +12,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-public class RegisterUser {
-    private static UserInfoRepository userInfoRepository;
+public class AddUser {
+    private UserInfoRepository userInfoRepository;
 
-    public RegisterUser(UserInfoRepository userInfoRepository) {
-        RegisterUser.userInfoRepository = userInfoRepository;
+    @Autowired
+    public void setUserInfoRepository(UserInfoRepository userInfoRepository) {
+        this.userInfoRepository = userInfoRepository;
     }
 
-    public static void registerUser(Update update) {
+    public void registerUser(Update update) {
         LocalDateTime currentTime = LocalDateTime.now();
         var chatId = update.getMessage().getChatId();
         var chat = update.getMessage().getChat();
