@@ -1,4 +1,4 @@
-package trainingBot.controller;
+package trainingBot.controller.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +13,11 @@ import trainingBot.model.entity.User;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.view.Sendler;
 
+
 @Component
-@PropertySources({@PropertySource("classpath:messages.properties")})
+@PropertySources({@PropertySource(value = "classpath:messages.properties", encoding = "UTF-8")})
 public class StartAction {
+
     @Value("${start.message}")
     private String startMessage;
 
@@ -36,6 +38,7 @@ public class StartAction {
 
     @Value("${add.rate.message}")
     private String addRateMessage;
+
 
     private Sendler sendler;
     private UserStateService userStateService;

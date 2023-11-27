@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import trainingBot.core.TrainingBot;
@@ -40,7 +41,7 @@ public class Sendler {
     }
 
 
-    private void sendMessageWithKeyboard(Long who, ReplyKeyboardMarkup replyKeyboardMarkup) {
+    private void sendMessageWithButton(Long who, ReplyKeyboardMarkup replyKeyboardMarkup) {
         SendMessage sm = SendMessage.builder().chatId(who.toString()).text("Главное меню").replyMarkup(replyKeyboardMarkup).build();
         try {
             trainingBot.execute(sm);
@@ -49,12 +50,29 @@ public class Sendler {
         }
     }
 
+    private void sendMessageWithCallBack(Long who, InlineKeyboardMarkup inlineKeyboardMarkup) {
+        SendMessage sm = SendMessage.builder().chatId(who.toString()).text("Главное меню").replyMarkup(inlineKeyboardMarkup).build();
+        try {
+            trainingBot.execute(sm);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void sendMainMenu(Long who) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu();
-        sendMessageWithKeyboard(who, replyKeyboardMarkup);
+        sendMessageWithButton(who, replyKeyboardMarkup);
+    }
+
+    public void sendTrainingsMenu(Long who) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = InlineMenu.trainingsMenu();
+        sendMessageWithCallBack(who, inlineKeyboardMarkup);
     }
 }
+
+
+
+
 
 
 

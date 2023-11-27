@@ -7,23 +7,23 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.AddUser;
+import trainingBot.controller.PhotoCommandController;
 import trainingBot.controller.TextCommandController;
 
 
 @Component
 public class UpdateReceiver {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
-    private AddUser addUser;
     private TextCommandController textCommandController;
+    private PhotoCommandController photoCommandController;
+    private AddUser addUser;
 
     @Autowired
-    public void setTextCommandController(TextCommandController textCommandController) {
+    public void setDependencies(TextCommandController textCommandController, PhotoCommandController photoCommandController, AddUser addUser) {
         this.textCommandController = textCommandController;
-    }
-
-    @Autowired
-    public void setAddUser(AddUser addUser) {
+        this.photoCommandController = photoCommandController;
         this.addUser = addUser;
+
     }
 
     public void handle(Update update) {
@@ -56,6 +56,7 @@ public class UpdateReceiver {
         if (message != null && message.hasPhoto()) {
             String text = "Загрузил картинку";
             logger.info("User: " + update.getMessage().getChatId() + " Received message: {}", text);
+            photoCommandController.handlePhotoMessage(update);
         }
     }
 

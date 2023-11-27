@@ -18,4 +18,5 @@ public class User {
     private String gallery;
     private String rate;
     private boolean coach;
+    private boolean admin;
 }
