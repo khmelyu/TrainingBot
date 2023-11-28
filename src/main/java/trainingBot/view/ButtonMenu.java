@@ -22,7 +22,8 @@ public class ButtonMenu {
 
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("Тренинги"));
-
+        keyboardFirstRow.add(new KeyboardButton("Мои данные"));
+        keyboardFirstRow.add(new KeyboardButton("Обратная связь"));
 
         keyboard.add(keyboardFirstRow);
 

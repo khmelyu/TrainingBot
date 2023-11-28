@@ -27,53 +27,47 @@ public class UpdateReceiver {
     }
 
     public void handle(Update update) {
-        addUser.registerUser(update);
-        if (update.getMessage().hasText()) {
+        if (update.hasCallbackQuery()) {
+            handleCallbackQuery(update);
+        }
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            addUser.registerUser(update);
             handleTextMessage(update);
         }
-        if (update.getMessage().hasPhoto()) {
+        if (update.hasMessage() && update.getMessage().hasPhoto()) {
             handlePhotoMessage(update);
         }
-        if (update.getMessage().hasAnimation()) {
+        if (update.hasMessage() && update.getMessage().hasAnimation()) {
             handleAnimationMessage(update);
         }
-        if (update.getMessage().hasVoice()) {
+        if (update.hasMessage() && update.getMessage().hasVoice()) {
             handleVoiceMessage(update);
         }
     }
 
+    private void handleCallbackQuery(Update update) {
+        String callbackQuery = update.getCallbackQuery().getData();
+        logger.info("User: " + update.getCallbackQuery().getId() + " received callback: {}", callbackQuery);
+    }
+
     private void handleTextMessage(Update update) {
         Message message = update.getMessage();
-        if (message != null && message.hasText()) {
-            String text = message.getText();
-            logger.info("User: " + update.getMessage().getChatId() + " Received message: {}", text);
-            textCommandController.handleTextMessage(update);
-        }
+        String text = message.getText();
+        textCommandController.handleTextMessage(update);
+        logger.info("User: " + update.getMessage().getChatId() + " received message: {}", text);
     }
 
     private void handlePhotoMessage(Update update) {
-        Message message = update.getMessage();
-        if (message != null && message.hasPhoto()) {
-            String text = "Загрузил картинку";
-            logger.info("User: " + update.getMessage().getChatId() + " Received message: {}", text);
-            photoCommandController.handlePhotoMessage(update);
-        }
+        logger.info("User: " + update.getMessage().getChatId() + "upload picture");
+        photoCommandController.handlePhotoMessage(update);
     }
 
     private void handleAnimationMessage(Update update) {
-        Message message = update.getMessage();
-        if (message != null && message.hasAnimation()) {
-            String text = "Отправил гифку";
-            logger.info("User: " + update.getMessage().getChatId() + " Received message: {}", text);
-        }
+        logger.info("User: " + update.getMessage().getChatId() + " upload .gif");
     }
 
     private void handleVoiceMessage(Update update) {
-        Message message = update.getMessage();
-        if (message != null && message.hasVoice()) {
-            String text = "Отправил войс";
-            logger.info("User: " + update.getMessage().getChatId() + " Received message: {}", text);
-        }
+        logger.info("User: " + update.getMessage().getChatId() + " upload voice");
     }
 }
 

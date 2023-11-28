@@ -2,6 +2,7 @@ package trainingBot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.model.entity.UserInfo;
 import trainingBot.model.rep.UserInfoRepository;
@@ -22,14 +23,14 @@ public class AddUser {
 
     public void registerUser(Update update) {
         LocalDateTime currentTime = LocalDateTime.now();
-        var chatId = update.getMessage().getChatId();
-        var chat = update.getMessage().getChat();
+        Long id = update.getMessage().getChatId();
+        Chat chat = update.getMessage().getChat();
 
-        Optional<UserInfo> existingUserOptional = userInfoRepository.findById(chatId);
+        Optional<UserInfo> existingUserOptional = userInfoRepository.findById(id);
 
         if (existingUserOptional.isEmpty()) {
             UserInfo userInfo = new UserInfo();
-            userInfo.setId(chatId);
+            userInfo.setId(id);
             userInfo.setName(chat.getFirstName());
             userInfo.setLastname(chat.getLastName());
             userInfo.setUsername(chat.getUserName());
