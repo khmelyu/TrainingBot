@@ -15,7 +15,7 @@ import trainingBot.view.Sendler;
 
 
 @Component
-@PropertySources({@PropertySource(value = "classpath:messages.properties", encoding = "UTF-8")})
+@PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")})
 public class StartAction {
 
     @Value("${start.message}")
@@ -39,6 +39,11 @@ public class StartAction {
     @Value("${add.rate.message}")
     private String addRateMessage;
 
+    @Value("${main.menu.message}")
+    private String mainMenu;
+    @Value("${user.data.fail}")
+    private String userDataFail;
+
 
     private Sendler sendler;
     private UserStateService userStateService;
@@ -57,7 +62,12 @@ public class StartAction {
 
     public void startAction(Update update) {
         Long id = update.getMessage().getChatId();
-        String msg = startMessage;
+        String msg = null;
+        if (userStateService.getUserState(id).equals(UserState.USER_DATA)) {
+            msg = userDataFail;
+        } else {
+            msg = startMessage;
+        }
         sendler.sendTextMessage(id, msg);
         userStateService.setUserState(id, UserState.START);
     }
@@ -131,7 +141,7 @@ public class StartAction {
         user.setRate(userRate);
         userRepository.save(user);
         userStateService.setUserState(id, UserState.MAIN_MENU);
-        sendler.sendMainMenu(id);
+        sendler.sendMainMenu(id, mainMenu);
     }
 }
 

@@ -24,17 +24,16 @@ public class PhotoAction {
         this.userRepository = userRepository;
     }
 
-
     public void photoAction(Update update) {
         Long id = update.getMessage().getChatId();
-        boolean user = userRepository.findById(id).get().isAdmin();
-
-        if (user) {
-            PhotoSize photoSize = update.getMessage().getPhoto().get(0);
-            sendler.sendTextMessage(id, photoSize.getFileId());
-            logger.info("User: " + update.getMessage().getChatId() + " Got the picture id: " + photoSize.getFileId());
-        } else {
-            sendler.sendTextMessage(id, "Бот пока не поддерживает загрузку изображений");
-        }
+        userRepository.findById(id).ifPresentOrElse(user -> {
+            if (user.isAdmin()) {
+                PhotoSize photoSize = update.getMessage().getPhoto().get(0);
+                sendler.sendTextMessage(id, photoSize.getFileId());
+                logger.info("User: " + id + " Got the picture id: " + photoSize.getFileId());
+            } else {
+                sendler.sendTextMessage(id, "Бот пока не поддерживает загрузку изображений");
+            }
+        }, () -> sendler.sendTextMessage(id, "Пользователь не найден или не является администратором."));
     }
 }

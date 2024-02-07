@@ -30,4 +30,20 @@ public class ButtonMenu {
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
+    public static ReplyKeyboardMarkup myData() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton("Все верно"));
+        keyboardFirstRow.add(new KeyboardButton("Изменить"));
+
+        keyboard.add(keyboardFirstRow);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
 }

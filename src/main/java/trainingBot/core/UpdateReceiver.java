@@ -58,7 +58,7 @@ public class UpdateReceiver {
     }
 
     private void handlePhotoMessage(Update update) {
-        logger.info("User: " + update.getMessage().getChatId() + "upload picture");
+        logger.info("User: " + update.getMessage().getChatId() + " upload picture");
         photoCommandController.handlePhotoMessage(update);
     }
 

@@ -41,8 +41,8 @@ public class Sendler {
     }
 
 
-    private void sendMessageWithButton(Long who, ReplyKeyboardMarkup replyKeyboardMarkup) {
-        SendMessage sm = SendMessage.builder().chatId(who.toString()).text("Главное меню").replyMarkup(replyKeyboardMarkup).build();
+    private void sendMessageWithButton(Long who, String what, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).replyMarkup(replyKeyboardMarkup).build();
         try {
             trainingBot.execute(sm);
         } catch (TelegramApiException e) {
@@ -59,9 +59,13 @@ public class Sendler {
         }
     }
 
-    public void sendMainMenu(Long who) {
+    public void sendMainMenu(Long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu();
-        sendMessageWithButton(who, replyKeyboardMarkup);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+    public void sendMyDataMenu(Long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.myData();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
     public void sendTrainingsMenu(Long who) {

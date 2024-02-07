@@ -9,6 +9,7 @@ public enum UserState {
     SET_GALLERY,
     SET_RATE,
     MAIN_MENU,
+    USER_DATA,
     DOCUMENTS_MENU,
     WORK_NOTES_MENU,
     PATTERNS_MENU,
