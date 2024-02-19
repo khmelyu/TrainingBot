@@ -26,9 +26,6 @@ public class RedisConfig {
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
 
-    public void Test() {
-
-    }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
