@@ -69,13 +69,14 @@ public class StartAction {
             msg = startMessage;
         }
         sendler.sendTextMessage(id, msg);
+        sendler.sendTextMessage(id, addNameMessage);
         userStateService.setUserState(id, UserState.START);
     }
 
     public void inputName(Update update) {
         Long id = update.getMessage().getChatId();
-        sendler.sendTextMessage(id, addNameMessage);
         userStateService.setUserState(id, UserState.SET_NAME);
+        addName(update);
     }
 
     public void addName(Update update) {
