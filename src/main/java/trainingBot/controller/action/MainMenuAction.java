@@ -14,7 +14,7 @@ import trainingBot.model.rep.UserRepository;
 import trainingBot.view.Sendler;
 
 @Component
-@PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")})
+@PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")})
 public class MainMenuAction {
     private Sendler sendler;
     private UserRepository userRepository;
@@ -24,6 +24,8 @@ public class MainMenuAction {
 
     @Value("${user.data.ok}")
     private String userDataOk;
+    @Value("${choice.training.type}")
+    private String trainingType;
 
     @Autowired
     public void setDependencies(
@@ -52,5 +54,10 @@ public class MainMenuAction {
 
     public void userDataFail(Long id, Update update) {
         startAction.startAction(update);
+    }
+    public void trainingsAction(Update update) {
+        Long id = update.getMessage().getChatId();
+        sendler.sendTrainingsMenu(id, trainingType);
+        userStateService.setUserState(id, UserState.TRAININGS_MENU);
     }
 }

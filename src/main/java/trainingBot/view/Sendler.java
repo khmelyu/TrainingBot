@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -68,20 +70,25 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
-    public void sendTrainingsMenu(Long who) {
+    public void sendTrainingsMenu(Long who, String pic) {
         InlineKeyboardMarkup inlineKeyboardMarkup = InlineMenu.trainingsMenu();
-        sendMessageWithCallBack(who, inlineKeyboardMarkup);
+        String photoFileId = pic;
+
+        InputFile inputFile = new InputFile(photoFileId);
+
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(who.toString());
+        sendPhoto.setPhoto(inputFile);
+        sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            trainingBot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
 
-
-
-
-
-
-
-//
 //    public void sendDocumentsMenu(Long who) {
 //        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.documentsMenu();
 //        sendMessageWithKeyboard(who, "Выбери тип документа", replyKeyboardMarkup);

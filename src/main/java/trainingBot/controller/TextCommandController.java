@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.action.MainMenuAction;
 import trainingBot.controller.action.StartAction;
-import trainingBot.controller.action.TrainingsAction;
 import trainingBot.controller.service.redis.UserState;
 import trainingBot.controller.service.redis.UserStateService;
 
@@ -13,15 +12,13 @@ import trainingBot.controller.service.redis.UserStateService;
 public class TextCommandController {
 
     private StartAction startAction;
-    private TrainingsAction trainingsAction;
     private UserStateService userStateService;
     private MainMenuAction mainMenuAction;
 
     @Autowired
-    public void setDependencies(UserStateService userStateService, StartAction startAction, TrainingsAction trainingsAction, MainMenuAction mainMenuAction) {
+    public void setDependencies(UserStateService userStateService, StartAction startAction, MainMenuAction mainMenuAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
-        this.trainingsAction = trainingsAction;
         this.mainMenuAction = mainMenuAction;
     }
 
@@ -31,7 +28,7 @@ public class TextCommandController {
         UserState userState = userStateService.getUserState(id);
         switch (text) {
             case "/start" -> startAction.startAction(update);
-            case "Тренинги" -> trainingsAction.trainingsAction(update);
+            case "Тренинги" -> mainMenuAction.trainingsAction(update);
             case "Мои данные" -> mainMenuAction.userData(id);
             case "Все верно" -> mainMenuAction.userDataOk(id);
             case "Изменить" -> mainMenuAction.userDataFail(id, update);
