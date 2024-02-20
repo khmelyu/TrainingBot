@@ -8,11 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @EntityScan(basePackages = "trainingBot.model.entity")
 public class TrainingBotMainClass {
     public static void main(String[] args) {
-        System.setProperty("user.timezone", "Europe/London");
+        System.setProperty("user.timezone", "Europe/Moscow");
         SpringApplication.run(TrainingBotMainClass.class, args);
     }
-
-
-
-
 }
