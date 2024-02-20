@@ -11,5 +11,4 @@ public class TrainingBotMainClass {
         System.setProperty("user.timezone", "Europe/Moscow");
         SpringApplication.run(TrainingBotMainClass.class, args);
     }
-
 }
