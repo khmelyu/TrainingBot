@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.AddUser;
+import trainingBot.controller.action.AddUser;
 import trainingBot.controller.PhotoCommandController;
 import trainingBot.controller.TextCommandController;
 
@@ -23,7 +23,6 @@ public class UpdateReceiver {
         this.textCommandController = textCommandController;
         this.photoCommandController = photoCommandController;
         this.addUser = addUser;
-
     }
 
     public void handle(Update update) {
