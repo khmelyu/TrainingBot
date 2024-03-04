@@ -52,13 +52,13 @@ public class UpdateReceiver {
     private void handleTextMessage(Update update) {
         Message message = update.getMessage();
         String text = message.getText();
-        textCommandController.handleTextMessage(update);
+        textCommandController.handleMessage(update);
         logger.info("User: " + update.getMessage().getChatId() + " received message: {}", text);
     }
 
     private void handlePhotoMessage(Update update) {
         logger.info("User: " + update.getMessage().getChatId() + " upload picture");
-        photoCommandController.handlePhotoMessage(update);
+        photoCommandController.handleMessage(update);
     }
 
     private void handleAnimationMessage(Update update) {

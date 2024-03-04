@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.action.PhotoAction;
 
 @Component
-public class PhotoCommandController {
+public class PhotoCommandController implements CommandController {
     private PhotoAction photoAction;
 
     @Autowired
@@ -14,7 +14,8 @@ public class PhotoCommandController {
         this.photoAction = photoAction;
     }
 
-    public void handlePhotoMessage(Update update) {
+    @Override
+    public void handleMessage(Update update) {
         photoAction.photoAction(update);
 
     }

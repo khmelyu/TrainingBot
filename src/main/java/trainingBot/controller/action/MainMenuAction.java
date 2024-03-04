@@ -26,6 +26,8 @@ public class MainMenuAction {
     private String userDataOk;
     @Value("${choice.training.type}")
     private String trainingType;
+    @Value("${feedback.message}")
+    private String feedbackMessage;
 
     @Autowired
     public void setDependencies(
@@ -52,12 +54,16 @@ public class MainMenuAction {
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
 
-    public void userDataFail(Long id, Update update) {
+    public void userDataFail(Update update) {
         startAction.startAction(update);
     }
-    public void trainingsAction(Update update) {
-        Long id = update.getMessage().getChatId();
+
+    public void trainingsAction(Long id) {
         sendler.sendTrainingsMenu(id, trainingType);
         userStateService.setUserState(id, UserState.TRAININGS_MENU);
+    }
+
+    public void feedback(Long id) {
+        sendler.sendTextMessage(id, feedbackMessage);
     }
 }

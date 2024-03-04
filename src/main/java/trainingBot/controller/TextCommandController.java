@@ -9,7 +9,7 @@ import trainingBot.controller.service.redis.UserState;
 import trainingBot.controller.service.redis.UserStateService;
 
 @Component
-public class TextCommandController {
+public class TextCommandController implements CommandController {
 
     private StartAction startAction;
     private UserStateService userStateService;
@@ -22,16 +22,18 @@ public class TextCommandController {
         this.mainMenuAction = mainMenuAction;
     }
 
-    public void handleTextMessage(Update update) {
+    @Override
+    public void handleMessage(Update update) {
         Long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         UserState userState = userStateService.getUserState(id);
         switch (text) {
             case "/start" -> startAction.startAction(update);
-            case "Тренинги" -> mainMenuAction.trainingsAction(update);
+            case "Тренинги" -> mainMenuAction.trainingsAction(id);
             case "Мои данные" -> mainMenuAction.userData(id);
             case "Все верно" -> mainMenuAction.userDataOk(id);
-            case "Изменить" -> mainMenuAction.userDataFail(id, update);
+            case "Изменить" -> mainMenuAction.userDataFail(update);
+            case "Обратная связь" -> mainMenuAction.feedback(id);
         }
         switch (userState) {
             case START -> startAction.inputName(update);
