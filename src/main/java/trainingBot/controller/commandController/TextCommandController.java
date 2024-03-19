@@ -7,8 +7,8 @@ import trainingBot.controller.action.BackAction;
 import trainingBot.controller.action.DocumentsAction;
 import trainingBot.controller.action.MainMenuAction;
 import trainingBot.controller.action.StartAction;
-import trainingBot.controller.service.redis.UserState;
-import trainingBot.controller.service.redis.UserStateService;
+import trainingBot.service.redis.UserState;
+import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Button;
 
 @Component
@@ -34,8 +34,8 @@ public class TextCommandController implements CommandController {
         Long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         UserState userState = userStateService.getUserState(id);
-        switch (text) {
-            case "/start" -> startAction.startAction(id);
+        if (text.equals("/start")) {
+            startAction.startAction(id);
         }
         for (Button button : Button.values()) {
             if (button.getText().equals(text)) {

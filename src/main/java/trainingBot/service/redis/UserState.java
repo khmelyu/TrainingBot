@@ -1,4 +1,4 @@
-package trainingBot.controller.service.redis;
+package trainingBot.service.redis;
 
 public enum UserState {
     START,
@@ -15,5 +15,6 @@ public enum UserState {
     PATTERNS_MENU,
     CERTIFICATES_MENU,
     COMPETENCIES_MENU,
-    TRAININGS_MENU
+    TRAININGS_MENU,
+    COACH_MENU
 }

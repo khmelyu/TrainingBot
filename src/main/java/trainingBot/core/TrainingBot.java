@@ -1,7 +1,6 @@
 package trainingBot.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -17,12 +16,6 @@ public class TrainingBot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String botToken;
 
-    private UpdateReceiver updateReceiver;
-
-    @Autowired
-    public void setUpdateReceiver(UpdateReceiver updateReceiver) {
-        this.updateReceiver = updateReceiver;
-    }
 
 
     @Override
@@ -37,7 +30,6 @@ public class TrainingBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        updateReceiver.handle(update);
-    }
 
+    }
 }

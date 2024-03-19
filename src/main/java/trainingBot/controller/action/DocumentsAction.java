@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
-import trainingBot.controller.service.redis.UserState;
-import trainingBot.controller.service.redis.UserStateService;
+import trainingBot.service.redis.UserState;
+import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
 
 @Component

@@ -1,5 +1,8 @@
 package trainingBot.view;
 
+import lombok.Getter;
+
+@Getter
 public enum Button {
     BACK("Назад"),
     MY_DATA("Мои данные"),
@@ -28,9 +31,6 @@ public enum Button {
 
     Button(String text) {
         this.text = text;
-    }
-    public String getText() {
-        return text;
     }
 
 }

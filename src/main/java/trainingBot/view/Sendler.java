@@ -138,27 +138,3 @@ public class Sendler {
     }
 }
 
-//
-//    public void sendPatternsMenu(Long who) {
-//        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.patternsMenu();
-//        sendMessageWithKeyboard(who, "Выбери шаблон или заявление", replyKeyboardMarkup);
-//    }
-//
-//    public void sendCertificatesMenu(Long who) {
-//        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.certificatesMenu();
-//        sendMessageWithKeyboard(who, "Выбери группу сертификатов", replyKeyboardMarkup);
-//    }
-//    public void sendCompetenciesMenu(Long who) {
-//        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.competenciesMenu();
-//        sendMessageWithKeyboard(who, "Выбери компетенции", replyKeyboardMarkup);
-//    }
-
-//   private void sendMessageWithCallBack(Long who, InlineKeyboardMarkup inlineKeyboardMarkup) {
-//       SendMessage sm = SendMessage.builder().chatId(who.toString()).text("Главное меню").replyMarkup(inlineKeyboardMarkup).build();
-//       try {
-//           trainingBot.execute(sm);
-//       } catch (TelegramApiException e) {
-//           throw new RuntimeException(e);
-//       }
-//   }
-

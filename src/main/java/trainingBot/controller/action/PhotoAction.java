@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.core.UpdateReceiver;
+import trainingBot.controller.UpdateReceiver;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.view.Sendler;
 

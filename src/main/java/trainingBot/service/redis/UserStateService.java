@@ -1,4 +1,4 @@
-package trainingBot.controller.service.redis;
+package trainingBot.service.redis;
 
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,10 +26,5 @@ public class UserStateService {
             return UserState.valueOf(stateString);
         }
         return null;
-    }
-
-
-    public void clearUserState(Long userId) {
-        redisTemplate.delete(userId + USER_STATE_PREFIX);
     }
 }

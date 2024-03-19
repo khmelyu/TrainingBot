@@ -1,4 +1,4 @@
-package trainingBot.core;
+package trainingBot.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

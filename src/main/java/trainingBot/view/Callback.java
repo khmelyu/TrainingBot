@@ -1,7 +1,7 @@
 package trainingBot.view;
 
 import lombok.Getter;
-
+@Getter
 public enum Callback {
     BACK("Назад", "Back"),
     OFFLINE_TRAININGS("Оффлайн тренинги", "OfflineTrainings"),
@@ -16,17 +16,13 @@ public enum Callback {
 
 
 
-    private final String callbackText;
     @Getter
+    private final String callbackText;
     private final String callbackData;
 
     Callback(String callbackText, String callbackData) {
         this.callbackText = callbackText;
         this.callbackData = callbackData;
-    }
-
-    public String getCallbackText() {
-        return callbackText;
     }
 
 }

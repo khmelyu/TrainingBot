@@ -7,8 +7,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import trainingBot.controller.service.redis.UserState;
-import trainingBot.controller.service.redis.UserStateService;
+import trainingBot.service.redis.UserState;
+import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
 
 @Component
