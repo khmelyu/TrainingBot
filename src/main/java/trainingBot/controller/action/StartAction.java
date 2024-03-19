@@ -41,6 +41,7 @@ public class StartAction {
 
     @Value("${main.menu.message}")
     private String mainMenu;
+
     @Value("${user.data.fail}")
     private String userDataFail;
 
@@ -60,9 +61,8 @@ public class StartAction {
         this.sendler = sendler;
     }
 
-    public void startAction(Update update) {
-        Long id = update.getMessage().getChatId();
-        String msg = null;
+    public void startAction(Long id) {
+       String msg;
         if (userStateService.getUserState(id).equals(UserState.USER_DATA)) {
             msg = userDataFail;
         } else {

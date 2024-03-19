@@ -1,4 +1,4 @@
-package trainingBot.controller;
+package trainingBot.controller.commandController;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

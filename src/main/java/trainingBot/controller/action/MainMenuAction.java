@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.service.redis.UserState;
 import trainingBot.controller.service.redis.UserStateService;
 import trainingBot.model.entity.User;
@@ -28,6 +27,8 @@ public class MainMenuAction {
     private String trainingType;
     @Value("${feedback.message}")
     private String feedbackMessage;
+    @Value("${documents.message}")
+    private String documentsMessage;
 
     @Autowired
     public void setDependencies(
@@ -54,8 +55,8 @@ public class MainMenuAction {
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
 
-    public void userDataFail(Update update) {
-        startAction.startAction(update);
+    public void userDataFail(Long id) {
+        startAction.startAction(id);
     }
 
     public void trainingsAction(Long id) {
@@ -65,5 +66,10 @@ public class MainMenuAction {
 
     public void feedback(Long id) {
         sendler.sendTextMessage(id, feedbackMessage);
+    }
+
+    public void documents(Long id) {
+        sendler.sendDocumentsMenu(id, documentsMessage);
+        userStateService.setUserState(id, UserState.DOCUMENTS_MENU);
     }
 }

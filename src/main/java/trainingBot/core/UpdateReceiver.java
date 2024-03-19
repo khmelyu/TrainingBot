@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.action.AddUser;
-import trainingBot.controller.PhotoCommandController;
-import trainingBot.controller.TextCommandController;
+import trainingBot.controller.commandController.CallBackCommandController;
+import trainingBot.controller.commandController.PhotoCommandController;
+import trainingBot.controller.commandController.TextCommandController;
 
 
 @Component
@@ -16,12 +17,14 @@ public class UpdateReceiver {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
     private TextCommandController textCommandController;
     private PhotoCommandController photoCommandController;
+    private CallBackCommandController callBackCommandController;
     private AddUser addUser;
 
     @Autowired
-    public void setDependencies(TextCommandController textCommandController, PhotoCommandController photoCommandController, AddUser addUser) {
+    public void setDependencies(TextCommandController textCommandController, PhotoCommandController photoCommandController, CallBackCommandController callBackCommandController, AddUser addUser) {
         this.textCommandController = textCommandController;
         this.photoCommandController = photoCommandController;
+        this.callBackCommandController = callBackCommandController;
         this.addUser = addUser;
     }
 
@@ -46,14 +49,15 @@ public class UpdateReceiver {
 
     private void handleCallbackQuery(Update update) {
         String callbackQuery = update.getCallbackQuery().getData();
-        logger.info("User: " + update.getCallbackQuery().getId() + " received callback: {}", callbackQuery);
+        callBackCommandController.handleMessage(update);
+        logger.info("User: " + update.getCallbackQuery().getMessage().getChatId() + " sent a callback: {}", callbackQuery);
     }
 
     private void handleTextMessage(Update update) {
         Message message = update.getMessage();
         String text = message.getText();
         textCommandController.handleMessage(update);
-        logger.info("User: " + update.getMessage().getChatId() + " received message: {}", text);
+        logger.info("User: " + update.getMessage().getChatId() + " sent a message: {}", text);
     }
 
     private void handlePhotoMessage(Update update) {
