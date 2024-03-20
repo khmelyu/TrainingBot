@@ -30,6 +30,5 @@ public class TrainingBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
     }
 }
