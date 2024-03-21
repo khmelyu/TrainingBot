@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-// НАДО НАХУЙ УБРАТЬ ЭТО ПОЗОРИЩЕ И НАПИСАТЬ ЭКЗЕКЬЮТ!
+// НАДО НАХУЙ УБРАТЬ ЭТО ПОЗОРИЩЕ И НАПИСАТЬ ЭКЗЕКЬЮТ В СЭНДЛЕР ИЛИ ОТДЕЛЬНЫМ СЕРВИСОМ!
 @Slf4j
 @Component
 public class TrainingBot extends TelegramLongPollingBot {
