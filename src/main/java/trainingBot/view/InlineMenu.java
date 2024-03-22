@@ -40,17 +40,14 @@ public class InlineMenu {
                 createButton(Callback.ONLINE_TRAININGS)));
 
         keyboard.add(createRow(
-                createButton(Callback.MY_TRAININGS)));
+                createButton(Callback.MY_TRAININGS),
+                user != null && user.isCoach() ? createButton(Callback.COACH_MENU) : null));
 
-        if (user != null && user.isCoach()) {
-            keyboard.add(createRow(createButton(Callback.COACH_MENU)));
-        }
-
-        if (user != null && user.isAdmin()) {
-            keyboard.add(createRow(createButton(Callback.ADMIN_MENU)));
-        }
+        keyboard.add(createRow(
+                user != null && user.isAdmin() ? createButton(Callback.COACH_MENU) : null));
 
         inlineKeyboardMarkup.setKeyboard(keyboard);
+
         return inlineKeyboardMarkup;
     }
 
