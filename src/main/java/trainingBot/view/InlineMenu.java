@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 @Component
 public class InlineMenu {
     private static UserRepository userRepository;
@@ -39,17 +40,26 @@ public class InlineMenu {
                 createButton(Callback.OFFLINE_TRAININGS),
                 createButton(Callback.ONLINE_TRAININGS)));
 
-        keyboard.add(createRow(
-                createButton(Callback.MY_TRAININGS),
-                user != null && user.isCoach() ? createButton(Callback.COACH_MENU) : null));
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(createButton(Callback.MY_TRAININGS));
+        if (user != null && user.isCoach()) {
+            row.add(createButton(Callback.COACH_MENU));
+        }
+        keyboard.add(row);
 
-        keyboard.add(createRow(
-                user != null && user.isAdmin() ? createButton(Callback.COACH_MENU) : null));
+        row = new ArrayList<>();
+        if (user != null && user.isAdmin()) {
+            row.add(createButton(Callback.ADMIN_MENU));
+        }
+        if (!row.isEmpty()) {
+            keyboard.add(row);
+        }
 
         inlineKeyboardMarkup.setKeyboard(keyboard);
 
         return inlineKeyboardMarkup;
     }
+
 
     public static InlineKeyboardMarkup coachMenu() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
