@@ -99,6 +99,10 @@ public class Sendler {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.patternsMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
+    public void sendCertificatesMenu(Long who, String what){
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.certificatesMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
 
 
 

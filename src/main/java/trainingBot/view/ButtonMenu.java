@@ -54,7 +54,7 @@ public class ButtonMenu {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         keyboard.add(createKeyboardRow(Button.WORKNOTE, Button.CERTIFICATES, Button.COMPETITIONS));
-        keyboard.add(createKeyboardRow(Button.PATTERNS, Button.BACK));
+        keyboard.add(createKeyboardRow(/*Button.PATTERNS,*/ Button.BACK));
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
@@ -77,6 +77,17 @@ public class ButtonMenu {
 
         keyboard.add(createKeyboardRow(Button.INVENTORY, Button.SALARY));
         keyboard.add(createKeyboardRow(Button.STATEMENTS, Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup certificatesMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.TEA, Button.PACKAGE, Button.ACCESSORIES, Button.CHOCOSTYLE));
+        keyboard.add(createKeyboardRow(Button.COFFEE,Button.SWEETS, Button.HOUSEHOLD, Button.BACK));
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;

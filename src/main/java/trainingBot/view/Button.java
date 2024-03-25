@@ -9,21 +9,32 @@ public enum Button {
     FEEDBACK("Обратная связь"),
     TRAININGS("Треннинги"),
     DOCUMENTS("Документы"),
+
     ITS_OK("Все верно"),
     CHANGE("Изменить"),
+
     WORKNOTE("Рабочие тетради"),
     WORKNOTE_TRAINEE("Стажерская"),
     WORKNOTE_SECOND("2 уровень"),
     WORKNOTE_THIRD("3 уровень"),
     WORKNOTE_FOURTH("4 уровень"),
     WORKNOTE_FIFTH("5 уровень"),
+
     CERTIFICATES("Сертификаты"),
+    TEA("Чай"),
+    COFFEE("Кофе"),
+    ACCESSORIES("Аксессуары"),
+    SWEETS("Сладости"),
+    PACKAGE("ПУ"),
+    HOUSEHOLD("Хоз товары"),
+    CHOCOSTYLE("Шокостайл"),
+
     COMPETITIONS("Компетенции"),
+
     PATTERNS("Шаблоны/заявления"),
     INVENTORY("Учеты"),
     SALARY("РСП для ЗП"),
     STATEMENTS("Заявления");
-
 
 
 

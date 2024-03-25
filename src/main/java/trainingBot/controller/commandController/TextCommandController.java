@@ -62,7 +62,14 @@ public class TextCommandController implements CommandController {
                     case STATEMENTS -> documentsAction.statements(id);
                     case INVENTORY -> documentsAction.inventory(id);
 
-
+                    case CERTIFICATES -> documentsAction.certificates(id);
+                    case TEA -> documentsAction.tea(id);
+                    case COFFEE -> documentsAction.coffee(id);
+                    case ACCESSORIES -> documentsAction.accessories(id);
+                    case SWEETS -> documentsAction.sweets(id);
+                    case PACKAGE -> documentsAction.packages(id);
+                    case HOUSEHOLD -> documentsAction.household(id);
+                    case CHOCOSTYLE -> documentsAction.chocostyle(id);
                 }
             }
         }
