@@ -103,7 +103,10 @@ public class Sendler {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.certificatesMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
-
+    public void sendCompetitionsMenu(Long who, String what){
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.competitionsMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
 
 
     public void sendTrainingsMenu(Long who, String pic) {

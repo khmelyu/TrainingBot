@@ -87,6 +87,25 @@ public class DocumentsAction {
     @Value("${certificate.chocostyle.link}")
     private String certificateChocostyleLink;
 
+    @Value("${competitions.message}")
+    private String competitionsMessage;
+    @Value("${competitions.corporate.message}")
+    private String competitionsCorporateText;
+    @Value("${competitions.corporate.link}")
+    private String competitionsCorporateLink;
+    @Value("${competitions.consultant.message}")
+    private String competitionsConsultantText;
+    @Value("${competitions.consultant.link}")
+    private String competitionsConsultantLink;
+    @Value("${competitions.curator.message}")
+    private String competitionsCuratorText;
+    @Value("${competitions.curator.link}")
+    private String competitionsCuratorLink;
+    @Value("${competitions.manager.message}")
+    private String competitionsManagerText;
+    @Value("${competitions.manager.link}")
+    private String competitionsManagerLink;
+
 
     @Autowired
     public void setDependencies(@Lazy Sendler sendler, UserStateService userStateService) {
@@ -169,6 +188,28 @@ public class DocumentsAction {
 
     public void chocostyle(Long id) {
         sendler.sendLink(id, certificateChocostyleText, certificateChocostyleLink);
+    }
+
+
+    public void competitions(Long id) {
+        sendler.sendCompetitionsMenu(id, competitionsMessage);
+        userStateService.setUserState(id, UserState.COMPETENCIES_MENU);
+    }
+
+    public void corporate(Long id) {
+        sendler.sendLink(id, competitionsCorporateText, competitionsCorporateLink);
+    }
+
+    public void consultant(Long id) {
+        sendler.sendLink(id, competitionsConsultantText, competitionsConsultantLink);
+    }
+
+    public void curator(Long id) {
+        sendler.sendLink(id, competitionsCuratorText, competitionsCuratorLink);
+    }
+
+    public void manager(Long id) {
+        sendler.sendLink(id, competitionsManagerText, competitionsManagerLink);
     }
 }
 

@@ -70,11 +70,21 @@ public class TextCommandController implements CommandController {
                     case PACKAGE -> documentsAction.packages(id);
                     case HOUSEHOLD -> documentsAction.household(id);
                     case CHOCOSTYLE -> documentsAction.chocostyle(id);
+
+                    case COMPETITIONS -> documentsAction.competitions(id);
+                    case CORPORATE -> documentsAction.corporate(id);
+                    case CONSULTANT -> documentsAction.consultant(id);
+                    case CURATOR -> documentsAction.curator(id);
+                    case MANAGER -> documentsAction.manager(id);
                 }
             }
         }
         switch (userState) {
             case START -> startAction.inputName(update);
+
+            case LOGIN -> startAction.inputLogin(update);
+            case PASSWORD -> startAction.inputPassword(update);
+
             case SET_NAME -> startAction.addName(update);
             case SET_LASTNAME -> startAction.addLastName(update);
             case SET_PHONE -> startAction.addPhone(update);

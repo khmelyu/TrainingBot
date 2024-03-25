@@ -2,6 +2,8 @@ package trainingBot.service.redis;
 
 public enum UserState {
     START,
+    LOGIN,
+    PASSWORD,
     SET_NAME,
     SET_LASTNAME,
     SET_PHONE,

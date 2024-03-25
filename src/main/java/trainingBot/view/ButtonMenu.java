@@ -93,4 +93,15 @@ public class ButtonMenu {
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup competitionsMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.CORPORATE, Button.CONSULTANT, Button.MANAGER));
+        keyboard.add(createKeyboardRow(Button.CURATOR, Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
 }

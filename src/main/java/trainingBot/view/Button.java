@@ -30,6 +30,10 @@ public enum Button {
     CHOCOSTYLE("Шокостайл"),
 
     COMPETITIONS("Компетенции"),
+    CORPORATE("Корпоративные компетенции"),
+    CONSULTANT("Компетенции консультанта"),
+    CURATOR("Компетенции куратора"),
+    MANAGER("Компетенции управляющего"),
 
     PATTERNS("Шаблоны/заявления"),
     INVENTORY("Учеты"),
