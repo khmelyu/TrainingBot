@@ -23,7 +23,7 @@ public class MainMenuAction {
 
     @Value("${user.data.ok}")
     private String userDataOk;
-    @Value("${choice.training.type}")
+    @Value("${training.type}")
     private String trainingType;
     @Value("${feedback.message}")
     private String feedbackMessage;

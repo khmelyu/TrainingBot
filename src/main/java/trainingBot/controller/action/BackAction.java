@@ -19,7 +19,7 @@ public class BackAction {
 
     @Value("${main.menu.message}")
     private String mainMenuMessage;
-    @Value("${choice.training.type}")
+    @Value("${training.type}")
     private String trainingType;
 
 
