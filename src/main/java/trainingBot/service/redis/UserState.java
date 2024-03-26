@@ -1,5 +1,8 @@
 package trainingBot.service.redis;
 
+import lombok.Getter;
+
+@Getter
 public enum UserState {
     START,
     LOGIN,
@@ -18,5 +21,10 @@ public enum UserState {
     CERTIFICATES_MENU,
     COMPETENCIES_MENU,
     TRAININGS_MENU,
-    COACH_MENU
+    COACH_MENU,
+    CREATE_TRAINING,
+    CREATE_ONLINE_TRAINING,
+    CREATE_OFFLINE_TRAINING,
+    MOSCOW,
+    SAINT_PETERSBURG
 }

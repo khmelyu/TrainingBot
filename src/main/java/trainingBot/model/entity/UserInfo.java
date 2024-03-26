@@ -14,7 +14,7 @@ import java.util.Objects;
 @Entity(name = "user_info")
 public class UserInfo {
     @Id
-    private Long id;
+    private long id;
     private String name;
     private String lastname;
     private String username;

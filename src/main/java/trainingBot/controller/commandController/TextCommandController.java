@@ -94,7 +94,7 @@ public class TextCommandController implements CommandController {
                 case SET_RATE -> startAction.addRate(update);
             }
         } else {
-            userStateService.setUserState(id, UserState.TRAININGS_MENU);
+            userStateService.setUserState(id, UserState.MAIN_MENU);
             handleMessage(update);
         }
     }

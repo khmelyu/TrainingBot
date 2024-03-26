@@ -1,9 +1,13 @@
 package trainingBot.view;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import trainingBot.model.entity.User;
+import trainingBot.model.rep.UserRepository;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +15,13 @@ import java.util.List;
 
 @Component
 public class ButtonMenu {
+
+    private static UserRepository userRepository;
+
+    @Autowired
+    public ButtonMenu(UserRepository userRepository) {
+        ButtonMenu.userRepository = userRepository;
+    }
 
     public static ReplyKeyboardMarkup createKeyboardMarkup() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -28,12 +39,16 @@ public class ButtonMenu {
         return keyboardRow;
     }
 
-    public static ReplyKeyboardMarkup mainMenu() {
+    public static ReplyKeyboardMarkup mainMenu(long id) {
+        User user = userRepository.findById(id).orElse(null);
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.MY_DATA, Button.FEEDBACK));
         keyboard.add(createKeyboardRow(Button.DOCUMENTS));
+        if (user != null && user.isAdmin()) {
+            keyboard.add(createKeyboardRow(Button.ADMIN));
+        }
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;

@@ -34,11 +34,11 @@ public class BackAction {
         this.userStateService = userStateService;
     }
 
-    public void backAction(Long id){
+    public void backAction(long id){
         sendler.sendMainMenu(id,mainMenuMessage);
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
-    public void backActionInline(Long id, Message curentMessage){
+    public void backActionInline(long id, Message curentMessage){
         sendler.updateTrainingsMenu(id, trainingType, curentMessage);
         userStateService.setUserState(id, UserState.TRAININGS_MENU);
     }

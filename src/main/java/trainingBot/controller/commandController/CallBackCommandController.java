@@ -27,9 +27,14 @@ public class CallBackCommandController implements CommandController {
         Message currentMessage = update.getCallbackQuery().getMessage();
         for (Callback callback : Callback.values()) {
             if (callback.getCallbackData().equals(data)) {
-                switch (callback){
+                switch (callback) {
                     case BACK -> backAction.backActionInline(id, currentMessage);
                     case COACH_MENU -> coachAction.coachAction(id, currentMessage);
+                    case CREATE_TRAININGS -> coachAction.createTraining(id, currentMessage);
+                    case ONLINE_TRAININGS_CREATE -> coachAction.createOnlineTraining(id, currentMessage);
+                    case OFFLINE_TRAININGS_CREATE -> coachAction.createOfflineTraining(id, currentMessage);
+                    case MOSCOW -> coachAction.createMoscowTraining(id, currentMessage);
+                    case SAINT_PETERSBURG -> coachAction.createSaintsPetersburgTraining(id, currentMessage);
                 }
             }
         }

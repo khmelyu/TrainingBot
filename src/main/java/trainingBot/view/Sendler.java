@@ -1,5 +1,7 @@
 package trainingBot.view;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -13,15 +15,17 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import trainingBot.controller.UpdateReceiver;
 import trainingBot.core.TrainingBot;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class Sendler {
-
+    private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
     private TrainingBot trainingBot;
 
     @Autowired
@@ -76,7 +80,7 @@ public class Sendler {
     }
 
     public void sendMainMenu(Long who, String what) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu();
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu(who);
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
@@ -95,22 +99,24 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
-    public void sendPatternsMenu(Long who, String what){
+    public void sendPatternsMenu(Long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.patternsMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
-    public void sendCertificatesMenu(Long who, String what){
+
+    public void sendCertificatesMenu(Long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.certificatesMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
-    public void sendCompetitionsMenu(Long who, String what){
+
+    public void sendCompetitionsMenu(Long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.competitionsMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
 
     public void sendTrainingsMenu(Long who, String pic) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = InlineMenu.trainingsMenu(who);
+        InlineKeyboardMarkup inlineKeyboardMarkup = CallbackMenu.trainingsMenu(who);
 
         InputFile inputFile = new InputFile(pic);
 
@@ -124,24 +130,63 @@ public class Sendler {
             throw new RuntimeException(e);
         }
     }
-    public void updateTrainingsMenu(Long who, String pic, Message currentMessage) {
-        InlineKeyboardMarkup updatedKeyboard = InlineMenu.trainingsMenu(who);
+
+    public void updateMenu(Long who, String pic, Message currentMessage, InlineKeyboardMarkup updatedKeyboard) {
         try {
-            EditMessageMedia editMessageMedia = EditMessageMedia.builder().chatId(who.toString()).messageId(currentMessage.getMessageId()).media(InputMediaPhoto.builder().media(pic).build()).replyMarkup(updatedKeyboard).build();
-            trainingBot.execute(editMessageMedia);
+            String currentCaption = currentMessage.getCaption();
+            boolean isContentChanged = !Objects.equals(currentCaption, pic);
+            boolean isKeyboardChanged = !currentMessage.getReplyMarkup().equals(updatedKeyboard);
+
+            if (isContentChanged || isKeyboardChanged) {
+                EditMessageMedia editMessageMedia = EditMessageMedia.builder()
+                        .chatId(who.toString())
+                        .messageId(currentMessage.getMessageId())
+                        .media(InputMediaPhoto.builder().media(pic).build())
+                        .replyMarkup(updatedKeyboard)
+                        .build();
+                trainingBot.execute(editMessageMedia);
+            } else {
+                logger.warn("User: " + who + "The content or keyboard have not changed, the update has been skipped.");
+            }
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }
+
+
+
+    public void updateTrainingsMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.trainingsMenu(who);
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
 
     public void sendCoachMenu(Long who, String pic, Message currentMessage) {
-        InlineKeyboardMarkup updatedKeyboard = InlineMenu.coachMenu();
-        try {
-            EditMessageMedia editMessageMedia = EditMessageMedia.builder().chatId(who.toString()).messageId(currentMessage.getMessageId()).media(InputMediaPhoto.builder().media(pic).build()).replyMarkup(updatedKeyboard).build();
-            trainingBot.execute(editMessageMedia);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.coachMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendCreateMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createTrainingsMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendCreateOnlineMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createOnlineTrainingsMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendCreateOfflineMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.cityChoiceMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendCreateMoscowMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createMoscowTrainingsMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+    public void sendCreateSaintPetersburgMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createSaintPetersburgTrainingsMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 }
-

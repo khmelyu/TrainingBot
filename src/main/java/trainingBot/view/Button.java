@@ -7,8 +7,9 @@ public enum Button {
     BACK("Назад"),
     MY_DATA("Мои данные"),
     FEEDBACK("Обратная связь"),
-    TRAININGS("Треннинги"),
+    TRAININGS("Тренинги"),
     DOCUMENTS("Документы"),
+    ADMIN("Админ панель"),
 
     ITS_OK("Все верно"),
     CHANGE("Изменить"),

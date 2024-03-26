@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity(name = "\"user\"")
 public class User {
     @Id
-    private Long id;
+    private long id;
     private String name;
     private String lastname;
     private String phone;
