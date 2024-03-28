@@ -101,16 +101,16 @@ public class CallbackMenu {
     }
 
     public static InlineKeyboardMarkup createOnlineTrainingsMenu() {
-        return trainingCategoryMenu("Онлайн");
+        return trainingCategoryMenu(Callback.ONLINE_TRAININGS_CREATE.getCallbackText());
     }
 
 
     public static InlineKeyboardMarkup createMoscowTrainingsMenu() {
-        return trainingCategoryMenu("Мск");
+        return trainingCategoryMenu(Callback.MOSCOW.getCallbackText());
     }
 
     public static InlineKeyboardMarkup createSaintPetersburgTrainingsMenu() {
-        return trainingCategoryMenu("СПб");
+        return trainingCategoryMenu(Callback.SAINT_PETERSBURG.getCallbackText());
     }
 
     public static InlineKeyboardMarkup cityChoiceMenu() {

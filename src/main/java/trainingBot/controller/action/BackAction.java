@@ -21,8 +21,10 @@ public class BackAction {
     private String mainMenuMessage;
     @Value("${training.type}")
     private String trainingType;
-
-
+    @Value("${coach.menu}")
+    private String coachMenu;
+    @Value("${training.city}")
+    private String trainingCity;
 
 
     @Autowired
@@ -34,12 +36,30 @@ public class BackAction {
         this.userStateService = userStateService;
     }
 
-    public void backAction(long id){
-        sendler.sendMainMenu(id,mainMenuMessage);
+    public void backAction(long id) {
+        sendler.sendMainMenu(id, mainMenuMessage);
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
-    public void backActionInline(long id, Message curentMessage){
-        sendler.updateTrainingsMenu(id, trainingType, curentMessage);
-        userStateService.setUserState(id, UserState.TRAININGS_MENU);
+
+    public void backActionInline(long id, Message curentMessage) {
+        UserState state = userStateService.getUserState(id);
+        switch (state) {
+            case COACH_MENU -> {
+                sendler.updateTrainingsMenu(id, trainingType, curentMessage);
+                userStateService.setUserState(id, UserState.TRAININGS_MENU);
+            }
+            case CREATE_TRAINING -> {
+                sendler.sendCoachMenu(id, coachMenu, curentMessage);
+                userStateService.setUserState(id, UserState.COACH_MENU);
+            }
+            case CREATE_OFFLINE_TRAINING, CREATE_ONLINE_TRAINING -> {
+                sendler.sendCreateMenu(id, trainingType, curentMessage);
+                userStateService.setUserState(id, UserState.CREATE_TRAINING);
+            }
+            case MOSCOW, SAINT_PETERSBURG -> {
+                sendler.sendCreateOfflineMenu(id, trainingCity, curentMessage);
+                userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
+            }
+        }
     }
 }
