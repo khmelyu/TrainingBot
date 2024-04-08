@@ -56,7 +56,7 @@ public class BackAction {
                 sendler.sendCreateMenu(id, trainingType, curentMessage);
                 userStateService.setUserState(id, UserState.CREATE_TRAINING);
             }
-            case MOSCOW, SAINT_PETERSBURG -> {
+            case CREATE_MOSCOW, CREATE_SAINT_PETERSBURG -> {
                 sendler.sendCreateOfflineMenu(id, trainingCity, curentMessage);
                 userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
             }

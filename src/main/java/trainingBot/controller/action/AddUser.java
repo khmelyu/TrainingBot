@@ -23,8 +23,18 @@ public class AddUser {
 
     public void registerUser(Update update) {
         LocalDateTime currentTime = LocalDateTime.now();
-        Long id = update.getMessage().getChatId();
-        Chat chat = update.getMessage().getChat();
+        Long id;
+        Chat chat;
+        if (update.hasMessage()) {
+            id = update.getMessage().getChatId();
+            chat = update.getMessage().getChat();
+
+        } else if (update.hasCallbackQuery()) {
+            id = update.getCallbackQuery().getMessage().getChatId();
+            chat = update.getCallbackQuery().getMessage().getChat();
+        } else {
+            return;
+        }
 
         Optional<UserInfo> existingUserOptional = userInfoRepository.findById(id);
 
@@ -35,6 +45,7 @@ public class AddUser {
             userInfo.setLastname(chat.getLastName());
             userInfo.setUsername(chat.getUserName());
             userInfo.setLast_update(Timestamp.valueOf(currentTime));
+            userInfo.setUpdate_count(1);
             userInfoRepository.save(userInfo);
         } else {
             UserInfo existingUser = existingUserOptional.get();
@@ -53,7 +64,9 @@ public class AddUser {
                     existingUser.setUsername(chat.getUserName());
                 }
             }
+            existingUser.setUpdate_count(existingUser.getUpdate_count() + 1);
             userInfoRepository.save(existingUser);
         }
     }
+
 }

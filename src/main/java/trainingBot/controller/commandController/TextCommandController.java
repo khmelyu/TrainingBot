@@ -3,10 +3,7 @@ package trainingBot.controller.commandController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.action.BackAction;
-import trainingBot.controller.action.DocumentsAction;
-import trainingBot.controller.action.MainMenuAction;
-import trainingBot.controller.action.StartAction;
+import trainingBot.controller.action.*;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Button;
@@ -16,14 +13,16 @@ public class TextCommandController implements CommandController {
 
     private UserStateService userStateService;
     private StartAction startAction;
+    private AdminAction adminAction;
     private BackAction backAction;
     private MainMenuAction mainMenuAction;
     private DocumentsAction documentsAction;
 
     @Autowired
-    public void setDependencies(UserStateService userStateService, StartAction startAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction) {
+    public void setDependencies(UserStateService userStateService, StartAction startAction,AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
+        this.adminAction = adminAction;
         this.backAction = backAction;
         this.mainMenuAction = mainMenuAction;
         this.documentsAction = documentsAction;
@@ -50,6 +49,9 @@ public class TextCommandController implements CommandController {
                         //MyData
                         case ITS_OK -> mainMenuAction.userDataOk(id);
                         case CHANGE -> mainMenuAction.userDataFail(id);
+                        //Admin
+                        case ADMIN -> adminAction.adminAction(id);
+                        case UPDATE_STAT -> adminAction.updateStat(id);
                         //Documents
                         case WORKNOTE -> documentsAction.worknote(id);
                         case WORKNOTE_TRAINEE -> documentsAction.traineeNote(id);

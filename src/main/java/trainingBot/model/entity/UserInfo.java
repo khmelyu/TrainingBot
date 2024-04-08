@@ -19,6 +19,11 @@ public class UserInfo {
     private String lastname;
     private String username;
     private Timestamp last_update;
+    private long update_count;
+
+    public UserInfo() {
+        this.update_count = 1; // Установка значения по умолчанию
+    }
 
     public boolean equalsUserInfo(String firstName, String lastName, String username) {
         return Objects.equals(this.name, firstName)

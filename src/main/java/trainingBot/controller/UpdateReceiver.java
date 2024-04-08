@@ -29,11 +29,12 @@ public class UpdateReceiver {
     }
 
     public void handle(Update update) {
+        addUser.registerUser(update);
+
         if (update.hasCallbackQuery()) {
             handleCallbackQuery(update);
         }
         if (update.hasMessage() && update.getMessage().hasText()) {
-            addUser.registerUser(update);
             handleTextMessage(update);
         }
         if (update.hasMessage() && update.getMessage().hasPhoto()) {

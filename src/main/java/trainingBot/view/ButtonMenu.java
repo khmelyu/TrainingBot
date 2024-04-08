@@ -64,6 +64,17 @@ public class ButtonMenu {
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup adminMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.UPDATE_STAT));
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
     public static ReplyKeyboardMarkup documentsMenu() {
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();

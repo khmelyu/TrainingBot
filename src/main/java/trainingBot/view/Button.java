@@ -14,6 +14,8 @@ public enum Button {
     ITS_OK("Все верно"),
     CHANGE("Изменить"),
 
+    UPDATE_STAT("Статистика запросов"),
+
     WORKNOTE("Рабочие тетради"),
     WORKNOTE_TRAINEE("Стажерская"),
     WORKNOTE_SECOND("2 уровень"),

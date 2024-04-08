@@ -8,7 +8,9 @@ import trainingBot.model.entity.User;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.UserRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 @Component
@@ -86,33 +88,6 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
-    public static InlineKeyboardMarkup trainingCategoryMenu(String city) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        for (String training : trainingsListRepository.findByCity(city)) {
-            keyboard.add(createRow(
-                    InlineKeyboardButton.builder().text(training).callbackData(training).build()));
-        }
-        keyboard.add(createRow(
-                createButton(Callback.BACK)));
-
-        inlineKeyboardMarkup.setKeyboard(keyboard);
-        return inlineKeyboardMarkup;
-    }
-
-    public static InlineKeyboardMarkup createOnlineTrainingsMenu() {
-        return trainingCategoryMenu(Callback.ONLINE_TRAININGS_CREATE.getCallbackText());
-    }
-
-
-    public static InlineKeyboardMarkup createMoscowTrainingsMenu() {
-        return trainingCategoryMenu(Callback.MOSCOW.getCallbackText());
-    }
-
-    public static InlineKeyboardMarkup createSaintPetersburgTrainingsMenu() {
-        return trainingCategoryMenu(Callback.SAINT_PETERSBURG.getCallbackText());
-    }
-
     public static InlineKeyboardMarkup cityChoiceMenu() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -127,4 +102,31 @@ public class CallbackMenu {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
+
+    public static InlineKeyboardMarkup createOnlineTrainingsMenu() {
+        return categoryMenu(Callback.ONLINE_TRAININGS_CREATE.getCallbackText());
+    }
+
+    public static InlineKeyboardMarkup createMoscowTrainingsMenu() {
+        return categoryMenu(Callback.MOSCOW.getCallbackText());
+    }
+
+    public static InlineKeyboardMarkup createSaintPetersburgTrainingsMenu() {
+        return categoryMenu(Callback.SAINT_PETERSBURG.getCallbackText());
+    }
+
+    public static InlineKeyboardMarkup categoryMenu(String city) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        for (String training : trainingsListRepository.findByCity(city)) {
+            keyboard.add(createRow(
+                    InlineKeyboardButton.builder().text(training).callbackData(training).build()));
+        }
+        keyboard.add(createRow(
+                createButton(Callback.BACK)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
 }

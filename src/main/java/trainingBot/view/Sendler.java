@@ -89,6 +89,11 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
+    public void sendAdminMenu(Long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.adminMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
     public void sendDocumentsMenu(Long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.documentsMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
@@ -160,7 +165,6 @@ public class Sendler {
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
-
     public void sendCoachMenu(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = CallbackMenu.coachMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard);
@@ -171,13 +175,13 @@ public class Sendler {
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
-    public void sendCreateOnlineMenu(Long who, String pic, Message currentMessage) {
-        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createOnlineTrainingsMenu();
+    public void sendCreateOfflineMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.cityChoiceMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
-    public void sendCreateOfflineMenu(Long who, String pic, Message currentMessage) {
-        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.cityChoiceMenu();
+    public void sendCreateOnlineMenu(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createOnlineTrainingsMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
@@ -185,6 +189,7 @@ public class Sendler {
         InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createMoscowTrainingsMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
+
     public void sendCreateSaintPetersburgMenu(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = CallbackMenu.createSaintPetersburgTrainingsMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard);
