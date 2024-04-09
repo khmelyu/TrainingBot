@@ -14,7 +14,9 @@ import java.util.List;
 public interface TrainingsListRepository extends JpaRepository<TrainingsList, Long> {
     @Query("SELECT DISTINCT t.category FROM trainings_list t WHERE t.city = :city")
     List<String> findByCity(@Param("city") String city);
+
     @Query("SELECT DISTINCT t.name FROM trainings_list t WHERE t.city = :city AND t.category = :category")
     List<String> findByCityAndCategory(@Param("city") String city, @Param("category") String category);
 
+    boolean existsByCategory(String category);
 }

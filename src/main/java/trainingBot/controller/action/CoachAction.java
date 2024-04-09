@@ -21,6 +21,9 @@ public class CoachAction {
     private String trainingCategory;
     @Value("${training.city}")
     private String trainingCity;
+    @Value("${training.choice}")
+    private String trainingChoice;
+
 
     private Sendler sendler;
     private UserStateService userStateService;
@@ -34,6 +37,7 @@ public class CoachAction {
         this.userStateService = userStateService;
     }
 
+
     public void coachAction(long id, Message currentMessage) {
         sendler.sendCoachMenu(id, coachMenu, currentMessage);
         userStateService.setUserState(id, UserState.COACH_MENU);
@@ -44,24 +48,31 @@ public class CoachAction {
         userStateService.setUserState(id, UserState.CREATE_TRAINING);
     }
 
-    public void createOfflineTraining(long id, Message currentMessage) {
-        sendler.sendCreateOfflineMenu(id, trainingCity, currentMessage);
+    public void viewTrainingCity(long id, Message currentMessage) {
+        sendler.sendCityChoice(id, trainingCity, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
     }
 
-    public void createOnlineTraining(long id, Message currentMessage) {
-        sendler.sendCreateOnlineMenu(id, trainingCategory, currentMessage);
+    public void viewOnlineCategory(long id, Message currentMessage, String data) {
+        userStateService.setCity(id, data);
+        sendler.sendOnlineCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_ONLINE_TRAINING);
     }
 
-    public void createMoscowTraining(long id, Message currentMessage) {
-        sendler.sendCreateMoscowMenu(id, trainingCategory, currentMessage);
+    public void viewMoscowCategory(long id, Message currentMessage, String data) {
+        userStateService.setCity(id, data);
+        sendler.sendMoscowCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_MOSCOW);
     }
 
-    public void createSaintsPetersburgTraining(long id, Message currentMessage) {
-        sendler.sendCreateSaintPetersburgMenu(id, trainingCategory, currentMessage);
+    public void viewSaintsPetersburgCategory(long id, Message currentMessage, String data) {
+        userStateService.setCity(id, data);
+        sendler.sendSaintPetersburgCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_SAINT_PETERSBURG);
     }
-
+    public void viewTrainingsOnCategory(long id, Message currentMessage, String data) {
+        userStateService.setCategory(id, data);
+        sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, userStateService.getCity(id), data);
+        userStateService.setUserState(id, UserState.VIEW_TRAINING_ON_CITY);
+    }
 }

@@ -1,7 +1,7 @@
-package trainingBot.controller.action;
+package trainingBot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.model.entity.UserInfo;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
-@Component
+@Service
 public class AddUser {
     private UserInfoRepository userInfoRepository;
 

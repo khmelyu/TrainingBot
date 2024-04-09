@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.action.AddUser;
-import trainingBot.controller.commandController.CallBackCommandController;
+import trainingBot.service.AddUser;
+import trainingBot.controller.commandController.CallbackCommandController;
 import trainingBot.controller.commandController.PhotoCommandController;
 import trainingBot.controller.commandController.TextCommandController;
 
@@ -17,11 +17,11 @@ public class UpdateReceiver {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
     private TextCommandController textCommandController;
     private PhotoCommandController photoCommandController;
-    private CallBackCommandController callBackCommandController;
+    private CallbackCommandController callBackCommandController;
     private AddUser addUser;
 
     @Autowired
-    public void setDependencies(TextCommandController textCommandController, PhotoCommandController photoCommandController, CallBackCommandController callBackCommandController, AddUser addUser) {
+    public void setDependencies(TextCommandController textCommandController, PhotoCommandController photoCommandController, CallbackCommandController callBackCommandController, AddUser addUser) {
         this.textCommandController = textCommandController;
         this.photoCommandController = photoCommandController;
         this.callBackCommandController = callBackCommandController;

@@ -103,15 +103,15 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
-    public static InlineKeyboardMarkup createOnlineTrainingsMenu() {
+    public static InlineKeyboardMarkup onlineCategory() {
         return categoryMenu(Callback.ONLINE_TRAININGS_CREATE.getCallbackText());
     }
 
-    public static InlineKeyboardMarkup createMoscowTrainingsMenu() {
+    public static InlineKeyboardMarkup moscowCategory() {
         return categoryMenu(Callback.MOSCOW.getCallbackText());
     }
 
-    public static InlineKeyboardMarkup createSaintPetersburgTrainingsMenu() {
+    public static InlineKeyboardMarkup saintPetersburgCategory() {
         return categoryMenu(Callback.SAINT_PETERSBURG.getCallbackText());
     }
 
@@ -129,4 +129,17 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
+    public static InlineKeyboardMarkup trainingsOnCategoryMenu(String city, String category) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        for (String training : trainingsListRepository.findByCityAndCategory(city, category)) {
+            keyboard.add(createRow(
+                    InlineKeyboardButton.builder().text(training).callbackData(training).build()));
+        }
+        keyboard.add(createRow(
+                createButton(Callback.BACK)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
 }

@@ -22,7 +22,7 @@ public class UserInfo {
     private long update_count;
 
     public UserInfo() {
-        this.update_count = 1; // Установка значения по умолчанию
+        this.update_count = 1;
     }
 
     public boolean equalsUserInfo(String firstName, String lastName, String username) {

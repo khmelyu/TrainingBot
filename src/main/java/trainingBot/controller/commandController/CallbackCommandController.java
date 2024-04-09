@@ -9,7 +9,7 @@ import trainingBot.controller.action.CoachAction;
 import trainingBot.view.Callback;
 
 @Component
-public class CallBackCommandController implements CommandController {
+public class CallbackCommandController implements CommandController {
 
     private BackAction backAction;
     private CoachAction coachAction;
@@ -31,10 +31,10 @@ public class CallBackCommandController implements CommandController {
                     case BACK -> backAction.backActionInline(id, currentMessage);
                     case COACH_MENU -> coachAction.coachAction(id, currentMessage);
                     case CREATE_TRAININGS -> coachAction.createTraining(id, currentMessage);
-                    case ONLINE_TRAININGS_CREATE -> coachAction.createOnlineTraining(id, currentMessage);
-                    case OFFLINE_TRAININGS_CREATE -> coachAction.createOfflineTraining(id, currentMessage);
-                    case MOSCOW -> coachAction.createMoscowTraining(id, currentMessage);
-                    case SAINT_PETERSBURG -> coachAction.createSaintsPetersburgTraining(id, currentMessage);
+                    case OFFLINE_TRAININGS_CREATE -> coachAction.viewTrainingCity(id, currentMessage);
+                    case ONLINE_TRAININGS_CREATE -> coachAction.viewOnlineCategory(id, currentMessage, callback.getCallbackText());
+                    case MOSCOW -> coachAction.viewMoscowCategory(id, currentMessage, callback.getCallbackText());
+                    case SAINT_PETERSBURG -> coachAction.viewSaintsPetersburgCategory(id, currentMessage, callback.getCallbackText());
                 }
             }
         }
