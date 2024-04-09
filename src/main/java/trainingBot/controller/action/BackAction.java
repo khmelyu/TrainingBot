@@ -52,11 +52,11 @@ public class BackAction {
                 sendler.sendCoachMenu(id, coachMenu, curentMessage);
                 userStateService.setUserState(id, UserState.COACH_MENU);
             }
-            case CREATE_OFFLINE_TRAINING, CREATE_ONLINE_TRAINING -> {
+            case CREATE_OFFLINE_TRAINING, CREATE_ONLINE_TRAINING, VIEW_TRAINING_ON_CITY -> {
                 sendler.sendCreateMenu(id, trainingType, curentMessage);
                 userStateService.setUserState(id, UserState.CREATE_TRAINING);
             }
-            case CREATE_MOSCOW, CREATE_SAINT_PETERSBURG -> {
+            case CREATE_MOSCOW_TRAINING, CREATE_SAINT_PETERSBURG_TRAINING -> {
                 sendler.sendCityChoice(id, trainingCity, curentMessage);
                 userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
             }

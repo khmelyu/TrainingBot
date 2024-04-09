@@ -62,13 +62,13 @@ public class CoachAction {
     public void viewMoscowCategory(long id, Message currentMessage, String data) {
         userStateService.setCity(id, data);
         sendler.sendMoscowCategoryMenu(id, trainingCategory, currentMessage);
-        userStateService.setUserState(id, UserState.CREATE_MOSCOW);
+        userStateService.setUserState(id, UserState.CREATE_MOSCOW_TRAINING);
     }
 
     public void viewSaintsPetersburgCategory(long id, Message currentMessage, String data) {
         userStateService.setCity(id, data);
         sendler.sendSaintPetersburgCategoryMenu(id, trainingCategory, currentMessage);
-        userStateService.setUserState(id, UserState.CREATE_SAINT_PETERSBURG);
+        userStateService.setUserState(id, UserState.CREATE_SAINT_PETERSBURG_TRAINING);
     }
     public void viewTrainingsOnCategory(long id, Message currentMessage, String data) {
         userStateService.setCategory(id, data);

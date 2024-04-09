@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import trainingBot.controller.UpdateReceiver;
 import trainingBot.core.TrainingBot;
 
@@ -151,12 +152,13 @@ public class Sendler {
                         .build();
                 trainingBot.execute(editMessageMedia);
             } else {
-                logger.warn("User: " + who + "The content or keyboard have not changed, the update has been skipped.");
+                logger.warn("User: " + who + " The content or keyboard have not changed, the update has been skipped.");
             }
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public void updateTrainingsMenu(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = CallbackMenu.trainingsMenu(who);
@@ -196,5 +198,4 @@ public class Sendler {
         InlineKeyboardMarkup updatedKeyboard = CallbackMenu.trainingsOnCategoryMenu(city, category);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
-
 }
