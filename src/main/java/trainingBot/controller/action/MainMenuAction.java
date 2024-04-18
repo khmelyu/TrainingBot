@@ -23,8 +23,8 @@ public class MainMenuAction {
 
     @Value("${user.data.ok}")
     private String userDataOk;
-    @Value("${training.type}")
-    private String trainingType;
+    @Value("${training.menu}")
+    private String trainingMenu;
     @Value("${feedback.message}")
     private String feedbackMessage;
     @Value("${documents.message}")
@@ -60,7 +60,7 @@ public class MainMenuAction {
     }
 
     public void trainingsAction(Long id) {
-        sendler.sendTrainingsMenu(id, trainingType);
+        sendler.sendTrainingsMenu(id, trainingMenu);
         userStateService.setUserState(id, UserState.TRAININGS_MENU);
     }
 

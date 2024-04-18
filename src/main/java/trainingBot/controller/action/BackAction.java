@@ -19,6 +19,8 @@ public class BackAction {
 
     @Value("${main.menu.message}")
     private String mainMenuMessage;
+    @Value("${training.menu}")
+    private String trainingMenu;
     @Value("${training.type}")
     private String trainingType;
     @Value("${coach.menu}")
@@ -45,7 +47,7 @@ public class BackAction {
         UserState state = userStateService.getUserState(id);
         switch (state) {
             case COACH_MENU, ONLINE_TRAININGS, OFFLINE_TRAININGS -> {
-                sendler.updateTrainingsMenu(id, trainingType, curentMessage);
+                sendler.updateTrainingsMenu(id, trainingMenu, curentMessage);
                 userStateService.setUserState(id, UserState.TRAININGS_MENU);
             }
             case CREATE_TRAINING, CREATED_TRAININGS -> {
