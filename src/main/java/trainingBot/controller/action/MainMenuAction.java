@@ -15,10 +15,10 @@ import trainingBot.view.Sendler;
 @Component
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")})
 public class MainMenuAction {
-    private Sendler sendler;
-    private UserRepository userRepository;
-    private StartAction startAction;
-    private UserStateService userStateService;
+    private final Sendler sendler;
+    private final UserRepository userRepository;
+    private final StartAction startAction;
+    private final UserStateService userStateService;
 
 
     @Value("${user.data.ok}")
@@ -31,7 +31,7 @@ public class MainMenuAction {
     private String documentsMessage;
 
     @Autowired
-    public void setDependencies(
+    public MainMenuAction(
             @Lazy Sendler sendler,
             UserRepository userRepository,
             UserStateService userStateService,

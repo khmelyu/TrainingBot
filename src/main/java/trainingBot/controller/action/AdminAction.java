@@ -14,11 +14,13 @@ public class AdminAction {
 
     @Value("${admin.menu.message}")
     private String adminMenu;
-    private Sendler sendler;
-    private UserInfoRepository userInfoRepository;
+    @Value("${admin.update.processed}")
+    private String adminUpdateProcessed;
+    private final Sendler sendler;
+    private final UserInfoRepository userInfoRepository;
 
     @Autowired
-    public void setDependencies(@Lazy Sendler sendler, UserInfoRepository userInfoRepository) {
+    public AdminAction(@Lazy Sendler sendler, UserInfoRepository userInfoRepository) {
         this.sendler = sendler;
         this.userInfoRepository = userInfoRepository;
     }
@@ -27,7 +29,7 @@ public class AdminAction {
     }
     public void updateStat(long id){
         long totalUpdateCount = userInfoRepository.sumUpdateCount();
-        sendler.sendTextMessage(id, "Всего было обработано запросов: " + totalUpdateCount);
+        sendler.sendTextMessage(id, adminUpdateProcessed + "\n" + totalUpdateCount);
     }
 
 }

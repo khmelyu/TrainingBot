@@ -15,13 +15,13 @@ import trainingBot.controller.commandController.TextCommandController;
 @Component
 public class UpdateReceiver {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
-    private TextCommandController textCommandController;
-    private PhotoCommandController photoCommandController;
-    private CallbackCommandController callBackCommandController;
-    private AddUser addUser;
+    private final TextCommandController textCommandController;
+    private final PhotoCommandController photoCommandController;
+    private final CallbackCommandController callBackCommandController;
+    private final AddUser addUser;
 
     @Autowired
-    public void setDependencies(TextCommandController textCommandController, PhotoCommandController photoCommandController, CallbackCommandController callBackCommandController, AddUser addUser) {
+    public UpdateReceiver(TextCommandController textCommandController, PhotoCommandController photoCommandController, CallbackCommandController callBackCommandController, AddUser addUser) {
         this.textCommandController = textCommandController;
         this.photoCommandController = photoCommandController;
         this.callBackCommandController = callBackCommandController;

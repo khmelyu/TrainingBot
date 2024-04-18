@@ -15,8 +15,10 @@ public interface TrainingsListRepository extends JpaRepository<TrainingsList, Lo
     @Query("SELECT DISTINCT t.category FROM trainings_list t WHERE t.city = :city")
     List<String> findByCity(@Param("city") String city);
 
-    @Query("SELECT DISTINCT t.name FROM trainings_list t WHERE t.city = :city AND t.category = :category")
-    List<String> findByCityAndCategory(@Param("city") String city, @Param("category") String category);
+    @Query("SELECT new trainingBot.model.entity.TrainingsList(t.id, t.name, t.description, t.city, t.category, t.max_users, t.pic) FROM trainings_list t WHERE t.city = :city AND t.category = :category")
+    List<TrainingsList> findByCityAndCategory(@Param("city") String city, @Param("category") String category);
 
     boolean existsByCategory(String category);
+
+
 }

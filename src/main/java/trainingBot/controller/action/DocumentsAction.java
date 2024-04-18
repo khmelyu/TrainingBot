@@ -13,9 +13,9 @@ import trainingBot.view.Sendler;
 @Component
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:files.txt", encoding = "UTF-8")})
 public class DocumentsAction {
-    private Sendler sendler;
+    private final Sendler sendler;
 
-    private UserStateService userStateService;
+    private final UserStateService userStateService;
 
     @Value("${worknote.message}")
     private String worknoteMessage;
@@ -108,7 +108,7 @@ public class DocumentsAction {
 
 
     @Autowired
-    public void setDependencies(@Lazy Sendler sendler, UserStateService userStateService) {
+    public DocumentsAction(@Lazy Sendler sendler, UserStateService userStateService) {
         this.sendler = sendler;
         this.userStateService = userStateService;
     }

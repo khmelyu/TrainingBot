@@ -7,10 +7,10 @@ import trainingBot.controller.action.PhotoAction;
 
 @Component
 public class PhotoCommandController implements CommandController {
-    private PhotoAction photoAction;
+    private final PhotoAction photoAction;
 
     @Autowired
-    public void setPhotoAction(PhotoAction photoAction) {
+    public PhotoCommandController(PhotoAction photoAction) {
         this.photoAction = photoAction;
     }
 

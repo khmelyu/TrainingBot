@@ -15,11 +15,11 @@ import trainingBot.view.Sendler;
 @Component
 public class PhotoAction {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
-    private Sendler sendler;
-    private UserRepository userRepository;
+    private final Sendler sendler;
+    private final UserRepository userRepository;
 
     @Autowired
-    public void setDependencies(@Lazy Sendler sendler, UserRepository userRepository) {
+    public PhotoAction(@Lazy Sendler sendler, UserRepository userRepository) {
         this.sendler = sendler;
         this.userRepository = userRepository;
     }

@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @Service
 public class AddUser {
-    private UserInfoRepository userInfoRepository;
+    private final UserInfoRepository userInfoRepository;
 
     @Autowired
-    public void setUserInfoRepository(UserInfoRepository userInfoRepository) {
+    public AddUser(UserInfoRepository userInfoRepository) {
         this.userInfoRepository = userInfoRepository;
     }
 

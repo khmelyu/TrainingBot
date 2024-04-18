@@ -54,12 +54,12 @@ public class StartAction {
     private String userDataFail;
 
 
-    private Sendler sendler;
-    private UserStateService userStateService;
-    private UserRepository userRepository;
+    private final Sendler sendler;
+    private final UserStateService userStateService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public void setDependencies(UserRepository userRepository, UserStateService userStateService, @Lazy Sendler sendler) {
+    public StartAction(UserRepository userRepository, UserStateService userStateService, @Lazy Sendler sendler) {
         this.userRepository = userRepository;
         this.userStateService = userStateService;
         this.sendler = sendler;

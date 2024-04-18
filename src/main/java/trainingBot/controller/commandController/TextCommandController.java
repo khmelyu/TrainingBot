@@ -11,26 +11,28 @@ import trainingBot.view.Button;
 @Component
 public class TextCommandController implements CommandController {
 
-    private UserStateService userStateService;
-    private StartAction startAction;
-    private AdminAction adminAction;
-    private BackAction backAction;
-    private MainMenuAction mainMenuAction;
-    private DocumentsAction documentsAction;
+    private final UserStateService userStateService;
+    private final StartAction startAction;
+    private final AdminAction adminAction;
+    private final BackAction backAction;
+    private final MainMenuAction mainMenuAction;
+    private final DocumentsAction documentsAction;
+    private final CoachAction coachAction;
 
     @Autowired
-    public void setDependencies(UserStateService userStateService, StartAction startAction,AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction) {
+    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, CoachAction coachAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.adminAction = adminAction;
         this.backAction = backAction;
         this.mainMenuAction = mainMenuAction;
         this.documentsAction = documentsAction;
+        this.coachAction = coachAction;
     }
 
     @Override
     public void handleMessage(Update update) {
-        Long id = update.getMessage().getChatId();
+        long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         UserState userState = userStateService.getUserState(id);
         if (userState != null) {
@@ -94,6 +96,7 @@ public class TextCommandController implements CommandController {
                 case SET_CITY -> startAction.addCity(update);
                 case SET_GALLERY -> startAction.addGallery(update);
                 case SET_RATE -> startAction.addRate(update);
+                case TRAINING_LINK -> coachAction.setTrainingLink(update);
             }
         } else {
             userStateService.setUserState(id, UserState.MAIN_MENU);

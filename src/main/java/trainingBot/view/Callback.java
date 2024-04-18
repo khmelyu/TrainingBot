@@ -1,6 +1,7 @@
 package trainingBot.view;
 
 import lombok.Getter;
+
 @Getter
 public enum Callback {
     BACK("Назад", "Back"),
@@ -9,16 +10,15 @@ public enum Callback {
     MY_TRAININGS("Мои тренинги", "MyTrainings"),
     COACH_MENU("Меню тренера", "CoachMenu"),
     CREATE_TRAININGS("Создать тренинг", "CreateTrainings"),
-    ONLINE_TRAININGS_CREATE("Онлайн","OnlineTrainingsCreate"),
-    OFFLINE_TRAININGS_CREATE("Офлайн","OfflineTrainingsCreate"),
-    MOSCOW("Мск","Moscow"),
-    SAINT_PETERSBURG("СПб","SaintPetersburg"),
+    ONLINE_TRAININGS_CREATE("Онлайн", "OnlineTrainingsCreate"),
+    OFFLINE_TRAININGS_CREATE("Офлайн", "OfflineTrainingsCreate"),
+    MOSCOW("Мск", "Moscow"),
+    SAINT_PETERSBURG("СПб", "SaintPetersburg"),
 
     CREATED_TRAININGS("Созданные тренинги", "CreatedTrainings"),
-    ARCHIVE_TRAININGS("Архив тренингов", "ArchiveTrainings");
-
-
-
+    ARCHIVE_TRAININGS("Архив тренингов", "ArchiveTrainings"),
+    NEXT_MONTH("▶️", "NEXT_MONTH"),
+    PREV_MONTH("◀️", "PREV_MONTH");
 
 
     @Getter
