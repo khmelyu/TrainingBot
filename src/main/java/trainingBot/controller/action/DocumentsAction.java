@@ -113,102 +113,102 @@ public class DocumentsAction {
         this.userStateService = userStateService;
     }
 
-    public void worknote(Long id) {
+    public void worknote(long id) {
         sendler.sendWorkNotesMenu(id, worknoteMessage);
         userStateService.setUserState(id, UserState.WORK_NOTES_MENU);
     }
 
-    public void traineeNote(Long id) {
+    public void traineeNote(long id) {
         sendler.sendLink(id, worknoteTraineeText, worknoteTraineeLink);
     }
 
-    public void secondLevelNote(Long id) {
+    public void secondLevelNote(long id) {
         sendler.sendLink(id, worknoteSecondText, worknoteSecondLink);
     }
 
-    public void thirdLevelNote(Long id) {
+    public void thirdLevelNote(long id) {
         sendler.sendLink(id, worknoteThirdText, worknoteThirdLink);
     }
 
-    public void fourthLevelNote(Long id) {
+    public void fourthLevelNote(long id) {
         sendler.sendLink(id, worknoteFourthText, worknoteFourthLink);
     }
 
-    public void fifthLevelNote(Long id) {
+    public void fifthLevelNote(long id) {
         sendler.sendLink(id, worknoteFifthText, worknoteFifthLink);
     }
 
 
-    public void patterns(Long id) {
+    public void patterns(long id) {
         sendler.sendPatternsMenu(id, patternMessage);
         userStateService.setUserState(id, UserState.PATTERNS_MENU);
     }
 
-    public void salary(Long id) {
+    public void salary(long id) {
         sendler.sendLink(id, patternSalaryText, patternSalaryLink);
     }
 
-    public void statements(Long id) {
+    public void statements(long id) {
         sendler.sendLink(id, patternStatementsText, patternStatementsLink);
     }
 
-    public void inventory(Long id) {
+    public void inventory(long id) {
         sendler.sendLink(id, patternInventoryText, patternInventoryLink);
     }
 
 
-    public void certificates(Long id) {
+    public void certificates(long id) {
         sendler.sendCertificatesMenu(id, certificateMessage);
         userStateService.setUserState(id, UserState.CERTIFICATES_MENU);
     }
 
-    public void tea(Long id) {
+    public void tea(long id) {
         sendler.sendLink(id, certificateTeaText, certificateTeaLink);
     }
 
-    public void coffee(Long id) {
+    public void coffee(long id) {
         sendler.sendLink(id, certificateCoffeeText, certificateCoffeeLink);
     }
 
-    public void accessories(Long id) {
+    public void accessories(long id) {
         sendler.sendLink(id, certificateAccessoriesText, certificateAccessoriesLink);
     }
 
-    public void sweets(Long id) {
+    public void sweets(long id) {
         sendler.sendLink(id, certificateSweetsText, certificateSweetsLink);
     }
 
-    public void packages(Long id) {
+    public void packages(long id) {
         sendler.sendLink(id, certificatePackageText, certificatePackageLink);
     }
 
-    public void household(Long id) {
+    public void household(long id) {
         sendler.sendLink(id, certificateHouseholdText, certificateHouseholdLink);
     }
 
-    public void chocostyle(Long id) {
+    public void chocostyle(long id) {
         sendler.sendLink(id, certificateChocostyleText, certificateChocostyleLink);
     }
 
 
-    public void competitions(Long id) {
+    public void competitions(long id) {
         sendler.sendCompetitionsMenu(id, competitionsMessage);
         userStateService.setUserState(id, UserState.COMPETENCIES_MENU);
     }
 
-    public void corporate(Long id) {
+    public void corporate(long id) {
         sendler.sendLink(id, competitionsCorporateText, competitionsCorporateLink);
     }
 
-    public void consultant(Long id) {
+    public void consultant(long id) {
         sendler.sendLink(id, competitionsConsultantText, competitionsConsultantLink);
     }
 
-    public void curator(Long id) {
+    public void curator(long id) {
         sendler.sendLink(id, competitionsCuratorText, competitionsCuratorLink);
     }
 
-    public void manager(Long id) {
+    public void manager(long id) {
         sendler.sendLink(id, competitionsManagerText, competitionsManagerLink);
     }
 }

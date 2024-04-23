@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import trainingBot.controller.UpdateReceiver;
+import trainingBot.core.TrainingBot;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
 import trainingBot.model.rep.TrainingsListRepository;
@@ -29,6 +32,7 @@ import java.util.Optional;
 @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")
 public class CoachAction {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
+    private final TrainingBot trainingBot;
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final TrainingsListRepository trainingsListRepository;
@@ -66,11 +70,12 @@ public class CoachAction {
 
     @Autowired
     public CoachAction(
-            @Lazy Sendler sendler,
+            TrainingBot trainingBot, @Lazy Sendler sendler,
             UserStateService userStateService,
             TrainingsListRepository trainingsListRepository,
             TrainingsRepository trainingsRepository
     ) {
+        this.trainingBot = trainingBot;
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingsListRepository = trainingsListRepository;
@@ -116,12 +121,14 @@ public class CoachAction {
     }
 
     public void viewTrainingsOnCategory(long id, Message currentMessage, String data) {
+
         userStateService.setCategory(id, data);
         sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, userStateService.getCity(id), data);
         userStateService.setUserState(id, UserState.TRAININGS_ON_CITY_FOR_CREATE);
     }
 
     public void viewCalendar(long id, Message currentMessage, String data) {
+
         Optional<TrainingsList> trainingOptional = trainingsListRepository.findById(Long.valueOf(data));
 
         if (trainingOptional.isPresent()) {
@@ -142,6 +149,7 @@ public class CoachAction {
     }
 
     public void viewTrainingStartTime(long id, Message currentMessage, String data) {
+
         userStateService.setTrainingDate(id, data);
         sendler.sendStartTimeMenu(id, trainingStartTime, currentMessage);
         userStateService.setUserState(id, UserState.TRAINING_START_TIME);
@@ -155,23 +163,26 @@ public class CoachAction {
         userStateService.setUserState(id, UserState.TRAINING_END_TIME);
     }
 
-    public void setTrainingEndTime(long id, String data) {
+    public void setTrainingEndTime(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        String data = update.getCallbackQuery().getData();
         String formattedEndTime = LocalTime.parse(data).format(DateTimeFormatter.ISO_LOCAL_TIME);
         userStateService.setEndTime(id, formattedEndTime);
         if (userStateService.getCity(id).equals(online)) {
             sendler.sendTextMessage(id, trainingLink);
             userStateService.setUserState(id, UserState.TRAINING_LINK);
-        } else createTraining(id);
+        } else createTraining(update);
     }
 
     public void setTrainingLink(Update update) {
         long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         userStateService.setLink(id, text);
-        createTraining(id);
+        createTraining(update);
     }
 
-    public void createTraining(long id) {
+    public void createTraining(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
         Trainings training = new Trainings();
         training.setName(userStateService.getTrainingName(id));
         training.setDescription(userStateService.getTrainingDescription(id));
@@ -197,5 +208,18 @@ public class CoachAction {
 
         sendler.sendTextMessage(id, trainingCreateComplete);
         userStateService.setUserState(id, UserState.MAIN_MENU);
+
+        String callbackQueryId = update.getCallbackQuery().getId();
+        AnswerCallbackQuery answer = AnswerCallbackQuery.builder().callbackQueryId(callbackQueryId).text("").showAlert(false).build();
+        try {
+            trainingBot.execute(answer);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void reviewMyTraining(long id, Message currentMessage) {
+
+        userStateService.setUserState(id, UserState.COACH_TRAINING_REVIEW);
     }
 }

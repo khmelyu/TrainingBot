@@ -18,7 +18,14 @@ public enum Callback {
     CREATED_TRAININGS("Созданные тренинги", "CreatedTrainings"),
     ARCHIVE_TRAININGS("Архив тренингов", "ArchiveTrainings"),
     NEXT_MONTH("▶️", "NEXT_MONTH"),
-    PREV_MONTH("◀️", "PREV_MONTH");
+    PREV_MONTH("◀️", "PREV_MONTH"),
+
+    SIGN_UP("Записаться", "SIGN_UP"),
+    YES("Да", "YES"),
+    NO("Нет", "NO"),
+    ABORT("Отмена", "ABORT"),
+    ABORTING("Отменить запись", "ABORTING");
+
 
 
     @Getter

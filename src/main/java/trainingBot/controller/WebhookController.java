@@ -14,7 +14,7 @@ public class WebhookController {
     }
 
     @PostMapping
-    public void onUpdateReceived(@RequestBody Update update) {
+    public void onUpdateReceived(@RequestBody Update update ) {
         updateReceiver.handle(update);
     }
 }

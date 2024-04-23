@@ -10,6 +10,7 @@ import trainingBot.model.entity.User;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
+import trainingBot.model.rep.UsersToTrainingsRepository;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 
@@ -23,18 +24,21 @@ public class CallbackMenu {
     private final UserRepository userRepository;
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
+    private final UsersToTrainingsRepository usersToTrainingsRepository;
     private final UserStateService userStateService;
 
     @Autowired
-    public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserStateService userStateService) {
+    public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UsersToTrainingsRepository usersToTrainingsRepository, UserStateService userStateService) {
         this.userRepository = userRepository;
         this.trainingsListRepository = trainingsListRepository;
         this.trainingsRepository = trainingsRepository;
+        this.usersToTrainingsRepository = usersToTrainingsRepository;
         this.userStateService = userStateService;
     }
 
     public InlineKeyboardButton createButton(Callback callback) {
         return InlineKeyboardButton.builder().text(callback.getCallbackText()).callbackData(callback.getCallbackData()).build();
+
     }
 
     public List<InlineKeyboardButton> createRow(InlineKeyboardButton... buttons) {
@@ -61,6 +65,29 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
+    public InlineKeyboardMarkup trainingInfoMenu(long id) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        if (userStateService.getUserState(id).equals(UserState.TRAININGS_ON_CITY)) {
+            keyboard.add(createRow(createButton(Callback.SIGN_UP), createButton(Callback.BACK)));
+        } else {
+            keyboard.add(createRow(createButton(Callback.ABORTING), createButton(Callback.BACK)));
+        }
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup checkDataMenu() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(Callback.YES), createButton(Callback.NO)));
+        keyboard.add(createRow(createButton(Callback.ABORT)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
     public InlineKeyboardMarkup coachMenu() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -73,17 +100,24 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
-    public InlineKeyboardMarkup createdTrainingsMenu(long id) {
+    public InlineKeyboardMarkup myTrainingsMenu(long id) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        for (Trainings training : trainingsRepository.findByCreator(id)) {
-            keyboard.add(createRow(InlineKeyboardButton.builder().text(training.getName()).callbackData(String.valueOf(training.getId())).build()));
+        if (userStateService.getUserState(id).equals(UserState.COACH_MENU)) {
+            for (Trainings training : trainingsRepository.findByCreator(id)) {
+                keyboard.add(createRow(InlineKeyboardButton.builder().text(training.getName()).callbackData(String.valueOf(training.getId())).build()));
+            }
+        } else {
+            for (Trainings training : usersToTrainingsRepository.findByUserId(id)) {
+                keyboard.add(createRow(InlineKeyboardButton.builder().text(training.getName()).callbackData(String.valueOf(training.getId())).build()));
+            }
         }
         keyboard.add(createRow(createButton(Callback.BACK)));
 
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
+
 
     public InlineKeyboardMarkup createTrainingsMenu() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -141,7 +175,7 @@ public class CallbackMenu {
     public InlineKeyboardMarkup trainingsOnCategoryMenu(String city, String category, long id) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        if (userStateService.getUserState(id).equals(UserState.CREATE_MOSCOW_TRAINING) || userStateService.getUserState(id).equals(UserState.CREATE_SAINT_PETERSBURG_TRAINING)|| userStateService.getUserState(id).equals(UserState.CREATE_ONLINE_TRAINING)) {
+        if (userStateService.getUserState(id).equals(UserState.CREATE_MOSCOW_TRAINING) || userStateService.getUserState(id).equals(UserState.CREATE_SAINT_PETERSBURG_TRAINING) || userStateService.getUserState(id).equals(UserState.CREATE_ONLINE_TRAINING)) {
             for (TrainingsList training : trainingsListRepository.findByCityAndCategory(city, category)) {
                 keyboard.add(createRow(InlineKeyboardButton.builder().text(training.getName()).callbackData(String.valueOf(training.getId())).build()));
             }

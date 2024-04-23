@@ -43,27 +43,27 @@ public class BackAction {
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
 
-    public void backActionInline(long id, Message curentMessage) {
+    public void backActionInline(long id, Message currentMessage) {
         UserState state = userStateService.getUserState(id);
         switch (state) {
             case COACH_MENU, ONLINE_TRAININGS, OFFLINE_TRAININGS -> {
-                sendler.updateTrainingsMenu(id, trainingMenu, curentMessage);
+                sendler.updateTrainingsMenu(id, trainingMenu, currentMessage);
                 userStateService.setUserState(id, UserState.TRAININGS_MENU);
             }
             case CREATE_TRAINING, CREATED_TRAININGS -> {
-                sendler.sendCoachMenu(id, coachMenu, curentMessage);
+                sendler.sendCoachMenu(id, coachMenu, currentMessage);
                 userStateService.setUserState(id, UserState.COACH_MENU);
             }
             case CREATE_OFFLINE_TRAINING, CREATE_ONLINE_TRAINING, TRAININGS_ON_CITY_FOR_CREATE -> {
-                sendler.sendCreateMenu(id, trainingType, curentMessage);
+                sendler.sendCreateMenu(id, trainingType, currentMessage);
                 userStateService.setUserState(id, UserState.CREATE_TRAINING);
             }
             case CREATE_MOSCOW_TRAINING, CREATE_SAINT_PETERSBURG_TRAINING -> {
-                sendler.sendCityChoice(id, trainingCity, curentMessage);
+                sendler.sendCityChoice(id, trainingCity, currentMessage);
                 userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
             }
             case MOSCOW_TRAININGS, SAINT_PETERSBURG_TRAININGS -> {
-                sendler.sendCityChoice(id, trainingCity, curentMessage);
+                sendler.sendCityChoice(id, trainingCity, currentMessage);
                 userStateService.setUserState(id, UserState.OFFLINE_TRAININGS);
             }
         }

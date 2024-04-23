@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -33,6 +34,21 @@ public class UserStateService {
         }
         return null;
     }
+
+    public void setTrainingId(long userId, String trainingId) {
+        hashOps.put(userId + USER_DATA_PREFIX, "training_id", trainingId);
+    }
+
+    public String getTrainingId(long userId) {
+        Object Object = hashOps.get(userId + USER_DATA_PREFIX, "training_id");
+        if (Object instanceof String) {
+            // Преобразование строки в UUID
+            UUID trainingId = UUID.fromString(Object.toString());
+            return trainingId.toString(); // Возвращаем строковое представление UUID, если это необходимо
+        }
+        return null;
+    }
+
 
     public void setCity(long userId, String city) {
         hashOps.put(userId + USER_DATA_PREFIX, "city", city);

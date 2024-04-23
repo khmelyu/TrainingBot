@@ -74,7 +74,7 @@ public class StartAction {
         }
     }
 
-    public void inputLogin(Update update) {
+    public void inputLogin(Update update ) {
         long id = update.getMessage().getChatId();
         if (update.getMessage().getText().equals(login)) {
             sendler.sendTextMessage(id, passwordMessage);
@@ -82,7 +82,7 @@ public class StartAction {
         } else sendler.sendTextMessage(id, wrongLoginMessage);
     }
 
-    public void inputPassword(Update update) {
+    public void inputPassword(Update update ) {
         long id = update.getMessage().getChatId();
         if (update.getMessage().getText().equals(password)) {
             restart(id);
@@ -101,13 +101,13 @@ public class StartAction {
         userStateService.setUserState(id, UserState.START);
     }
 
-    public void inputName(Update update) {
+    public void inputName(Update update ) {
         long id = update.getMessage().getChatId();
         userStateService.setUserState(id, UserState.SET_NAME);
         addName(update);
     }
 
-    public void addName(Update update) {
+    public void addName(Update update  ) {
         long id = update.getMessage().getChatId();
         String userName = update.getMessage().getText();
         User user = userRepository.findById(id).orElse(new User());
@@ -118,7 +118,7 @@ public class StartAction {
         sendler.sendTextMessage(id, addLastNameMessage);
     }
 
-    public void addLastName(Update update) {
+    public void addLastName(Update update  ) {
         long id = update.getMessage().getChatId();
         String userLastName = update.getMessage().getText();
         User user = userRepository.findById(id).orElse(new User());
@@ -129,7 +129,7 @@ public class StartAction {
         sendler.sendTextMessage(id, addPhoneMessage);
     }
 
-    public void addPhone(Update update) {
+    public void addPhone(Update update ) {
         long id = update.getMessage().getChatId();
         String userPhone = update.getMessage().getText();
         User user = userRepository.findById(id).orElse(new User());
@@ -140,7 +140,7 @@ public class StartAction {
         sendler.sendTextMessage(id, addCityMessage);
     }
 
-    public void addCity(Update update) {
+    public void addCity(Update update ) {
         long id = update.getMessage().getChatId();
         String userCity = update.getMessage().getText();
         User user = userRepository.findById(id).orElse(new User());
@@ -151,7 +151,7 @@ public class StartAction {
         sendler.sendTextMessage(id, addGalleryMessage);
     }
 
-    public void addGallery(Update update) {
+    public void addGallery(Update update ) {
         long id = update.getMessage().getChatId();
         String userGallery = update.getMessage().getText();
         User user = userRepository.findById(id).orElse(new User());
@@ -162,7 +162,7 @@ public class StartAction {
         sendler.sendTextMessage(id, addRateMessage);
     }
 
-    public void addRate(Update update) {
+    public void addRate(Update update ) {
         long id = update.getMessage().getChatId();
         String userRate = update.getMessage().getText();
         User user = userRepository.findById(id).orElse(new User());

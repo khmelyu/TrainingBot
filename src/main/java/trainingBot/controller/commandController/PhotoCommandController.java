@@ -15,7 +15,7 @@ public class PhotoCommandController implements CommandController {
     }
 
     @Override
-    public void handleMessage(Update update) {
+    public void handleMessage(Update update ) {
         photoAction.photoAction(update);
 
     }

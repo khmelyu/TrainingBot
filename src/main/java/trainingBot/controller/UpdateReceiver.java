@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.service.AddUser;
 import trainingBot.controller.commandController.CallbackCommandController;
 import trainingBot.controller.commandController.PhotoCommandController;
 import trainingBot.controller.commandController.TextCommandController;
+import trainingBot.service.AddUser;
 
 
 @Component
@@ -55,8 +55,8 @@ public class UpdateReceiver {
     }
 
     private void handleTextMessage(Update update) {
-        Message message = update.getMessage();
-        String text = message.getText();
+        Message currentMessage = update.getMessage();
+        String text = update.getMessage().getText();
         textCommandController.handleMessage(update);
         logger.info("User: " + update.getMessage().getChatId() + " sent a message: {}", text);
     }

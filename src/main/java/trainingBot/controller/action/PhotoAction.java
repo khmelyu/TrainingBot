@@ -24,7 +24,7 @@ public class PhotoAction {
         this.userRepository = userRepository;
     }
 
-    public void photoAction(Update update) {
+    public void photoAction(Update update ) {
         Long id = update.getMessage().getChatId();
         userRepository.findById(id).ifPresentOrElse(user -> {
             if (user.isAdmin()) {

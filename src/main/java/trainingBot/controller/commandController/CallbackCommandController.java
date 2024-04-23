@@ -35,10 +35,10 @@ public class CallbackCommandController implements CommandController {
 
     @Override
     public void handleMessage(Update update) {
-        Long id = update.getCallbackQuery().getMessage().getChatId();
+        long id = update.getCallbackQuery().getMessage().getChatId();
         String data = update.getCallbackQuery().getData();
-        UserState userState = userStateService.getUserState(id);
         Message currentMessage = update.getCallbackQuery().getMessage();
+        UserState userState = userStateService.getUserState(id);
         for (Callback callback : Callback.values()) {
             if (callback.getCallbackData().equals(data)) {
                 switch (callback) {
@@ -64,7 +64,10 @@ public class CallbackCommandController implements CommandController {
                     case CREATED_TRAININGS -> coachAction.createdTrainings(id, currentMessage);
                     case ONLINE_TRAININGS -> usersOnTrainingsAction.viewOnlineCategory(id, currentMessage);
                     case OFFLINE_TRAININGS -> usersOnTrainingsAction.viewTrainingCity(id, currentMessage);
-
+                    case SIGN_UP -> usersOnTrainingsAction.checkUserData(id, currentMessage);
+                    case YES -> usersOnTrainingsAction.signUpOnTraining(id, update);
+                    case MY_TRAININGS -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
+                    case ABORTING -> usersOnTrainingsAction.abortTrainings(update);
                 }
             }
         }
@@ -82,13 +85,16 @@ public class CallbackCommandController implements CommandController {
             }
             case TRAININGS_ON_CITY_FOR_CREATE -> coachAction.viewCalendar(id, currentMessage, data);
             case TRAINING_START_TIME -> coachAction.viewTrainingEndTime(id, currentMessage, data);
-            case TRAINING_END_TIME -> coachAction.setTrainingEndTime(id, data);
+            case TRAINING_END_TIME -> coachAction.setTrainingEndTime(update);
         }
         if (data.matches("\\d{4}-\\d{2}-\\d{2}")) {
             coachAction.viewTrainingStartTime(id, currentMessage, data);
         }
         if (data.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$")) {
-
+            switch (userState) {
+                case TRAININGS_ON_CITY, MY_TRAININGS -> usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
+                case CREATED_TRAININGS -> coachAction.reviewMyTraining(id, currentMessage);
+            }
         }
     }
 }

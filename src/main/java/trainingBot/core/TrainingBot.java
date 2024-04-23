@@ -18,7 +18,6 @@ public class TrainingBot extends TelegramLongPollingBot {
     private String botToken;
 
 
-
     @Override
     public String getBotUsername() {
         return botName;

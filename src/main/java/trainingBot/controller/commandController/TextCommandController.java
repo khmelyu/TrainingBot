@@ -31,7 +31,7 @@ public class TextCommandController implements CommandController {
     }
 
     @Override
-    public void handleMessage(Update update) {
+    public void handleMessage(Update update ) {
         long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         UserState userState = userStateService.getUserState(id);

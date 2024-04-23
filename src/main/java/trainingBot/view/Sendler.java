@@ -159,10 +159,12 @@ public class Sendler {
             } else {
                 logger.warn("User: " + who + " The content or keyboard have not changed, the update has been skipped.");
             }
+
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public void updateMenu(Long who, String pic, Message currentMessage, InlineKeyboardMarkup updatedKeyboard, String caption) {
         try {
@@ -181,6 +183,7 @@ public class Sendler {
             } else {
                 logger.warn("User: " + who + " The content or keyboard have not changed, the update has been skipped.");
             }
+
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
@@ -198,7 +201,7 @@ public class Sendler {
     }
 
     public void sendCreatedTrainingsMenu(Long who, String pic, Message currentMessage) {
-        InlineKeyboardMarkup updatedKeyboard = callbackMenu.createdTrainingsMenu(who);
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.myTrainingsMenu(who);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
@@ -249,6 +252,21 @@ public class Sendler {
 
     public void sendEndTimeMenu(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.endTimeMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendTrainingInfo(Long who, String pic, Message currentMessage, String caption) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.trainingInfoMenu(who);
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
+    }
+
+    public void sendCheckMyData(Long who, String pic, Message currentMessage, String caption) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.checkDataMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
+    }
+
+    public void sendMyTrainings(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.myTrainingsMenu(who);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 }
