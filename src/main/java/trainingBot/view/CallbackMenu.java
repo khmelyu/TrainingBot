@@ -84,15 +84,15 @@ public class CallbackMenu {
     public InlineKeyboardMarkup trainingInfoMenu(long id) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        if (userStateService.getUserState(id).equals(UserState.TRAININGS_ON_CITY)) {
-            keyboard.add(createRow(createButton(Callback.SIGN_UP), createButton(Callback.BACK)));
-        } else if (userStateService.getUserState(id).equals(UserState.MY_TRAININGS)) {
+        if (userStateService.getUserState(id).equals(UserState.MY_TRAININGS)) {
             keyboard.add(createRow(createButton(Callback.ABORTING), createButton(Callback.BACK)));
-        } else {
+        } else if (userStateService.getUserState(id).equals(UserState.CREATED_TRAININGS)) {
             keyboard.add(createRow(createButton(Callback.DELETE_TRAINING), createButton(Callback.USER_LIST)));
             keyboard.add(createRow(createButton(Callback.MARK_USER), createButton(Callback.FEEDBACK_REQUEST)));
             keyboard.add(createRow(createButton(Callback.IN_ARCHIVE)));
             keyboard.add(createRow(createButton(Callback.BACK)));
+        } else {
+            keyboard.add(createRow(createButton(Callback.SIGN_UP), createButton(Callback.BACK)));
         }
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;

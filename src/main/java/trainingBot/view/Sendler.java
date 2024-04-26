@@ -266,6 +266,21 @@ public class Sendler {
         updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
     }
 
+    public void sendTrainingInfoFromCalendar(Long who, String pic, String caption) {
+            InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.trainingInfoMenu(who);
+            InputFile inputFile = new InputFile(pic);
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setChatId(who.toString());
+            sendPhoto.setPhoto(inputFile);
+            sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+            sendPhoto.setCaption(caption);
+            try {
+                trainingBot.execute(sendPhoto);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     public void sendCheckMyData(Long who, String pic, Message currentMessage, String caption) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.checkDataMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard, caption);

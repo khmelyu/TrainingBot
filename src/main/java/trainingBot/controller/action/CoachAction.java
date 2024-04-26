@@ -185,22 +185,31 @@ public class CoachAction {
     }
 
     public void createTraining(Update update) {
-        long id = update.getMessage().getChatId();
-
+        long id;
+        if (update.hasCallbackQuery()) {
+            id = update.getCallbackQuery().getMessage().getChatId();
+        } else {
+            id = update.getMessage().getChatId();
+        }
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM");
         LocalDate localDate = LocalDate.parse(userStateService.getTrainingDate(id), inputFormatter);
         String date = outputFormatter.format(localDate);
-        String startTime = userStateService.getStartTime(id);
-        String endTime = userStateService.getEndTime(id);
+        LocalTime startTime = LocalTime.parse(userStateService.getStartTime(id));
+        LocalTime endTime = LocalTime.parse(userStateService.getEndTime(id));
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        String formattedStartTime = startTime.format(timeFormatter);
+        String formattedEndTime = endTime.format(timeFormatter);
         String description = userStateService.getTrainingDescription(id);
         User user = userRepository.findById(id).orElse(new User());
+        String trainingName = userStateService.getTrainingName(id);
+        String formattedTrainingName = date + " - " + trainingName;
         String coachName = user.getName();
         String coachLastname = user.getLastname();
-        String finalDescription = date + "\n" + startTime + " - " + endTime + "\n" + "\n" + description + "\n" + "\n" + "Тренер:" + "\n" + coachLastname + " " + coachName;
+        String finalDescription = date + "\n" + formattedStartTime + " - " + formattedEndTime + "\n" + "\n" + description + "\n" + "\n" + "Тренер:" + "\n" + coachLastname + " " + coachName;
         Trainings training = new Trainings();
 
-        training.setName(userStateService.getTrainingName(id));
+        training.setName(formattedTrainingName);
         training.setDescription(finalDescription);
         training.setCategory(userStateService.getCategory(id));
         training.setCity(userStateService.getCity(id));
@@ -270,7 +279,7 @@ public class CoachAction {
         sendler.callbackAnswer(update);
     }
 
-    public void archivedTrainings(long id, Message currentMessage ) {
+    public void archivedTrainings(long id, Message currentMessage) {
         sendler.sendArchivedTrainings(id, archiveTrainings, currentMessage);
         userStateService.setUserState(id, UserState.ARCHIVE_TRAININGS);
     }

@@ -8,15 +8,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import trainingBot.controller.commandController.CallbackCommandController;
 
 @RestController
 public class WebhookController {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
     private final UpdateReceiver updateReceiver;
+    private final CallbackCommandController callBackCommandController;
 
     @Autowired
-    public WebhookController(UpdateReceiver updateReceiver) {
+    public WebhookController(UpdateReceiver updateReceiver, CallbackCommandController callBackCommandController) {
         this.updateReceiver = updateReceiver;
+        this.callBackCommandController = callBackCommandController;
     }
 
     @PostMapping
@@ -26,10 +29,11 @@ public class WebhookController {
 
     @PostMapping("/callback")
     public ResponseEntity<String> handleCallback(@RequestBody CallbackRequest request) {
-        logger.info("Sent a callback: {} from calendar", request.trainingId);
+        logger.info("User: {} sent callback {} from calendar", request.userId, request.trainingId);
+        callBackCommandController.handleCallbackRequest(request);
         return ResponseEntity.ok("Success baby");
     }
 
-    public record CallbackRequest(String trainingId) {
+    public record CallbackRequest(String trainingId, long userId) {
     }
 }

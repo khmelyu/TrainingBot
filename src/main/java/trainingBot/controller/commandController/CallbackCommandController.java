@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import trainingBot.controller.WebhookController;
 import trainingBot.controller.action.BackAction;
 import trainingBot.controller.action.CoachAction;
 import trainingBot.controller.action.UsersOnTrainingsAction;
@@ -99,5 +100,8 @@ public class CallbackCommandController implements CommandController {
                 case CREATED_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
             }
         }
+    }
+    public void handleCallbackRequest(WebhookController.CallbackRequest request) {
+        usersOnTrainingsAction.reviewTraining(request.userId(), request.trainingId());
     }
 }

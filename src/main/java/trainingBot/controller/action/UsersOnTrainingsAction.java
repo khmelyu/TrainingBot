@@ -119,6 +119,25 @@ public class UsersOnTrainingsAction {
         }
     }
 
+    public void reviewTraining(long id, String data) {
+        userStateService.setTrainingId(id, data);
+
+        Optional<Trainings> trainingOptional = trainingsRepository.findById(UUID.fromString(data));
+        if (trainingOptional.isPresent()) {
+            Trainings training = trainingOptional.get();
+            String description = training.getDescription();
+            String pic = training.getPic();
+            String shortDescription;
+            if (description.length() <= 1024) {
+                shortDescription = description;
+            } else {
+                shortDescription = description.substring(0, 1024);
+            }
+            sendler.sendTrainingInfoFromCalendar(id, pic, shortDescription);
+            userStateService.setUserState(id, UserState.SELECT_TRAINING);
+        }
+    }
+
     public void checkUserData(long id, Message currentMessage) {
         User user = userRepository.findById(id).orElseThrow();
         String data = user.userData();
@@ -165,13 +184,21 @@ public class UsersOnTrainingsAction {
             }
         }
         if (exists && !fullTraining) {
-            if (actual) {
+            if (waitingList && actual) {
                 usersToTrainingsRepository.removeUserFromWaitingList(user, training);
-            } else {
+                sendler.sendTextMessage(id, signUpMessage);
+                logger.info("User: {} signup on training. Training id: {}", id, training.getId());
+
+            } else if (!waitingList && !actual){
                 usersToTrainingsRepository.reSignupUserFromTraining(user, training);
+                sendler.sendTextMessage(id, signUpMessage);
+                logger.info("User: {} signup on training. Training id: {}", id, training.getId());
+            }else {
+                usersToTrainingsRepository.reSignupUserFromTraining(user, training);
+                sendler.sendTextMessage(id, repeatSignupMessage);
+                logger.info("User: {} to re-signup on training . Training id: {}", id, training.getId());
+
             }
-            sendler.sendTextMessage(id, signUpMessage);
-            logger.info("User: {} signup on training. Training id: {}", id, training.getId());
         }
         userStateService.setUserState(id, UserState.MAIN_MENU);
         String callbackQueryId = update.getCallbackQuery().getId();
