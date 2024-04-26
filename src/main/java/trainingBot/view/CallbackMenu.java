@@ -91,8 +91,10 @@ public class CallbackMenu {
             keyboard.add(createRow(createButton(Callback.MARK_USER), createButton(Callback.FEEDBACK_REQUEST)));
             keyboard.add(createRow(createButton(Callback.IN_ARCHIVE)));
             keyboard.add(createRow(createButton(Callback.BACK)));
-        } else {
+        } else if (userStateService.getUserState(id).equals(UserState.TRAININGS_ON_CITY)) {
             keyboard.add(createRow(createButton(Callback.SIGN_UP), createButton(Callback.BACK)));
+        } else {
+            keyboard.add(createRow(createButton(Callback.SIGN_UP)));
         }
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
