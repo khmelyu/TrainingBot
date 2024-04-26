@@ -127,7 +127,8 @@ public class UsersOnTrainingsAction {
     }
 
     @Transactional
-    public void signUpOnTraining(long id, Update update) {
+    public void signUpOnTraining(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         Trainings training = trainingsRepository.findById(UUID.fromString(userStateService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
         long currentUserCount = usersToTrainingsRepository.countByTrainings(training, false, true);
@@ -181,7 +182,6 @@ public class UsersOnTrainingsAction {
             throw new RuntimeException(e);
         }
     }
-
     public void viewMyTrainings(long id, Message currentMessage) {
         sendler.sendMyTrainings(id, myTrainings, currentMessage);
         userStateService.setUserState(id, UserState.MY_TRAININGS);
@@ -202,6 +202,5 @@ public class UsersOnTrainingsAction {
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

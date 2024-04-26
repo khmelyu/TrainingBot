@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -37,6 +39,16 @@ public class Sendler {
         this.trainingBot = trainingBot;
         this.calendar = calendar;
         this.callbackMenu = callbackMenu;
+    }
+
+    public void callbackAnswer(Update update) {
+        String callbackQueryId = update.getCallbackQuery().getId();
+        AnswerCallbackQuery answer = AnswerCallbackQuery.builder().callbackQueryId(callbackQueryId).text("").showAlert(false).build();
+        try {
+            trainingBot.execute(answer);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendTextMessage(Long who, String what) {
@@ -189,7 +201,6 @@ public class Sendler {
         }
     }
 
-
     public void updateTrainingsMenu(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.trainingsMenu(who);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
@@ -197,11 +208,6 @@ public class Sendler {
 
     public void sendCoachMenu(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.coachMenu();
-        updateMenu(who, pic, currentMessage, updatedKeyboard);
-    }
-
-    public void sendCreatedTrainingsMenu(Long who, String pic, Message currentMessage) {
-        InlineKeyboardMarkup updatedKeyboard = callbackMenu.myTrainingsMenu(who);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
@@ -267,6 +273,11 @@ public class Sendler {
 
     public void sendMyTrainings(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.myTrainingsMenu(who);
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendArchivedTrainings(Long who, String pic, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.archivedTrainingsMenu(who);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 }

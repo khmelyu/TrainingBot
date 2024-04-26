@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import trainingBot.controller.UpdateReceiver;
-import trainingBot.core.TrainingBot;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
+import trainingBot.model.entity.User;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
+import trainingBot.model.rep.UserRepository;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
@@ -27,16 +27,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")
 public class CoachAction {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
-    private final TrainingBot trainingBot;
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
+    private final UserRepository userRepository;
 
     @Value("${coach.menu}")
     private String coachMenu;
@@ -66,20 +67,21 @@ public class CoachAction {
     private String online;
     @Value("${offline}")
     private String offline;
+    @Value("${archive.training}")
+    private String trainingArchiveMessage;
+    @Value("${training.delete.message}")
+    private String trainingDeleteMessage;
+    @Value("${archive.trainings}")
+    private String archiveTrainings;
 
 
     @Autowired
-    public CoachAction(
-            TrainingBot trainingBot, @Lazy Sendler sendler,
-            UserStateService userStateService,
-            TrainingsListRepository trainingsListRepository,
-            TrainingsRepository trainingsRepository
-    ) {
-        this.trainingBot = trainingBot;
+    public CoachAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingsListRepository = trainingsListRepository;
         this.trainingsRepository = trainingsRepository;
+        this.userRepository = userRepository;
     }
 
     public void coachAction(long id, Message currentMessage) {
@@ -88,7 +90,7 @@ public class CoachAction {
     }
 
     public void createdTrainings(long id, Message currentMessage) {
-        sendler.sendCreatedTrainingsMenu(id, createdTrainings, currentMessage);
+        sendler.sendMyTrainings(id, createdTrainings, currentMessage);
         userStateService.setUserState(id, UserState.CREATED_TRAININGS);
     }
 
@@ -171,6 +173,7 @@ public class CoachAction {
         if (userStateService.getCity(id).equals(online)) {
             sendler.sendTextMessage(id, trainingLink);
             userStateService.setUserState(id, UserState.TRAINING_LINK);
+            sendler.callbackAnswer(update);
         } else createTraining(update);
     }
 
@@ -182,10 +185,23 @@ public class CoachAction {
     }
 
     public void createTraining(Update update) {
-        long id = update.getCallbackQuery().getMessage().getChatId();
+        long id = update.getMessage().getChatId();
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM");
+        LocalDate localDate = LocalDate.parse(userStateService.getTrainingDate(id), inputFormatter);
+        String date = outputFormatter.format(localDate);
+        String startTime = userStateService.getStartTime(id);
+        String endTime = userStateService.getEndTime(id);
+        String description = userStateService.getTrainingDescription(id);
+        User user = userRepository.findById(id).orElse(new User());
+        String coachName = user.getName();
+        String coachLastname = user.getLastname();
+        String finalDescription = date + "\n" + startTime + " - " + endTime + "\n" + "\n" + description + "\n" + "\n" + "Тренер:" + "\n" + coachLastname + " " + coachName;
         Trainings training = new Trainings();
+
         training.setName(userStateService.getTrainingName(id));
-        training.setDescription(userStateService.getTrainingDescription(id));
+        training.setDescription(finalDescription);
         training.setCategory(userStateService.getCategory(id));
         training.setCity(userStateService.getCity(id));
         training.setCreator(String.valueOf(id));
@@ -208,18 +224,54 @@ public class CoachAction {
 
         sendler.sendTextMessage(id, trainingCreateComplete);
         userStateService.setUserState(id, UserState.MAIN_MENU);
-
-        String callbackQueryId = update.getCallbackQuery().getId();
-        AnswerCallbackQuery answer = AnswerCallbackQuery.builder().callbackQueryId(callbackQueryId).text("").showAlert(false).build();
-        try {
-            trainingBot.execute(answer);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+        if (update.hasCallbackQuery()) {
+            sendler.callbackAnswer(update);
         }
     }
 
-    public void reviewMyTraining(long id, Message currentMessage) {
+    public void reviewTraining(long id, Message currentMessage, String data) {
+        userStateService.setTrainingId(id, data);
 
-        userStateService.setUserState(id, UserState.COACH_TRAINING_REVIEW);
+        Optional<Trainings> trainingOptional = trainingsRepository.findById(UUID.fromString(data));
+        if (trainingOptional.isPresent()) {
+            Trainings training = trainingOptional.get();
+            String description = training.getDescription();
+            String pic = training.getPic();
+            String shortDescription;
+            if (description.length() <= 1024) {
+                shortDescription = description;
+            } else {
+                shortDescription = description.substring(0, 1024);
+            }
+            sendler.sendTrainingInfo(id, pic, currentMessage, shortDescription);
+            userStateService.setUserState(id, UserState.SELECT_TRAINING);
+        }
+    }
+
+    @Transactional
+    public void archiveTraining(Update update) {
+        long chatId = update.getCallbackQuery().getMessage().getChatId();
+        String trainingIdString = userStateService.getTrainingId(chatId);
+        UUID trainingId = UUID.fromString(trainingIdString);
+        trainingsRepository.archiveTraining(trainingId);
+        sendler.sendTextMessage(chatId, trainingArchiveMessage);
+        userStateService.setUserState(chatId, UserState.MAIN_MENU);
+        sendler.callbackAnswer(update);
+    }
+
+    @Transactional
+    public void deleteTraining(Update update) {
+        long chatId = update.getCallbackQuery().getMessage().getChatId();
+        String trainingIdString = userStateService.getTrainingId(chatId);
+        UUID trainingId = UUID.fromString(trainingIdString);
+        trainingsRepository.deleteTraining(trainingId);
+        sendler.sendTextMessage(chatId, trainingDeleteMessage);
+        userStateService.setUserState(chatId, UserState.MAIN_MENU);
+        sendler.callbackAnswer(update);
+    }
+
+    public void archivedTrainings(long id, Message currentMessage ) {
+        sendler.sendArchivedTrainings(id, archiveTrainings, currentMessage);
+        userStateService.setUserState(id, UserState.ARCHIVE_TRAININGS);
     }
 }

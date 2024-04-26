@@ -1,6 +1,8 @@
 package trainingBot.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -20,12 +22,18 @@ import java.util.List;
 
 
 @Component
+@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")
 public class CallbackMenu {
     private final UserRepository userRepository;
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
     private final UsersToTrainingsRepository usersToTrainingsRepository;
     private final UserStateService userStateService;
+
+    @Value("${calendar.name}")
+    private String calendarName;
+    @Value("${calendar.link}")
+    private String calendarLink;
 
     @Autowired
     public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UsersToTrainingsRepository usersToTrainingsRepository, UserStateService userStateService) {
@@ -40,6 +48,14 @@ public class CallbackMenu {
         return InlineKeyboardButton.builder().text(callback.getCallbackText()).callbackData(callback.getCallbackData()).build();
 
     }
+
+    private InlineKeyboardButton createButton(String text, String url) {
+        InlineKeyboardButton button = new InlineKeyboardButton();
+        button.setText(text);
+        button.setUrl(url);
+        return button;
+    }
+
 
     public List<InlineKeyboardButton> createRow(InlineKeyboardButton... buttons) {
         return new ArrayList<>(Arrays.asList(buttons));
@@ -59,7 +75,7 @@ public class CallbackMenu {
             row.add(createButton(Callback.COACH_MENU));
         }
         keyboard.add(row);
-
+        keyboard.add(createRow(createButton(calendarName, calendarLink)));
         inlineKeyboardMarkup.setKeyboard(keyboard);
 
         return inlineKeyboardMarkup;
@@ -70,8 +86,13 @@ public class CallbackMenu {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         if (userStateService.getUserState(id).equals(UserState.TRAININGS_ON_CITY)) {
             keyboard.add(createRow(createButton(Callback.SIGN_UP), createButton(Callback.BACK)));
-        } else {
+        } else if (userStateService.getUserState(id).equals(UserState.MY_TRAININGS)) {
             keyboard.add(createRow(createButton(Callback.ABORTING), createButton(Callback.BACK)));
+        } else {
+            keyboard.add(createRow(createButton(Callback.DELETE_TRAINING), createButton(Callback.USER_LIST)));
+            keyboard.add(createRow(createButton(Callback.MARK_USER), createButton(Callback.FEEDBACK_REQUEST)));
+            keyboard.add(createRow(createButton(Callback.IN_ARCHIVE)));
+            keyboard.add(createRow(createButton(Callback.BACK)));
         }
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
@@ -82,7 +103,7 @@ public class CallbackMenu {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
         keyboard.add(createRow(createButton(Callback.YES), createButton(Callback.NO)));
-        keyboard.add(createRow(createButton(Callback.ABORT)));
+        keyboard.add(createRow(createButton(Callback.ABORT_SIGNUP)));
 
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
@@ -118,6 +139,18 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
+    public InlineKeyboardMarkup archivedTrainingsMenu(long id) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        for (Trainings training : trainingsRepository.findByCreatorArchived(id)) {
+            keyboard.add(createRow(InlineKeyboardButton.builder().text(training.getName()).callbackData(String.valueOf(training.getId())).build()));
+        }
+        keyboard.add(createRow(createButton(Callback.BACK)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
 
     public InlineKeyboardMarkup createTrainingsMenu() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();

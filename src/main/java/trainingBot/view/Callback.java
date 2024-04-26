@@ -4,27 +4,34 @@ import lombok.Getter;
 
 @Getter
 public enum Callback {
-    BACK("Назад", "Back"),
-    ONLINE_TRAININGS("Онлайн тренинги", "OnlineTrainings"),
-    OFFLINE_TRAININGS("Офлайн тренинги", "OfflineTrainings"),
-    MY_TRAININGS("Мои тренинги", "MyTrainings"),
-    COACH_MENU("Меню тренера", "CoachMenu"),
-    CREATE_TRAININGS("Создать тренинг", "CreateTrainings"),
-    ONLINE_TRAININGS_CREATE("Онлайн", "OnlineTrainingsCreate"),
-    OFFLINE_TRAININGS_CREATE("Офлайн", "OfflineTrainingsCreate"),
-    MOSCOW("Мск", "Moscow"),
-    SAINT_PETERSBURG("СПб", "SaintPetersburg"),
+    BACK("Назад", "BACK"),
+    ONLINE_TRAININGS("Онлайн тренинги", "ONLINE_TRAININGS"),
+    OFFLINE_TRAININGS("Офлайн тренинги", "OFFLINE_TRAININGS"),
+    MY_TRAININGS("Мои тренинги", "MY_TRAININGS"),
+    COACH_MENU("Меню тренера", "COACH_MENU"),
+    CREATE_TRAININGS("Создать тренинг", "CREATE_TRAININGS"),
+    ONLINE_TRAININGS_CREATE("Онлайн", "ONLINE_TRAININGS_CREATE"),
+    OFFLINE_TRAININGS_CREATE("Офлайн", "OFFLINE_TRAININGS_CREATE"),
+    MOSCOW("Мск", "MOSCOW"),
+    SAINT_PETERSBURG("СПб", "SAINT_PETERSBURG"),
+    CALENDAR("Календарь", "https://t.me/ReefCareBot/calendar"),
 
-    CREATED_TRAININGS("Созданные тренинги", "CreatedTrainings"),
-    ARCHIVE_TRAININGS("Архив тренингов", "ArchiveTrainings"),
+    CREATED_TRAININGS("Созданные тренинги", "CREATED_TRAININGS"),
+    ARCHIVE_TRAININGS("Архив тренингов", "ARCHIVE_TRAININGS"),
     NEXT_MONTH("▶️", "NEXT_MONTH"),
     PREV_MONTH("◀️", "PREV_MONTH"),
 
     SIGN_UP("Записаться", "SIGN_UP"),
     YES("Да", "YES"),
     NO("Нет", "NO"),
-    ABORT("Отмена", "ABORT"),
-    ABORTING("Отменить запись", "ABORTING");
+    ABORT_SIGNUP("Отмена", "ABORT"),
+    ABORTING("Отменить запись", "ABORTING"),
+
+    DELETE_TRAINING("Удалить тренинг", "DELETE_TRAINING"),
+    USER_LIST("Список записавшихся", "SIGNUP_LIST"),
+    MARK_USER("Отметить участников", "MARK_USER"),
+    FEEDBACK_REQUEST("Запросить ОС", "FEEDBACK_REQUEST"),
+    IN_ARCHIVE("В архив", "IN_ARCHIVE");
 
 
 

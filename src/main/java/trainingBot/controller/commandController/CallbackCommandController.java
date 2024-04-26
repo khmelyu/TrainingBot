@@ -65,9 +65,12 @@ public class CallbackCommandController implements CommandController {
                     case ONLINE_TRAININGS -> usersOnTrainingsAction.viewOnlineCategory(id, currentMessage);
                     case OFFLINE_TRAININGS -> usersOnTrainingsAction.viewTrainingCity(id, currentMessage);
                     case SIGN_UP -> usersOnTrainingsAction.checkUserData(id, currentMessage);
-                    case YES -> usersOnTrainingsAction.signUpOnTraining(id, update);
+                    case YES -> usersOnTrainingsAction.signUpOnTraining(update);
                     case MY_TRAININGS -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
                     case ABORTING -> usersOnTrainingsAction.abortTrainings(update);
+                    case IN_ARCHIVE -> coachAction.archiveTraining(update);
+                    case DELETE_TRAINING -> coachAction.deleteTraining(update);
+                    case ARCHIVE_TRAININGS -> coachAction.archivedTrainings(id, currentMessage);
                 }
             }
         }
@@ -93,7 +96,7 @@ public class CallbackCommandController implements CommandController {
         if (data.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$")) {
             switch (userState) {
                 case TRAININGS_ON_CITY, MY_TRAININGS -> usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
-                case CREATED_TRAININGS -> coachAction.reviewMyTraining(id, currentMessage);
+                case CREATED_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
             }
         }
     }
