@@ -7,14 +7,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.UpdateReceiver;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.view.Sendler;
 
 
 @Component
 public class PhotoAction {
-    private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
+    private final Logger logger = LoggerFactory.getLogger(PhotoAction.class);
     private final Sendler sendler;
     private final UserRepository userRepository;
 
@@ -24,7 +23,7 @@ public class PhotoAction {
         this.userRepository = userRepository;
     }
 
-    public void photoAction(Update update ) {
+    public void photoAction(Update update) {
         Long id = update.getMessage().getChatId();
         userRepository.findById(id).ifPresentOrElse(user -> {
             if (user.isAdmin()) {

@@ -11,6 +11,7 @@ import trainingBot.model.entity.User;
 import trainingBot.model.entity.UsersToTrainings;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainings, Long> {
@@ -30,6 +31,10 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
     void removeUserFromWaitingList(@Param("user") User user, @Param("trainings") Trainings trainings);
 
     @Modifying
+    @Query("update users_to_trainings u set u.waiting_list = true, u.actual = true where u.user = :user and u.trainings = :trainings")
+    void addUserFromWaitingList(@Param("user") User user, @Param("trainings") Trainings trainings);
+
+    @Modifying
     @Query("update users_to_trainings u set u.actual = true where u.user = :user and u.trainings = :trainings")
     void reSignupUserFromTraining(@Param("user") User user, @Param("trainings") Trainings trainings);
 
@@ -39,6 +44,12 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
 
     @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false")
     List<Trainings> findByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT u.user.id FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.waiting_list = true")
+    List<Long> findUserWaitingForTraining(@Param("trainingId") UUID trainingId);
+
+    @Query("SELECT u.user.id FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.waiting_list = false AND u.actual = true")
+    List<Long> findUserSignedTraining(@Param("trainingId") UUID trainingId);
 
 }
 

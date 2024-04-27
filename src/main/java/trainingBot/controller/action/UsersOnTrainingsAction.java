@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import trainingBot.controller.UpdateReceiver;
 import trainingBot.core.TrainingBot;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.User;
@@ -20,6 +19,7 @@ import trainingBot.model.entity.UsersToTrainings;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.model.rep.UsersToTrainingsRepository;
+import trainingBot.service.NotificationUser;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
@@ -30,12 +30,13 @@ import java.util.UUID;
 @Component
 @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")
 public class UsersOnTrainingsAction {
-    private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
+    private final Logger logger = LoggerFactory.getLogger(UsersOnTrainingsAction.class);
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final TrainingsRepository trainingsRepository;
     private final UserRepository userRepository;
     private final UsersToTrainingsRepository usersToTrainingsRepository;
+    private final NotificationUser notificationUser;
     private final TrainingBot trainingBot;
 
 
@@ -62,12 +63,13 @@ public class UsersOnTrainingsAction {
 
 
     @Autowired
-    public UsersOnTrainingsAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, TrainingBot trainingBot) {
+    public UsersOnTrainingsAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingsRepository = trainingsRepository;
         this.userRepository = userRepository;
         this.usersToTrainingsRepository = usersToTrainingsRepository;
+        this.notificationUser = notificationUser;
         this.trainingBot = trainingBot;
     }
 
@@ -175,10 +177,12 @@ public class UsersOnTrainingsAction {
             }
         }
         if (exists && fullTraining) {
-            if (!waitingList) {
+            if (!waitingList && actual) {
                 sendler.sendTextMessage(id, repeatSignupMessage);
                 logger.info("User: {} tried to re-signup on training. Training id: {}", id, training.getId());
+                System.out.println(currentUserCount);
             } else {
+                usersToTrainingsRepository.addUserFromWaitingList(user, training);
                 sendler.sendTextMessage(id, waitingListMessage);
                 logger.info("User: {} tried to re-signup on training. Training id: {}", id, training.getId());
             }
@@ -189,15 +193,14 @@ public class UsersOnTrainingsAction {
                 sendler.sendTextMessage(id, signUpMessage);
                 logger.info("User: {} signup on training. Training id: {}", id, training.getId());
 
-            } else if (!waitingList && !actual){
+            } else if (!waitingList && !actual) {
                 usersToTrainingsRepository.reSignupUserFromTraining(user, training);
                 sendler.sendTextMessage(id, signUpMessage);
                 logger.info("User: {} signup on training. Training id: {}", id, training.getId());
-            }else {
+            } else {
                 usersToTrainingsRepository.reSignupUserFromTraining(user, training);
                 sendler.sendTextMessage(id, repeatSignupMessage);
                 logger.info("User: {} to re-signup on training . Training id: {}", id, training.getId());
-
             }
         }
         userStateService.setUserState(id, UserState.MAIN_MENU);
@@ -209,6 +212,7 @@ public class UsersOnTrainingsAction {
             throw new RuntimeException(e);
         }
     }
+
     public void viewMyTrainings(long id, Message currentMessage) {
         sendler.sendMyTrainings(id, myTrainings, currentMessage);
         userStateService.setUserState(id, UserState.MY_TRAININGS);
@@ -221,6 +225,9 @@ public class UsersOnTrainingsAction {
         Trainings training = trainingsRepository.findById(UUID.fromString(userStateService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
         usersToTrainingsRepository.abortUserFromTraining(user, training);
         sendler.sendTextMessage(id, trainingAbortMessage);
+        if (notificationUser.canCall(id)) {
+            notificationUser.notificationWaitingList(userStateService.getTrainingId(id));
+        }
         userStateService.setUserState(id, UserState.MAIN_MENU);
         String callbackQueryId = update.getCallbackQuery().getId();
         AnswerCallbackQuery answer = AnswerCallbackQuery.builder().callbackQueryId(callbackQueryId).text("").showAlert(false).build();

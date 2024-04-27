@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.UpdateReceiver;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
 import trainingBot.model.entity.User;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
+import trainingBot.service.NotificationUser;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
@@ -32,12 +32,13 @@ import java.util.UUID;
 @Component
 @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")
 public class CoachAction {
-    private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
+    private final Logger logger = LoggerFactory.getLogger(CoachAction.class);
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
     private final UserRepository userRepository;
+    private final NotificationUser notificationUser;
 
     @Value("${coach.menu}")
     private String coachMenu;
@@ -76,12 +77,13 @@ public class CoachAction {
 
 
     @Autowired
-    public CoachAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository) {
+    public CoachAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository, NotificationUser notificationUser) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingsListRepository = trainingsListRepository;
         this.trainingsRepository = trainingsRepository;
         this.userRepository = userRepository;
+        this.notificationUser = notificationUser;
     }
 
     public void coachAction(long id, Message currentMessage) {
@@ -270,12 +272,16 @@ public class CoachAction {
 
     @Transactional
     public void deleteTraining(Update update) {
-        long chatId = update.getCallbackQuery().getMessage().getChatId();
-        String trainingIdString = userStateService.getTrainingId(chatId);
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        String trainingIdString = userStateService.getTrainingId(id);
         UUID trainingId = UUID.fromString(trainingIdString);
         trainingsRepository.deleteTraining(trainingId);
-        sendler.sendTextMessage(chatId, trainingDeleteMessage);
-        userStateService.setUserState(chatId, UserState.MAIN_MENU);
+        sendler.sendTextMessage(id, trainingDeleteMessage);
+        logger.info("User: {} deleting training {}", id, trainingId);
+        if (notificationUser.canCall(id)) {
+            notificationUser.notificationAbortTraining(userStateService.getTrainingId(id));
+        }
+        userStateService.setUserState(id, UserState.MAIN_MENU);
         sendler.callbackAnswer(update);
     }
 

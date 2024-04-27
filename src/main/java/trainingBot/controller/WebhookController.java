@@ -12,7 +12,7 @@ import trainingBot.controller.commandController.CallbackCommandController;
 
 @RestController
 public class WebhookController {
-    private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
+    private final Logger logger = LoggerFactory.getLogger(WebhookController.class);
     private final UpdateReceiver updateReceiver;
     private final CallbackCommandController callBackCommandController;
 
