@@ -82,7 +82,10 @@ public class BackAction {
                 coachAction.viewMarkUsersMenu(id, currentMessage);
             }
             case SELECT_TRAINING ->  usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
-            case SELECT_COACH_TRAINING -> coachAction.createdTrainings(id, currentMessage);
+            case SELECT_COACH_TRAINING -> {
+                userStateService.setUserState(id, UserState.COACH_MENU);
+                coachAction.createdTrainings(id, currentMessage);
+            }
 
 
         }

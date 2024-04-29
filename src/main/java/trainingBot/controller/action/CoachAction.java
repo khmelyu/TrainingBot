@@ -87,6 +87,8 @@ public class CoachAction {
     private String userInfo;
     @Value("${waiting.list.users}")
     private String waitingListUsers;
+    @Value("${user.list.empty}")
+    private String userListEmpty;
 
 
     @Autowired
@@ -335,18 +337,8 @@ public class CoachAction {
         userTrainingsList.sort(Comparator.comparing(ut -> ut.getUser().getLastname()));
         userWaitingList.sort(Comparator.comparing(ut -> ut.getUser().getLastname()));
         int i = 0;
-        for (UsersToTrainings ut : userTrainingsList) {
-            i++;
-            User user = ut.getUser();
-            String name = user.getName();
-            String lastname = user.getLastname();
-            String userMessage = i + ". " + lastname + " " + name + "\n";
-            userList.append(userMessage);
-        }
-        if (!userWaitingList.isEmpty()) {
-            userList.append("\n").append(waitingListUsers).append("\n");
-            i = 0;
-            for (UsersToTrainings ut : userWaitingList) {
+        if (!userTrainingsList.isEmpty()) {
+            for (UsersToTrainings ut : userTrainingsList) {
                 i++;
                 User user = ut.getUser();
                 String name = user.getName();
@@ -354,8 +346,23 @@ public class CoachAction {
                 String userMessage = i + ". " + lastname + " " + name + "\n";
                 userList.append(userMessage);
             }
+            if (!userWaitingList.isEmpty()) {
+                userList.append("\n").append(waitingListUsers).append("\n");
+                i = 0;
+                for (UsersToTrainings ut : userWaitingList) {
+                    i++;
+                    User user = ut.getUser();
+                    String name = user.getName();
+                    String lastname = user.getLastname();
+                    String userMessage = i + ". " + lastname + " " + name + "\n";
+                    userList.append(userMessage);
+                }
+            }
+            sendler.sendTextMessage(id, String.valueOf(userList));
+
+        } else {
+            sendler.sendTextMessage(id, userListEmpty);
         }
-        sendler.sendTextMessage(id, String.valueOf(userList));
         sendler.callbackAnswer(update);
     }
 }
