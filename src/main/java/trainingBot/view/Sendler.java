@@ -1,7 +1,5 @@
 package trainingBot.view;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
@@ -17,7 +15,6 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import trainingBot.controller.UpdateReceiver;
 import trainingBot.core.TrainingBot;
 import trainingBot.service.Calendar;
 
@@ -25,11 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Component
 public class Sendler {
-    private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
     private final TrainingBot trainingBot;
     private final Calendar calendar;
     private final CallbackMenu callbackMenu;
@@ -156,21 +151,13 @@ public class Sendler {
 
     public void updateMenu(Long who, String pic, Message currentMessage, InlineKeyboardMarkup updatedKeyboard) {
         try {
-            String currentCaption = currentMessage.getCaption();
-            boolean isContentChanged = !Objects.equals(currentCaption, pic);
-            boolean isKeyboardChanged = !currentMessage.getReplyMarkup().equals(updatedKeyboard);
-
-            if (isContentChanged || isKeyboardChanged) {
-                EditMessageMedia editMessageMedia = EditMessageMedia.builder()
-                        .chatId(who.toString())
-                        .messageId(currentMessage.getMessageId())
-                        .media(InputMediaPhoto.builder().media(pic).build())
-                        .replyMarkup(updatedKeyboard)
-                        .build();
-                trainingBot.execute(editMessageMedia);
-            } else {
-                logger.warn("User: " + who + " The content or keyboard have not changed, the update has been skipped.");
-            }
+            EditMessageMedia editMessageMedia = EditMessageMedia.builder()
+                    .chatId(who.toString())
+                    .messageId(currentMessage.getMessageId())
+                    .media(InputMediaPhoto.builder().media(pic).build())
+                    .replyMarkup(updatedKeyboard)
+                    .build();
+            trainingBot.execute(editMessageMedia);
 
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
@@ -180,21 +167,15 @@ public class Sendler {
 
     public void updateMenu(Long who, String pic, Message currentMessage, InlineKeyboardMarkup updatedKeyboard, String caption) {
         try {
-            String currentCaption = currentMessage.getCaption();
-            boolean isContentChanged = !Objects.equals(currentCaption, pic);
-            boolean isKeyboardChanged = !currentMessage.getReplyMarkup().equals(updatedKeyboard);
 
-            if (isContentChanged || isKeyboardChanged) {
-                EditMessageMedia editMessageMedia = EditMessageMedia.builder()
-                        .chatId(who.toString())
-                        .messageId(currentMessage.getMessageId())
-                        .media(InputMediaPhoto.builder().media(pic).caption(caption).build())
-                        .replyMarkup(updatedKeyboard)
-                        .build();
-                trainingBot.execute(editMessageMedia);
-            } else {
-                logger.warn("User: " + who + " The content or keyboard have not changed, the update has been skipped.");
-            }
+            EditMessageMedia editMessageMedia = EditMessageMedia.builder()
+                    .chatId(who.toString())
+                    .messageId(currentMessage.getMessageId())
+                    .media(InputMediaPhoto.builder().media(pic).caption(caption).build())
+                    .replyMarkup(updatedKeyboard)
+                    .build();
+            trainingBot.execute(editMessageMedia);
+
 
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
@@ -267,22 +248,27 @@ public class Sendler {
     }
 
     public void sendTrainingInfoFromCalendar(Long who, String pic, String caption) {
-            InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.trainingInfoMenu(who);
-            InputFile inputFile = new InputFile(pic);
-            SendPhoto sendPhoto = new SendPhoto();
-            sendPhoto.setChatId(who.toString());
-            sendPhoto.setPhoto(inputFile);
-            sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
-            sendPhoto.setCaption(caption);
-            try {
-                trainingBot.execute(sendPhoto);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+        InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.trainingInfoMenu(who);
+        InputFile inputFile = new InputFile(pic);
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(who.toString());
+        sendPhoto.setPhoto(inputFile);
+        sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+        sendPhoto.setCaption(caption);
+        try {
+            trainingBot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
         }
+    }
 
     public void sendCheckMyData(Long who, String pic, Message currentMessage, String caption) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.checkDataMenu();
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
+    }
+
+    public void sendCheckUserData(Long who, String pic, Message currentMessage, String caption) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.backMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
     }
 
@@ -293,6 +279,11 @@ public class Sendler {
 
     public void sendArchivedTrainings(Long who, String pic, Message currentMessage) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.archivedTrainingsMenu(who);
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendMarkUserList(Long who, String pic, Message currentMessage, String trainingId) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.markUserMenu(trainingId);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 }

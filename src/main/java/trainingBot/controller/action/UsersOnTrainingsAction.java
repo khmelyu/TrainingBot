@@ -20,10 +20,12 @@ import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.model.rep.UsersToTrainingsRepository;
 import trainingBot.service.NotificationUser;
+import trainingBot.service.redis.TrainingDataService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +35,7 @@ public class UsersOnTrainingsAction {
     private final Logger logger = LoggerFactory.getLogger(UsersOnTrainingsAction.class);
     private final Sendler sendler;
     private final UserStateService userStateService;
+    private final TrainingDataService trainingDataService;
     private final TrainingsRepository trainingsRepository;
     private final UserRepository userRepository;
     private final UsersToTrainingsRepository usersToTrainingsRepository;
@@ -63,9 +66,10 @@ public class UsersOnTrainingsAction {
 
 
     @Autowired
-    public UsersOnTrainingsAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
+    public UsersOnTrainingsAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
         this.sendler = sendler;
         this.userStateService = userStateService;
+        this.trainingDataService = trainingDataService;
         this.trainingsRepository = trainingsRepository;
         this.userRepository = userRepository;
         this.usersToTrainingsRepository = usersToTrainingsRepository;
@@ -74,7 +78,7 @@ public class UsersOnTrainingsAction {
     }
 
     public void viewOnlineCategory(long id, Message currentMessage) {
-        userStateService.setCity(id, online);
+        trainingDataService.setCity(id, online);
         sendler.sendOnlineCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.ONLINE_TRAININGS);
     }
@@ -85,25 +89,25 @@ public class UsersOnTrainingsAction {
     }
 
     public void viewMoscowCategory(long id, Message currentMessage, String data) {
-        userStateService.setCity(id, data);
+        trainingDataService.setCity(id, data);
         sendler.sendMoscowCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.MOSCOW_TRAININGS);
     }
 
     public void viewSaintsPetersburgCategory(long id, Message currentMessage, String data) {
-        userStateService.setCity(id, data);
+        trainingDataService.setCity(id, data);
         sendler.sendSaintPetersburgCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.SAINT_PETERSBURG_TRAININGS);
     }
 
     public void viewTrainingsOnCategory(long id, Message currentMessage, String data) {
-        userStateService.setCategory(id, data);
-        sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, userStateService.getCity(id), data);
+        trainingDataService.setCategory(id, data);
+        sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, trainingDataService.getCity(id), data);
         userStateService.setUserState(id, UserState.TRAININGS_ON_CITY);
     }
 
     public void reviewTraining(long id, Message currentMessage, String data) {
-        userStateService.setTrainingId(id, data);
+        trainingDataService.setTrainingId(id, data);
 
         Optional<Trainings> trainingOptional = trainingsRepository.findById(UUID.fromString(data));
         if (trainingOptional.isPresent()) {
@@ -122,7 +126,7 @@ public class UsersOnTrainingsAction {
     }
 
     public void reviewTraining(long id, String data) {
-        userStateService.setTrainingId(id, data);
+        trainingDataService.setTrainingId(id, data);
 
         Optional<Trainings> trainingOptional = trainingsRepository.findById(UUID.fromString(data));
         if (trainingOptional.isPresent()) {
@@ -144,14 +148,14 @@ public class UsersOnTrainingsAction {
         User user = userRepository.findById(id).orElseThrow();
         String data = user.userData();
         sendler.sendCheckMyData(id, userInfo, currentMessage, data);
-        userStateService.setUserState(id, UserState.CHECK_DATA);
+        userStateService.setUserState(id, UserState.CHECK_MY_DATA);
     }
 
     @Transactional
     public void signUpOnTraining(Update update) {
         long id = update.getCallbackQuery().getMessage().getChatId();
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        Trainings training = trainingsRepository.findById(UUID.fromString(userStateService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
+        Trainings training = trainingsRepository.findById(UUID.fromString(trainingDataService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
         long currentUserCount = usersToTrainingsRepository.countByTrainings(training, false, true);
         boolean exists = usersToTrainingsRepository.existsByUserAndTrainings(user, training);
         boolean fullTraining = currentUserCount >= training.getMax_users();
@@ -160,10 +164,10 @@ public class UsersOnTrainingsAction {
 
         if (!exists) {
             UsersToTrainings usersToTrainings = new UsersToTrainings();
-
             usersToTrainings.setUser(user);
             usersToTrainings.setTrainings(training);
             usersToTrainings.setActual(true);
+            usersToTrainings.setSignup_time(new Timestamp(System.currentTimeMillis()));
             usersToTrainings.setPresence(true);
             usersToTrainings.setWaiting_list(fullTraining);
             usersToTrainingsRepository.save(usersToTrainings);
@@ -222,11 +226,12 @@ public class UsersOnTrainingsAction {
     public void abortTrainings(Update update) {
         long id = update.getCallbackQuery().getMessage().getChatId();
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        Trainings training = trainingsRepository.findById(UUID.fromString(userStateService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
-        usersToTrainingsRepository.abortUserFromTraining(user, training);
+        Trainings training = trainingsRepository.findById(UUID.fromString(trainingDataService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
+        usersToTrainingsRepository.abortUserFromTraining(user, training, new Timestamp(System.currentTimeMillis()));
         sendler.sendTextMessage(id, trainingAbortMessage);
+        logger.info("User: {} aborting on training. Training id: {}", id, training.getId());
         if (notificationUser.canCall(id)) {
-            notificationUser.notificationWaitingList(userStateService.getTrainingId(id));
+            notificationUser.notificationWaitingList(trainingDataService.getTrainingId(id));
         }
         userStateService.setUserState(id, UserState.MAIN_MENU);
         String callbackQueryId = update.getCallbackQuery().getId();

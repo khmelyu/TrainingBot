@@ -13,12 +13,14 @@ import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.model.rep.UsersToTrainingsRepository;
+import trainingBot.service.UserListService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -29,6 +31,7 @@ public class CallbackMenu {
     private final TrainingsRepository trainingsRepository;
     private final UsersToTrainingsRepository usersToTrainingsRepository;
     private final UserStateService userStateService;
+    private final UserListService userListService;
 
     @Value("${calendar.name}")
     private String calendarName;
@@ -36,12 +39,13 @@ public class CallbackMenu {
     private String calendarLink;
 
     @Autowired
-    public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UsersToTrainingsRepository usersToTrainingsRepository, UserStateService userStateService) {
+    public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UsersToTrainingsRepository usersToTrainingsRepository, UserStateService userStateService, UserListService userListService) {
         this.userRepository = userRepository;
         this.trainingsListRepository = trainingsListRepository;
         this.trainingsRepository = trainingsRepository;
         this.usersToTrainingsRepository = usersToTrainingsRepository;
         this.userStateService = userStateService;
+        this.userListService = userListService;
     }
 
     public InlineKeyboardButton createButton(Callback callback) {
@@ -59,6 +63,16 @@ public class CallbackMenu {
 
     public List<InlineKeyboardButton> createRow(InlineKeyboardButton... buttons) {
         return new ArrayList<>(Arrays.asList(buttons));
+    }
+
+    public InlineKeyboardMarkup backMenu() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(Callback.BACK)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
     }
 
     public InlineKeyboardMarkup trainingsMenu(long id) {
@@ -87,8 +101,8 @@ public class CallbackMenu {
         if (userStateService.getUserState(id).equals(UserState.MY_TRAININGS)) {
             keyboard.add(createRow(createButton(Callback.ABORTING), createButton(Callback.BACK)));
         } else if (userStateService.getUserState(id).equals(UserState.CREATED_TRAININGS)) {
-            keyboard.add(createRow(createButton(Callback.DELETE_TRAINING), createButton(Callback.USER_LIST)));
-            keyboard.add(createRow(createButton(Callback.MARK_USER), createButton(Callback.FEEDBACK_REQUEST)));
+            keyboard.add(createRow(createButton(Callback.DELETE_TRAINING), createButton(Callback.USERS_LIST)));
+            keyboard.add(createRow(createButton(Callback.MARK_USERS), createButton(Callback.FEEDBACK_REQUEST)));
             keyboard.add(createRow(createButton(Callback.IN_ARCHIVE)));
             keyboard.add(createRow(createButton(Callback.BACK)));
         } else if (userStateService.getUserState(id).equals(UserState.TRAININGS_ON_CITY)) {
@@ -147,6 +161,23 @@ public class CallbackMenu {
 
         for (Trainings training : trainingsRepository.findByCreatorArchived(id)) {
             keyboard.add(createRow(InlineKeyboardButton.builder().text(training.getName()).callbackData(String.valueOf(training.getId())).build()));
+        }
+        keyboard.add(createRow(createButton(Callback.BACK)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup markUserMenu(String trainingId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        Map<String, String> trainingMap = userListService.markUserList(trainingId);
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        for (Map.Entry<String, String> entry : trainingMap.entrySet()) {
+
+            String userId = entry.getKey();
+            String userName = entry.getValue();
+            keyboard.add(createRow(InlineKeyboardButton.builder().text(userName).callbackData(Callback.SELECT_USER.getCallbackData() + userId).build(),
+                    InlineKeyboardButton.builder().text(Callback.USER_MARK.getCallbackText()).callbackData(Callback.USER_MARK.getCallbackData() + userId).build()));
         }
         keyboard.add(createRow(createButton(Callback.BACK)));
 

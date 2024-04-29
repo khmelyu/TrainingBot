@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Setter
 @Getter
 @Entity(name = "users_to_trainings")
@@ -21,6 +23,9 @@ public class UsersToTrainings {
     private Trainings trainings;
 
     private boolean actual;
+    private Timestamp signup_time;
+    private Timestamp abort_time;
     private boolean presence;
     private boolean waiting_list;
+
 }

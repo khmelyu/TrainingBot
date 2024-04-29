@@ -13,10 +13,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
 import trainingBot.model.entity.User;
+import trainingBot.model.entity.UsersToTrainings;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
+import trainingBot.model.rep.UsersToTrainingsRepository;
 import trainingBot.service.NotificationUser;
+import trainingBot.service.redis.TrainingDataService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
@@ -26,6 +29,8 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,9 +40,11 @@ public class CoachAction {
     private final Logger logger = LoggerFactory.getLogger(CoachAction.class);
     private final Sendler sendler;
     private final UserStateService userStateService;
+    private final TrainingDataService trainingDataService;
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
     private final UserRepository userRepository;
+    private final UsersToTrainingsRepository usersToTrainingsRepository;
     private final NotificationUser notificationUser;
 
     @Value("${coach.menu}")
@@ -74,15 +81,23 @@ public class CoachAction {
     private String trainingDeleteMessage;
     @Value("${archive.trainings}")
     private String archiveTrainings;
+    @Value("${mark.user}")
+    private String markUser;
+    @Value("${user.info}")
+    private String userInfo;
+    @Value("${waiting.list.users}")
+    private String waitingListUsers;
 
 
     @Autowired
-    public CoachAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository, NotificationUser notificationUser) {
+    public CoachAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser) {
         this.sendler = sendler;
         this.userStateService = userStateService;
+        this.trainingDataService = trainingDataService;
         this.trainingsListRepository = trainingsListRepository;
         this.trainingsRepository = trainingsRepository;
         this.userRepository = userRepository;
+        this.usersToTrainingsRepository = usersToTrainingsRepository;
         this.notificationUser = notificationUser;
     }
 
@@ -107,27 +122,27 @@ public class CoachAction {
     }
 
     public void viewOnlineCategory(long id, Message currentMessage, String data) {
-        userStateService.setCity(id, data);
+        trainingDataService.setCity(id, data);
         sendler.sendOnlineCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_ONLINE_TRAINING);
     }
 
     public void viewMoscowCategory(long id, Message currentMessage, String data) {
-        userStateService.setCity(id, data);
+        trainingDataService.setCity(id, data);
         sendler.sendMoscowCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_MOSCOW_TRAINING);
     }
 
     public void viewSaintsPetersburgCategory(long id, Message currentMessage, String data) {
-        userStateService.setCity(id, data);
+        trainingDataService.setCity(id, data);
         sendler.sendSaintPetersburgCategoryMenu(id, trainingCategory, currentMessage);
         userStateService.setUserState(id, UserState.CREATE_SAINT_PETERSBURG_TRAINING);
     }
 
     public void viewTrainingsOnCategory(long id, Message currentMessage, String data) {
 
-        userStateService.setCategory(id, data);
-        sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, userStateService.getCity(id), data);
+        trainingDataService.setCategory(id, data);
+        sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, trainingDataService.getCity(id), data);
         userStateService.setUserState(id, UserState.TRAININGS_ON_CITY_FOR_CREATE);
     }
 
@@ -137,10 +152,10 @@ public class CoachAction {
 
         if (trainingOptional.isPresent()) {
             TrainingsList training = trainingOptional.get();
-            userStateService.setTrainingName(id, training.getName());
-            userStateService.setTrainingDescription(id, training.getDescription());
-            userStateService.setPic(id, training.getPic());
-            userStateService.setMaxUsers(id, String.valueOf(training.getMax_users()));
+            trainingDataService.setTrainingName(id, training.getName());
+            trainingDataService.setTrainingDescription(id, training.getDescription());
+            trainingDataService.setPic(id, training.getPic());
+            trainingDataService.setMaxUsers(id, String.valueOf(training.getMax_users()));
         }
 
         LocalDate currentDate = LocalDate.now();
@@ -154,7 +169,7 @@ public class CoachAction {
 
     public void viewTrainingStartTime(long id, Message currentMessage, String data) {
 
-        userStateService.setTrainingDate(id, data);
+        trainingDataService.setTrainingDate(id, data);
         sendler.sendStartTimeMenu(id, trainingStartTime, currentMessage);
         userStateService.setUserState(id, UserState.TRAINING_START_TIME);
     }
@@ -162,7 +177,7 @@ public class CoachAction {
     public void viewTrainingEndTime(long id, Message currentMessage, String data) {
         String formattedStartTime = LocalTime.parse(data).format(DateTimeFormatter.ISO_LOCAL_TIME);
 
-        userStateService.setStartTime(id, formattedStartTime);
+        trainingDataService.setStartTime(id, formattedStartTime);
         sendler.sendEndTimeMenu(id, trainingEndTime, currentMessage);
         userStateService.setUserState(id, UserState.TRAINING_END_TIME);
     }
@@ -171,8 +186,8 @@ public class CoachAction {
         long id = update.getCallbackQuery().getMessage().getChatId();
         String data = update.getCallbackQuery().getData();
         String formattedEndTime = LocalTime.parse(data).format(DateTimeFormatter.ISO_LOCAL_TIME);
-        userStateService.setEndTime(id, formattedEndTime);
-        if (userStateService.getCity(id).equals(online)) {
+        trainingDataService.setEndTime(id, formattedEndTime);
+        if (trainingDataService.getCity(id).equals(online)) {
             sendler.sendTextMessage(id, trainingLink);
             userStateService.setUserState(id, UserState.TRAINING_LINK);
             sendler.callbackAnswer(update);
@@ -182,7 +197,7 @@ public class CoachAction {
     public void setTrainingLink(Update update) {
         long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
-        userStateService.setLink(id, text);
+        trainingDataService.setLink(id, text);
         createTraining(update);
     }
 
@@ -195,16 +210,16 @@ public class CoachAction {
         }
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd.MM");
-        LocalDate localDate = LocalDate.parse(userStateService.getTrainingDate(id), inputFormatter);
+        LocalDate localDate = LocalDate.parse(trainingDataService.getTrainingDate(id), inputFormatter);
         String date = outputFormatter.format(localDate);
-        LocalTime startTime = LocalTime.parse(userStateService.getStartTime(id));
-        LocalTime endTime = LocalTime.parse(userStateService.getEndTime(id));
+        LocalTime startTime = LocalTime.parse(trainingDataService.getStartTime(id));
+        LocalTime endTime = LocalTime.parse(trainingDataService.getEndTime(id));
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String formattedStartTime = startTime.format(timeFormatter);
         String formattedEndTime = endTime.format(timeFormatter);
-        String description = userStateService.getTrainingDescription(id);
+        String description = trainingDataService.getTrainingDescription(id);
         User user = userRepository.findById(id).orElse(new User());
-        String trainingName = userStateService.getTrainingName(id);
+        String trainingName = trainingDataService.getTrainingName(id);
         String formattedTrainingName = date + " - " + trainingName;
         String coachName = user.getName();
         String coachLastname = user.getLastname();
@@ -213,25 +228,25 @@ public class CoachAction {
 
         training.setName(formattedTrainingName);
         training.setDescription(finalDescription);
-        training.setCategory(userStateService.getCategory(id));
-        training.setCity(userStateService.getCity(id));
+        training.setCategory(trainingDataService.getCategory(id));
+        training.setCity(trainingDataService.getCity(id));
         training.setCreator(String.valueOf(id));
-        training.setDate(Date.valueOf(userStateService.getTrainingDate(id)));
-        training.setStart_time(Time.valueOf(userStateService.getStartTime(id)));
-        training.setEnd_time(Time.valueOf(userStateService.getEndTime(id)));
-        training.setMax_users(Integer.parseInt(userStateService.getMaxUsers(id)));
-        training.setPic(userStateService.getPic(id));
+        training.setDate(Date.valueOf(trainingDataService.getTrainingDate(id)));
+        training.setStart_time(Time.valueOf(trainingDataService.getStartTime(id)));
+        training.setEnd_time(Time.valueOf(trainingDataService.getEndTime(id)));
+        training.setMax_users(Integer.parseInt(trainingDataService.getMaxUsers(id)));
+        training.setPic(trainingDataService.getPic(id));
         training.setActual(true);
         training.setArchive(false);
-        if (userStateService.getCity(id).equals(online)) {
+        if (trainingDataService.getCity(id).equals(online)) {
             training.setType(online);
-            training.setLink(userStateService.getLink(id));
+            training.setLink(trainingDataService.getLink(id));
         } else {
             training.setType(offline);
         }
         trainingsRepository.save(training);
         logger.info("User: {} created new training. Training id: {}", id, training.getId());
-        userStateService.clearTemplate(id);
+        trainingDataService.clearTemplate(id);
 
         sendler.sendTextMessage(id, trainingCreateComplete);
         userStateService.setUserState(id, UserState.MAIN_MENU);
@@ -241,7 +256,7 @@ public class CoachAction {
     }
 
     public void reviewTraining(long id, Message currentMessage, String data) {
-        userStateService.setTrainingId(id, data);
+        trainingDataService.setTrainingId(id, data);
 
         Optional<Trainings> trainingOptional = trainingsRepository.findById(UUID.fromString(data));
         if (trainingOptional.isPresent()) {
@@ -255,14 +270,14 @@ public class CoachAction {
                 shortDescription = description.substring(0, 1024);
             }
             sendler.sendTrainingInfo(id, pic, currentMessage, shortDescription);
-            userStateService.setUserState(id, UserState.SELECT_TRAINING);
+            userStateService.setUserState(id, UserState.SELECT_COACH_TRAINING);
         }
     }
 
     @Transactional
     public void archiveTraining(Update update) {
         long chatId = update.getCallbackQuery().getMessage().getChatId();
-        String trainingIdString = userStateService.getTrainingId(chatId);
+        String trainingIdString = trainingDataService.getTrainingId(chatId);
         UUID trainingId = UUID.fromString(trainingIdString);
         trainingsRepository.archiveTraining(trainingId);
         sendler.sendTextMessage(chatId, trainingArchiveMessage);
@@ -273,13 +288,13 @@ public class CoachAction {
     @Transactional
     public void deleteTraining(Update update) {
         long id = update.getCallbackQuery().getMessage().getChatId();
-        String trainingIdString = userStateService.getTrainingId(id);
+        String trainingIdString = trainingDataService.getTrainingId(id);
         UUID trainingId = UUID.fromString(trainingIdString);
         trainingsRepository.deleteTraining(trainingId);
         sendler.sendTextMessage(id, trainingDeleteMessage);
         logger.info("User: {} deleting training {}", id, trainingId);
         if (notificationUser.canCall(id)) {
-            notificationUser.notificationAbortTraining(userStateService.getTrainingId(id));
+            notificationUser.notificationAbortTraining(trainingDataService.getTrainingId(id));
         }
         userStateService.setUserState(id, UserState.MAIN_MENU);
         sendler.callbackAnswer(update);
@@ -288,5 +303,59 @@ public class CoachAction {
     public void archivedTrainings(long id, Message currentMessage) {
         sendler.sendArchivedTrainings(id, archiveTrainings, currentMessage);
         userStateService.setUserState(id, UserState.ARCHIVE_TRAININGS);
+    }
+
+    public void viewMarkUsersMenu(long id, Message currentMessage) {
+        sendler.sendMarkUserList(id, markUser, currentMessage, trainingDataService.getTrainingId(id));
+        userStateService.setUserState(id, UserState.MARK_USERS);
+    }
+
+    @Transactional
+    public void markUsers(long id, Message currentMessage, String data) {
+        UUID trainingUUID = UUID.fromString(trainingDataService.getTrainingId(id));
+        usersToTrainingsRepository.markUserOnTraining(trainingUUID, Long.parseLong(data.substring(10)));
+        sendler.sendMarkUserList(id, markUser, currentMessage, trainingDataService.getTrainingId(id));
+        userStateService.setUserState(id, UserState.MARK_USERS);
+    }
+
+    public void checkUserData(long id, Message currentMessage, String data) {
+        long userId = Long.parseLong(data.substring(12));
+        User user = userRepository.findById(userId).orElseThrow();
+        String userData = user.userData();
+        sendler.sendCheckUserData(id, userInfo, currentMessage, userData);
+        userStateService.setUserState(id, UserState.CHECK_USER_DATA);
+    }
+
+    public void viewUserList(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        StringBuilder userList = new StringBuilder();
+        UUID trainingUUID = UUID.fromString(trainingDataService.getTrainingId(id));
+        List<UsersToTrainings> userTrainingsList = usersToTrainingsRepository.findByTrainingsIdNoWaitingList(trainingUUID, true);
+        List<UsersToTrainings> userWaitingList = usersToTrainingsRepository.findByTrainingsIdAndWaitingList(trainingUUID, true);
+        userTrainingsList.sort(Comparator.comparing(ut -> ut.getUser().getLastname()));
+        userWaitingList.sort(Comparator.comparing(ut -> ut.getUser().getLastname()));
+        int i = 0;
+        for (UsersToTrainings ut : userTrainingsList) {
+            i++;
+            User user = ut.getUser();
+            String name = user.getName();
+            String lastname = user.getLastname();
+            String userMessage = i + ". " + lastname + " " + name + "\n";
+            userList.append(userMessage);
+        }
+        if (!userWaitingList.isEmpty()) {
+            userList.append("\n").append(waitingListUsers).append("\n");
+            i = 0;
+            for (UsersToTrainings ut : userWaitingList) {
+                i++;
+                User user = ut.getUser();
+                String name = user.getName();
+                String lastname = user.getLastname();
+                String userMessage = i + ". " + lastname + " " + name + "\n";
+                userList.append(userMessage);
+            }
+        }
+        sendler.sendTextMessage(id, String.valueOf(userList));
+        sendler.callbackAnswer(update);
     }
 }

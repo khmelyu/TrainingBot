@@ -72,6 +72,8 @@ public class CallbackCommandController implements CommandController {
                     case IN_ARCHIVE -> coachAction.archiveTraining(update);
                     case DELETE_TRAINING -> coachAction.deleteTraining(update);
                     case ARCHIVE_TRAININGS -> coachAction.archivedTrainings(id, currentMessage);
+                    case MARK_USERS -> coachAction.viewMarkUsersMenu(id, currentMessage);
+                    case USERS_LIST -> coachAction.viewUserList(update);
                 }
             }
         }
@@ -90,6 +92,13 @@ public class CallbackCommandController implements CommandController {
             case TRAININGS_ON_CITY_FOR_CREATE -> coachAction.viewCalendar(id, currentMessage, data);
             case TRAINING_START_TIME -> coachAction.viewTrainingEndTime(id, currentMessage, data);
             case TRAINING_END_TIME -> coachAction.setTrainingEndTime(update);
+            case MARK_USERS -> {
+                if (data.contains(Callback.USER_MARK.getCallbackData())){
+                    coachAction.markUsers(id, currentMessage, data);
+                } else if (data.contains("USER:")) {
+                    coachAction.checkUserData(id, currentMessage, data);
+                }
+            }
         }
         if (data.matches("\\d{4}-\\d{2}-\\d{2}")) {
             coachAction.viewTrainingStartTime(id, currentMessage, data);

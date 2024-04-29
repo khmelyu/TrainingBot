@@ -28,10 +28,12 @@ public enum Callback {
     ABORTING("Отменить запись", "ABORTING"),
 
     DELETE_TRAINING("Удалить тренинг", "DELETE_TRAINING"),
-    USER_LIST("Список записавшихся", "SIGNUP_LIST"),
-    MARK_USER("Отметить участников", "MARK_USER"),
+    USERS_LIST("Список записавшихся", "USERS_LIST"),
+    MARK_USERS("Отметить участников", "MARK_USERS"),
     FEEDBACK_REQUEST("Запросить ОС", "FEEDBACK_REQUEST"),
-    IN_ARCHIVE("В архив", "IN_ARCHIVE");
+    IN_ARCHIVE("В архив", "IN_ARCHIVE"),
+    SELECT_USER("SELECT_USER","SELECT_USER:"),
+    USER_MARK("✅ / ❌", "USER_MARK:");
 
 
 
