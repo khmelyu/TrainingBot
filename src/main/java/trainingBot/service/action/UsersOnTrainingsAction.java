@@ -1,4 +1,4 @@
-package trainingBot.controller.action;
+package trainingBot.service.action;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -29,7 +29,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
+@Service
 @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")
 public class UsersOnTrainingsAction {
     private final Logger logger = LoggerFactory.getLogger(UsersOnTrainingsAction.class);

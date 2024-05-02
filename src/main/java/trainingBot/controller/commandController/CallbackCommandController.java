@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.WebhookController;
-import trainingBot.controller.action.BackAction;
-import trainingBot.controller.action.CoachAction;
-import trainingBot.controller.action.UsersOnTrainingsAction;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
+import trainingBot.service.action.BackAction;
+import trainingBot.service.action.CoachAction;
+import trainingBot.service.action.UsersOnTrainingsAction;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Callback;
@@ -70,11 +70,13 @@ public class CallbackCommandController implements CommandController {
                     case MY_TRAININGS -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
                     case ABORTING -> usersOnTrainingsAction.abortTrainings(update);
                     case IN_ARCHIVE -> coachAction.archiveTraining(update);
+                    case OUT_ARCHIVE -> coachAction.unArchiveTraining(update);
                     case DELETE_TRAINING -> coachAction.deleteTraining(update);
                     case ARCHIVE_TRAININGS -> coachAction.archivedTrainings(id, currentMessage);
                     case MARK_USERS -> coachAction.viewMarkUsersMenu(id, currentMessage);
                     case USERS_LIST -> coachAction.viewUserList(update);
                     case FEEDBACK_REQUEST -> coachAction.feedbackRequest(update);
+                    case FEEDBACK_VIEW -> coachAction.viewPresenceList(id, currentMessage);
                 }
             }
         }
@@ -108,14 +110,18 @@ public class CallbackCommandController implements CommandController {
                 switch (userState) {
                     case TRAININGS_ON_CITY, MY_TRAININGS ->
                             usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
-                    case CREATED_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
+                    case CREATED_TRAININGS, ARCHIVE_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
                 }
             }
         }
-        if (data.contains(Callback.FEEDBACK_ANSWER.getCallbackData())){
+        if (data.contains(Callback.FEEDBACK_ANSWER.getCallbackData())) {
             usersOnTrainingsAction.feedbackAnswer(update);
         }
+        if (data.contains(Callback.SELECT_FEEDBACK.getCallbackData())) {
+            coachAction.viewFeedback(id, currentMessage, data);
+        }
     }
+
     public void handleCallbackRequest(WebhookController.CallbackRequest request) {
         usersOnTrainingsAction.reviewTraining(request.userId(), request.trainingId());
     }

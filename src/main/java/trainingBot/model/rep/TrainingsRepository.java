@@ -29,6 +29,10 @@ public interface TrainingsRepository extends JpaRepository<Trainings, UUID> {
     void archiveTraining(@Param("id") UUID id);
 
     @Modifying
+    @Query("update trainings u set u.archive = false where u.id = :id")
+    void UnArchiveTraining(@Param("id") UUID id);
+
+    @Modifying
     @Query("update trainings u set u.actual = false where u.id = :id")
     void deleteTraining(@Param("id") UUID id);
 

@@ -3,7 +3,7 @@ package trainingBot.controller.commandController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.controller.action.*;
+import trainingBot.service.action.*;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Button;

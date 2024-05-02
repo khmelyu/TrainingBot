@@ -1,18 +1,18 @@
-package trainingBot.controller.action;
+package trainingBot.service.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import trainingBot.service.redis.TrainingDataService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
 
-@Component
+@Service
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")})
 public class BackAction {
     private final Sendler sendler;
@@ -87,7 +87,12 @@ public class BackAction {
                     userStateService.setUserState(id, UserState.COACH_MENU);
                     coachAction.createdTrainings(id, currentMessage);
                 }
-
+                case SELECT_ARCHIVE_TRAINING -> coachAction.archivedTrainings(id, currentMessage);
+                case FEEDBACK_VIEW -> coachAction.viewPresenceList(id, currentMessage);
+                case FEEDBACK_USER_LIST -> {
+                    userStateService.setUserState(id, UserState.ARCHIVE_TRAININGS);
+                    coachAction.reviewTraining(id, currentMessage, trainingDataService.getTrainingId(id));
+                }
 
             }
         } else {

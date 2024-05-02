@@ -1,11 +1,11 @@
-package trainingBot.controller.action;
+package trainingBot.service.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import trainingBot.model.entity.CantataZnaet;
 import trainingBot.model.entity.User;
 import trainingBot.model.rep.CantataZnaetRepository;
@@ -16,7 +16,7 @@ import trainingBot.view.Sendler;
 
 import java.util.List;
 
-@Component
+@Service
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")})
 public class MainMenuAction {
     private final Sendler sendler;

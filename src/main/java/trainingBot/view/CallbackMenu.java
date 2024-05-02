@@ -17,10 +17,7 @@ import trainingBot.service.UserListService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Component
@@ -116,6 +113,9 @@ public class CallbackMenu {
             keyboard.add(createRow(createButton(Callback.BACK)));
         } else if (userStateService.getUserState(id).equals(UserState.TRAININGS_ON_CITY)) {
             keyboard.add(createRow(createButton(Callback.SIGN_UP), createButton(Callback.BACK)));
+        } else if (userStateService.getUserState(id).equals(UserState.ARCHIVE_TRAININGS)) {
+            keyboard.add(createRow(createButton(Callback.FEEDBACK_VIEW), createButton(Callback.OUT_ARCHIVE)));
+            keyboard.add(createRow(createButton(Callback.BACK)));
         } else {
             keyboard.add(createRow(createButton(Callback.SIGN_UP)));
         }
@@ -263,6 +263,19 @@ public class CallbackMenu {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
+
+    public InlineKeyboardMarkup userListMenu(String trainingId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        for (User user : usersToTrainingsRepository.findByTrainingId(UUID.fromString(trainingId))) {
+            keyboard.add(createRow(InlineKeyboardButton.builder().text(user.getLastname() + "\n" + user.getName()).callbackData(Callback.SELECT_FEEDBACK.getCallbackData() + user.getId()).build()));
+        }
+        keyboard.add(createRow(createButton(Callback.BACK)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
 
     public InlineKeyboardMarkup startTimeMenu() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();

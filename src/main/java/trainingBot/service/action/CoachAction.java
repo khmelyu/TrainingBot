@@ -1,4 +1,4 @@
-package trainingBot.controller.action;
+package trainingBot.service.action;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
+@Service
 @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")
 public class CoachAction {
     private final Logger logger = LoggerFactory.getLogger(CoachAction.class);
@@ -77,6 +77,8 @@ public class CoachAction {
     private String offline;
     @Value("${archive.training}")
     private String trainingArchiveMessage;
+    @Value("${un.archive.training}")
+    private String unArchiveTrainingsMessage;
     @Value("${training.delete.message}")
     private String trainingDeleteMessage;
     @Value("${archive.trainings}")
@@ -89,10 +91,16 @@ public class CoachAction {
     private String waitingListUsers;
     @Value("${user.list.empty}")
     private String userListEmpty;
+    @Value("${user.list}")
+    private String userList;
     @Value("${training.feedback.coach.message}")
     private String trainingFeedbackCoachMessage;
     @Value("${training.feedback.user.message}")
     private String trainingFeedbackUserMessage;
+    @Value("${info.and.feedback}")
+    private String infoAndFeedback;
+    @Value("${feedback.is.empty}")
+    private String feedbackIsEmpty;
 
 
     @Autowired
@@ -276,17 +284,33 @@ public class CoachAction {
                 shortDescription = description.substring(0, 1024);
             }
             sendler.sendTrainingInfo(id, pic, currentMessage, shortDescription);
-            userStateService.setUserState(id, UserState.SELECT_COACH_TRAINING);
+            if (userStateService.getUserState(id).equals(UserState.CREATED_TRAININGS)) {
+                userStateService.setUserState(id, UserState.SELECT_COACH_TRAINING);
+            } else {
+                userStateService.setUserState(id, UserState.SELECT_ARCHIVE_TRAINING);
+            }
         }
     }
 
     @Transactional
     public void archiveTraining(Update update) {
-        long chatId = update.getCallbackQuery().getMessage().getChatId();
-        String trainingIdString = trainingDataService.getTrainingId(chatId);
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        String trainingIdString = trainingDataService.getTrainingId(id);
         UUID trainingId = UUID.fromString(trainingIdString);
         trainingsRepository.archiveTraining(trainingId);
-        sendler.sendTextMessage(chatId, trainingArchiveMessage);
+        logger.info("User: {} move training {} in archive", id, trainingId);
+        sendler.sendTextMessage(id, trainingArchiveMessage);
+        sendler.callbackAnswer(update);
+    }
+
+    @Transactional
+    public void unArchiveTraining(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        String trainingIdString = trainingDataService.getTrainingId(id);
+        UUID trainingId = UUID.fromString(trainingIdString);
+        trainingsRepository.UnArchiveTraining(trainingId);
+        logger.info("User: {} move training {} out archive", id, trainingId);
+        sendler.sendTextMessage(id, unArchiveTrainingsMessage);
         sendler.callbackAnswer(update);
     }
 
@@ -386,5 +410,29 @@ public class CoachAction {
             sendler.sendTextMessage(id, userListEmpty);
         }
         sendler.callbackAnswer(update);
+    }
+
+    public void viewPresenceList(long id, Message currentMessage) {
+        sendler.sendUserListMenu(id, userList, currentMessage, trainingDataService.getTrainingId(id));
+        userStateService.setUserState(id, UserState.FEEDBACK_USER_LIST);
+    }
+
+    public void viewFeedback(long id, Message currentMessage, String data) {
+        long userId = Long.parseLong(data.substring(16));
+        User user = userRepository.findById(userId).orElseThrow();
+        String userData = user.userData();
+        String feedback = usersToTrainingsRepository.viewFeedback(UUID.fromString(trainingDataService.getTrainingId(id)), userId);
+
+        StringBuilder message = new StringBuilder();
+        message.append(userData);
+        message.append("\n");
+        if (feedback != null && !feedback.isEmpty()) {
+            message.append(feedback);
+        } else {
+            message.append(feedbackIsEmpty);
+        }
+
+        sendler.sendUserFeedback(id, infoAndFeedback, currentMessage, String.valueOf(message));
+        userStateService.setUserState(id, UserState.FEEDBACK_VIEW);
     }
 }
