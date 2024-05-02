@@ -63,7 +63,10 @@ public class UsersOnTrainingsAction {
     private String repeatSignupMessage;
     @Value("${training.abort.message}")
     private String trainingAbortMessage;
-
+    @Value("${training.feedback.questions}")
+    private String trainingFeedbackQuestions;
+    @Value("${training.feedback.end}")
+    private String trainingFeedbackEnd;
 
     @Autowired
     public UsersOnTrainingsAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
@@ -241,5 +244,24 @@ public class UsersOnTrainingsAction {
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void feedbackAnswer(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        String data = update.getCallbackQuery().getData();
+        trainingDataService.setTrainingId(id, data.substring(16));
+        userStateService.setUserState(id, UserState.FEEDBACK_ANSWER);
+        sendler.sendBack(id, trainingFeedbackQuestions);
+        sendler.callbackAnswer(update);
+    }
+
+    @Transactional
+    public void sendingFeedback(long id, String feedback) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        Trainings training = trainingsRepository.findById(UUID.fromString(trainingDataService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
+        usersToTrainingsRepository.saveFeedback(feedback, user, training);
+        logger.info("User: {} send feedback {} for training {}", id, feedback, training.getId());
+        sendler.sendMainMenu(id, trainingFeedbackEnd);
+        userStateService.setUserState(id, UserState.MAIN_MENU);
     }
 }

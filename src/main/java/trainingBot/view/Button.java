@@ -9,6 +9,7 @@ public enum Button {
     FEEDBACK("Обратная связь"),
     TRAININGS("Тренинги"),
     DOCUMENTS("Документы"),
+    CZ_SEARCH("Поиск на cantata-znaet.com"),
     ADMIN("Админ панель"),
 
     ITS_OK("Все верно"),

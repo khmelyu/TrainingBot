@@ -92,6 +92,11 @@ public class Sendler {
         }
     }
 
+    public void sendBack(Long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.back();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
     public void sendMainMenu(Long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu(who);
         sendMessageWithButton(who, what, replyKeyboardMarkup);
@@ -151,12 +156,7 @@ public class Sendler {
 
     public void updateMenu(Long who, String pic, Message currentMessage, InlineKeyboardMarkup updatedKeyboard) {
         try {
-            EditMessageMedia editMessageMedia = EditMessageMedia.builder()
-                    .chatId(who.toString())
-                    .messageId(currentMessage.getMessageId())
-                    .media(InputMediaPhoto.builder().media(pic).build())
-                    .replyMarkup(updatedKeyboard)
-                    .build();
+            EditMessageMedia editMessageMedia = EditMessageMedia.builder().chatId(who.toString()).messageId(currentMessage.getMessageId()).media(InputMediaPhoto.builder().media(pic).build()).replyMarkup(updatedKeyboard).build();
             trainingBot.execute(editMessageMedia);
 
         } catch (TelegramApiException e) {
@@ -168,12 +168,7 @@ public class Sendler {
     public void updateMenu(Long who, String pic, Message currentMessage, InlineKeyboardMarkup updatedKeyboard, String caption) {
         try {
 
-            EditMessageMedia editMessageMedia = EditMessageMedia.builder()
-                    .chatId(who.toString())
-                    .messageId(currentMessage.getMessageId())
-                    .media(InputMediaPhoto.builder().media(pic).caption(caption).build())
-                    .replyMarkup(updatedKeyboard)
-                    .build();
+            EditMessageMedia editMessageMedia = EditMessageMedia.builder().chatId(who.toString()).messageId(currentMessage.getMessageId()).media(InputMediaPhoto.builder().media(pic).caption(caption).build()).replyMarkup(updatedKeyboard).build();
             trainingBot.execute(editMessageMedia);
 
 
@@ -285,5 +280,19 @@ public class Sendler {
     public void sendMarkUserList(Long who, String pic, Message currentMessage, String trainingId) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.markUserMenu(trainingId);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+    public void sendFeedbackAnswer(Long who, String what, String trainingId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.feedbackMenu(trainingId);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(who.toString());
+        sendMessage.setText(what);
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            trainingBot.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

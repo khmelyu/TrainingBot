@@ -75,6 +75,15 @@ public class CallbackMenu {
         return inlineKeyboardMarkup;
     }
 
+    public InlineKeyboardMarkup feedbackMenu(String trainingId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(createRow(InlineKeyboardButton.builder().text(Callback.FEEDBACK_ANSWER.getCallbackText()).callbackData(Callback.FEEDBACK_ANSWER.getCallbackData() + trainingId).build()));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
     public InlineKeyboardMarkup trainingsMenu(long id) {
         User user = userRepository.findById(id).orElse(null);
 

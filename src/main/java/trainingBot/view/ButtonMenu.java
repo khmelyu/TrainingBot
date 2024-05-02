@@ -39,13 +39,22 @@ public class ButtonMenu {
         return keyboardRow;
     }
 
+    public static ReplyKeyboardMarkup back() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
     public static ReplyKeyboardMarkup mainMenu(long id) {
         User user = userRepository.findById(id).orElse(null);
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
-
-        keyboard.add(createKeyboardRow(Button.TRAININGS, Button.MY_DATA, Button.FEEDBACK));
-        keyboard.add(createKeyboardRow(Button.DOCUMENTS));
+        keyboard.add(createKeyboardRow(Button.CZ_SEARCH));
+        keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
+        keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
         if (user != null && user.isAdmin()) {
             keyboard.add(createKeyboardRow(Button.ADMIN));
         }

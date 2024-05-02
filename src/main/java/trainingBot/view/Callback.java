@@ -33,7 +33,8 @@ public enum Callback {
     FEEDBACK_REQUEST("Запросить ОС", "FEEDBACK_REQUEST"),
     IN_ARCHIVE("В архив", "IN_ARCHIVE"),
     SELECT_USER("SELECT_USER","SELECT_USER:"),
-    USER_MARK("✅ / ❌", "USER_MARK:");
+    USER_MARK("✅ / ❌", "USER_MARK:"),
+    FEEDBACK_ANSWER("Оставить ОС", "FEEDBACK_ANSWER:");
 
 
 

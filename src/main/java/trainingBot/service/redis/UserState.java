@@ -16,6 +16,7 @@ public enum UserState {
     SET_RATE,
 
     MAIN_MENU,
+    CZ_SEARCH,
     USER_DATA,
     DOCUMENTS_MENU,
 
@@ -53,5 +54,6 @@ public enum UserState {
     CHECK_MY_DATA,
     MY_TRAININGS,
     USER_TRAINING_REVIEW,
+    FEEDBACK_ANSWER,
 
 }

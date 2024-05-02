@@ -18,9 +18,10 @@ public class TextCommandController implements CommandController {
     private final MainMenuAction mainMenuAction;
     private final DocumentsAction documentsAction;
     private final CoachAction coachAction;
+    private final UsersOnTrainingsAction usersOnTrainingsAction;
 
     @Autowired
-    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, CoachAction coachAction) {
+    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.adminAction = adminAction;
@@ -28,10 +29,11 @@ public class TextCommandController implements CommandController {
         this.mainMenuAction = mainMenuAction;
         this.documentsAction = documentsAction;
         this.coachAction = coachAction;
+        this.usersOnTrainingsAction = usersOnTrainingsAction;
     }
 
     @Override
-    public void handleMessage(Update update ) {
+    public void handleMessage(Update update) {
         long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         UserState userState = userStateService.getUserState(id);
@@ -81,6 +83,7 @@ public class TextCommandController implements CommandController {
                         case CONSULTANT -> documentsAction.consultant(id);
                         case CURATOR -> documentsAction.curator(id);
                         case MANAGER -> documentsAction.manager(id);
+                        case CZ_SEARCH -> mainMenuAction.czSearchMessage(id);
                     }
                 }
             }
@@ -96,7 +99,13 @@ public class TextCommandController implements CommandController {
                 case SET_CITY -> startAction.addCity(update);
                 case SET_GALLERY -> startAction.addGallery(update);
                 case SET_RATE -> startAction.addRate(update);
+                case CZ_SEARCH -> mainMenuAction.czSearchAction(id, text);
                 case TRAINING_LINK -> coachAction.setTrainingLink(update);
+                case FEEDBACK_ANSWER -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        usersOnTrainingsAction.sendingFeedback(id, text);
+                    }
+                }
             }
         } else {
             userStateService.setUserState(id, UserState.MAIN_MENU);

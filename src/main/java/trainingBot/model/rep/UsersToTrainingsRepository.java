@@ -44,7 +44,7 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
     void abortUserFromTraining(@Param("user") User user, @Param("trainings") Trainings trainings, @Param("abort_time")Timestamp timestamp);
 
 
-    @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false")
+    @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false AND (t.date > current_date OR (t.date = current_date AND t.start_time > current_time))")
     List<Trainings> findByUserId(@Param("userId") Long userId);
 
     @Query("SELECT u.user.id FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.waiting_list = true")
@@ -65,7 +65,15 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
 
     @Query("SELECT ut FROM users_to_trainings ut WHERE ut.trainings.id = :trainingId AND ut.actual = :actual AND ut.waiting_list = true")
     List<UsersToTrainings> findByTrainingsIdAndWaitingList(@Param("trainingId") UUID trainingId, @Param("actual") boolean actual);
+
+    @Query("SELECT u.user.id FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.waiting_list = false AND u.actual = true AND u.presence = true")
+    List<Long> findPresenceUsers(@Param("trainingId") UUID trainingId);
+    @Modifying
+    @Query("update users_to_trainings u set u.feedback = :feedback where u.user = :user and u.trainings = :trainings")
+    void saveFeedback(@Param("feedback") String feedback, @Param("user") User user, @Param("trainings") Trainings trainings);
 }
+
+
 
 
 

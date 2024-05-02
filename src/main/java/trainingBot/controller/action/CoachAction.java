@@ -89,6 +89,10 @@ public class CoachAction {
     private String waitingListUsers;
     @Value("${user.list.empty}")
     private String userListEmpty;
+    @Value("${training.feedback.coach.message}")
+    private String trainingFeedbackCoachMessage;
+    @Value("${training.feedback.user.message}")
+    private String trainingFeedbackUserMessage;
 
 
     @Autowired
@@ -283,7 +287,6 @@ public class CoachAction {
         UUID trainingId = UUID.fromString(trainingIdString);
         trainingsRepository.archiveTraining(trainingId);
         sendler.sendTextMessage(chatId, trainingArchiveMessage);
-        userStateService.setUserState(chatId, UserState.MAIN_MENU);
         sendler.callbackAnswer(update);
     }
 
@@ -298,7 +301,6 @@ public class CoachAction {
         if (notificationUser.canCall(id)) {
             notificationUser.notificationAbortTraining(trainingDataService.getTrainingId(id));
         }
-        userStateService.setUserState(id, UserState.MAIN_MENU);
         sendler.callbackAnswer(update);
     }
 
@@ -326,6 +328,26 @@ public class CoachAction {
         String userData = user.userData();
         sendler.sendCheckUserData(id, userInfo, currentMessage, userData);
         userStateService.setUserState(id, UserState.CHECK_USER_DATA);
+    }
+
+    public void feedbackRequest(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        String trainingId = trainingDataService.getTrainingId(id);
+        List<Long> usersId = usersToTrainingsRepository.findPresenceUsers(UUID.fromString(trainingId));
+        Trainings training = trainingsRepository.findById(UUID.fromString(trainingId)).orElseThrow(() -> new RuntimeException("Training not found"));
+        String trainingName = training.getName();
+        String message = String.format(trainingFeedbackUserMessage, trainingName);
+        for (long userId : usersId) {
+            try {
+                sendler.sendFeedbackAnswer(userId, message, trainingId);
+                logger.info("User: {} received a message about a feedback for training {}", userId, trainingId);
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+                logger.warn("User: {} didn't get a request for feedback for training {}", userId, trainingId);
+            }
+            sendler.sendTextMessage(id, trainingFeedbackCoachMessage);
+        }
+        sendler.callbackAnswer(update);
     }
 
     public void viewUserList(Update update) {

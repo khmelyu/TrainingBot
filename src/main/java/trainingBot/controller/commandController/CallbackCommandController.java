@@ -74,40 +74,46 @@ public class CallbackCommandController implements CommandController {
                     case ARCHIVE_TRAININGS -> coachAction.archivedTrainings(id, currentMessage);
                     case MARK_USERS -> coachAction.viewMarkUsersMenu(id, currentMessage);
                     case USERS_LIST -> coachAction.viewUserList(update);
+                    case FEEDBACK_REQUEST -> coachAction.feedbackRequest(update);
                 }
             }
         }
-
-        switch (userState) {
-            case CREATE_SAINT_PETERSBURG_TRAINING, CREATE_MOSCOW_TRAINING, CREATE_ONLINE_TRAINING -> {
-                if (trainingsListRepository.existsByCategory(data)) {
-                    coachAction.viewTrainingsOnCategory(id, currentMessage, data);
-                }
-            }
-            case MOSCOW_TRAININGS, SAINT_PETERSBURG_TRAININGS, ONLINE_TRAININGS -> {
-                if (trainingsRepository.existsByCategory(data)) {
-                    usersOnTrainingsAction.viewTrainingsOnCategory(id, currentMessage, data);
-                }
-            }
-            case TRAININGS_ON_CITY_FOR_CREATE -> coachAction.viewCalendar(id, currentMessage, data);
-            case TRAINING_START_TIME -> coachAction.viewTrainingEndTime(id, currentMessage, data);
-            case TRAINING_END_TIME -> coachAction.setTrainingEndTime(update);
-            case MARK_USERS -> {
-                if (data.contains(Callback.USER_MARK.getCallbackData())){
-                    coachAction.markUsers(id, currentMessage, data);
-                } else if (data.contains("USER:")) {
-                    coachAction.checkUserData(id, currentMessage, data);
-                }
-            }
-        }
-        if (data.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            coachAction.viewTrainingStartTime(id, currentMessage, data);
-        }
-        if (data.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$")) {
+        if (userState != null) {
             switch (userState) {
-                case TRAININGS_ON_CITY, MY_TRAININGS -> usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
-                case CREATED_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
+                case CREATE_SAINT_PETERSBURG_TRAINING, CREATE_MOSCOW_TRAINING, CREATE_ONLINE_TRAINING -> {
+                    if (trainingsListRepository.existsByCategory(data)) {
+                        coachAction.viewTrainingsOnCategory(id, currentMessage, data);
+                    }
+                }
+                case MOSCOW_TRAININGS, SAINT_PETERSBURG_TRAININGS, ONLINE_TRAININGS -> {
+                    if (trainingsRepository.existsByCategory(data)) {
+                        usersOnTrainingsAction.viewTrainingsOnCategory(id, currentMessage, data);
+                    }
+                }
+                case TRAININGS_ON_CITY_FOR_CREATE -> coachAction.viewCalendar(id, currentMessage, data);
+                case TRAINING_START_TIME -> coachAction.viewTrainingEndTime(id, currentMessage, data);
+                case TRAINING_END_TIME -> coachAction.setTrainingEndTime(update);
+                case MARK_USERS -> {
+                    if (data.contains(Callback.USER_MARK.getCallbackData())) {
+                        coachAction.markUsers(id, currentMessage, data);
+                    } else if (data.contains(Callback.SELECT_USER.getCallbackData())) {
+                        coachAction.checkUserData(id, currentMessage, data);
+                    }
+                }
             }
+            if (data.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                coachAction.viewTrainingStartTime(id, currentMessage, data);
+            }
+            if (data.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$")) {
+                switch (userState) {
+                    case TRAININGS_ON_CITY, MY_TRAININGS ->
+                            usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
+                    case CREATED_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
+                }
+            }
+        }
+        if (data.contains(Callback.FEEDBACK_ANSWER.getCallbackData())){
+            usersOnTrainingsAction.feedbackAnswer(update);
         }
     }
     public void handleCallbackRequest(WebhookController.CallbackRequest request) {

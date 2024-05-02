@@ -27,5 +27,6 @@ public class UsersToTrainings {
     private Timestamp abort_time;
     private boolean presence;
     private boolean waiting_list;
+    private String feedback;
 
 }
