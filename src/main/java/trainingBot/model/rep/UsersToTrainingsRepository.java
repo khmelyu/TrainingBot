@@ -43,7 +43,7 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
     @Query("update users_to_trainings u set u.actual = false, u.abort_time = :abort_time where u.user = :user and u.trainings = :trainings")
     void abortUserFromTraining(@Param("user") User user, @Param("trainings") Trainings trainings, @Param("abort_time")Timestamp timestamp);
 
-    @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false AND (t.date > current_date OR (t.date = current_date AND t.start_time > current_time))")
+    @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false AND (t.date > current_date() OR (t.date = current_date() AND t.start_time > current_time())) ORDER BY t.name")
     List<Trainings> findByUserId(@Param("userId") Long userId);
     @Query("SELECT u.user FROM users_to_trainings u WHERE u.trainings.id = :trainingId")
     List<User> findByTrainingId(@Param("trainingId") UUID trainingId);
