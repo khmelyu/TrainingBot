@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface TrainingsRepository extends JpaRepository<Trainings, UUID> {
-    @Query("SELECT new trainingBot.model.entity.Trainings(t.id, t.name, t.description, t.city, t.date, t.start_time, t.type, t.creator, t.end_time, t.category, t.max_users, t.pic, t.link, t.actual, t.archive) FROM trainings t WHERE t.creator = :creator AND t.archive = false AND t.actual = true")
+    @Query("SELECT new trainingBot.model.entity.Trainings(t.id, t.name, t.description, t.city, t.date, t.start_time, t.type, t.creator, t.end_time, t.category, t.max_users, t.pic, t.link, t.actual, t.archive) FROM trainings t WHERE t.creator = :creator AND t.archive = false AND t.actual = true ORDER BY t.date")
     List<Trainings> findByCreator(@Param("creator") long id);
 
     @Query("SELECT new trainingBot.model.entity.Trainings(t.id, t.name, t.description, t.city, t.date, t.start_time, t.type, t.creator, t.end_time, t.category, t.max_users, t.pic, t.link, t.actual, t.archive) FROM trainings t WHERE t.creator = :creator AND t.archive = true AND t.actual = true")
