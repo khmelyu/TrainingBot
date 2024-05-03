@@ -2,7 +2,6 @@ package trainingBot.service.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ public class StartAction {
     private String userDataFail;
 
     @Autowired
-    public StartAction(UserRepository userRepository, UserStateService userStateService, @Lazy Sendler sendler) {
+    public StartAction(UserRepository userRepository, UserStateService userStateService, Sendler sendler) {
         this.userRepository = userRepository;
         this.userStateService = userStateService;
         this.sendler = sendler;

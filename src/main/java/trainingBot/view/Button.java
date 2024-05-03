@@ -11,7 +11,12 @@ public enum Button {
     TRAININGS("Тренинги"),
     DOCUMENTS("Документы"),
     CZ_SEARCH("Поиск на cantata-znaet.com"),
+    CONTACTS_SEARCH("Поиск контактов"),
+    INFO_SEARCH("Где искать информацию?"),
     ADMIN("Админ панель"),
+
+    YES("Да"),
+    NO("Нет"),
 
     ITS_OK("Все верно"),
     CHANGE("Изменить"),
@@ -43,7 +48,23 @@ public enum Button {
     PATTERNS("Шаблоны/заявления"),
     INVENTORY("Учеты"),
     SALARY("РСП для ЗП"),
-    STATEMENTS("Заявления");
+    STATEMENTS("Заявления"),
+
+    PRODUCT_AND_SERVICE("Продукт и сервис\uD83C\uDF75"),
+    MANAGEMENT("Управление\uD83D\uDCC8"),
+    DESIGN("Дизайн\uD83C\uDF80"),
+    IT("IT\uD83D\uDCBB"),
+    CORPORATE_CULTURE("Корпоративная культура\uD83D\uDC6B"),
+
+    PRODUCT_QUALITY("Качество продукта"),
+    PROMOTION("Акции"),
+    TECH("Техника"),
+    CHAIN_MEETING("Собрание сети"),
+    TAKEAWAY("Напитки с собой"),
+    ORDER("Заказы/остатки"),
+    SICK_LEAVE_REQUEST("Заявления на отпуск и больничный"),
+    CONTRACT("Договоры/проверки");
+
 
 
 

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +50,6 @@ public class UsersOnTrainingsAction {
     private String trainingChoice;
     @Value("${my.trainings}")
     private String myTrainings;
-    @Value("${user.info}")
-    private String userInfo;
     @Value("${actual.data}")
     private String actualData;
     @Value("${online}")
@@ -71,7 +68,7 @@ public class UsersOnTrainingsAction {
     private String trainingFeedbackEnd;
 
     @Autowired
-    public UsersOnTrainingsAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
+    public UsersOnTrainingsAction(Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingDataService = trainingDataService;
@@ -110,6 +107,7 @@ public class UsersOnTrainingsAction {
         sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, trainingDataService.getCity(id), data);
         userStateService.setUserState(id, UserState.TRAININGS_ON_CITY);
     }
+
     public void reviewMyTraining(long id, Message currentMessage, String data) {
         trainingDataService.setTrainingId(id, data);
 
@@ -128,6 +126,7 @@ public class UsersOnTrainingsAction {
             userStateService.setUserState(id, UserState.SELECT_MY_TRAINING);
         }
     }
+
     public void reviewTraining(long id, Message currentMessage, String data) {
         trainingDataService.setTrainingId(id, data);
 

@@ -3,7 +3,6 @@ package trainingBot.service.action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,7 +17,7 @@ public class PhotoAction {
     private final UserRepository userRepository;
 
     @Autowired
-    public PhotoAction(@Lazy Sendler sendler, UserRepository userRepository) {
+    public PhotoAction(Sendler sendler, UserRepository userRepository) {
         this.sendler = sendler;
         this.userRepository = userRepository;
     }

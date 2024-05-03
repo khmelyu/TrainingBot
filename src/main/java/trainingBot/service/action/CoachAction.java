@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,7 +106,7 @@ public class CoachAction {
 
 
     @Autowired
-    public CoachAction(@Lazy Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser) {
+    public CoachAction(Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingDataService = trainingDataService;
@@ -214,7 +213,7 @@ public class CoachAction {
     public void setTrainingLink(Update update) {
         long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
-        if(!text.equals(Button.ABORT.getText())){
+        if (!text.equals(Button.ABORT.getText())) {
             trainingDataService.setLink(id, text);
             createTraining(update);
         }

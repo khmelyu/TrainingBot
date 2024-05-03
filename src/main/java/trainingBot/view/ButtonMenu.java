@@ -61,7 +61,7 @@ public class ButtonMenu {
         User user = userRepository.findById(id).orElse(null);
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(createKeyboardRow(Button.CZ_SEARCH));
+        keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.CONTACTS_SEARCH));
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
         if (user != null && user.isAdmin()) {
@@ -143,6 +143,41 @@ public class ButtonMenu {
 
         keyboard.add(createKeyboardRow(Button.CORPORATE, Button.CONSULTANT, Button.MANAGER));
         keyboard.add(createKeyboardRow(Button.CURATOR, Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup infoSearchMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.PRODUCT_AND_SERVICE, Button.MANAGEMENT, Button.DESIGN));
+        keyboard.add(createKeyboardRow(Button.IT, Button.CORPORATE_CULTURE));
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup contactSearchMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.YES, Button.NO));
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup contactSearchNoMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.PRODUCT_QUALITY, Button.PROMOTION, Button.TECH));
+        keyboard.add(createKeyboardRow(Button.CHAIN_MEETING, Button.TAKEAWAY, Button.ORDER));
+        keyboard.add(createKeyboardRow(Button.SICK_LEAVE_REQUEST, Button.CONTRACT, Button.BACK));
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;

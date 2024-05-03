@@ -17,17 +17,21 @@ public class TextCommandController implements CommandController {
     private final BackAction backAction;
     private final MainMenuAction mainMenuAction;
     private final DocumentsAction documentsAction;
+    private final InfoSearchAction infoSearchAction;
+    private final ContactSearchAction contactSearchAction;
     private final CoachAction coachAction;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
 
     @Autowired
-    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction) {
+    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.adminAction = adminAction;
         this.backAction = backAction;
         this.mainMenuAction = mainMenuAction;
         this.documentsAction = documentsAction;
+        this.infoSearchAction = infoSearchAction;
+        this.contactSearchAction = contactSearchAction;
         this.coachAction = coachAction;
         this.usersOnTrainingsAction = usersOnTrainingsAction;
     }
@@ -47,7 +51,10 @@ public class TextCommandController implements CommandController {
                         case BACK, ABORT -> backAction.backAction(id);
                         //MainMenu
                         case TRAININGS -> mainMenuAction.trainingsAction(id);
+                        case CZ_SEARCH -> mainMenuAction.czSearchMessage(id);
                         case DOCUMENTS -> mainMenuAction.documents(id);
+                        case INFO_SEARCH -> mainMenuAction.infoSearch(id);
+                        case CONTACTS_SEARCH -> mainMenuAction.contactSearch(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
                         //MyData
@@ -83,7 +90,23 @@ public class TextCommandController implements CommandController {
                         case CONSULTANT -> documentsAction.consultant(id);
                         case CURATOR -> documentsAction.curator(id);
                         case MANAGER -> documentsAction.manager(id);
-                        case CZ_SEARCH -> mainMenuAction.czSearchMessage(id);
+                        //InfoSearch
+                        case PRODUCT_AND_SERVICE -> infoSearchAction.productAndService(id);
+                        case MANAGEMENT -> infoSearchAction.management(id);
+                        case DESIGN -> infoSearchAction.design(id);
+                        case IT -> infoSearchAction.it(id);
+                        case CORPORATE_CULTURE -> infoSearchAction.corporateCulture(id);
+                        //ContactSearch
+                        case NO -> contactSearchAction.noMenu(id);
+                        case PRODUCT_QUALITY -> contactSearchAction.productQuality(id);
+                        case PROMOTION -> contactSearchAction.promotion(id);
+                        case TECH -> contactSearchAction.tech(id);
+                        case CHAIN_MEETING -> contactSearchAction.chainMeeting(id);
+                        case TAKEAWAY -> contactSearchAction.takeAway(id);
+                        case ORDER -> contactSearchAction.order(id);
+                        case SICK_LEAVE_REQUEST -> contactSearchAction.sickLeaveRequest(id);
+                        case CONTRACT -> contactSearchAction.contract(id);
+
                     }
                 }
             }

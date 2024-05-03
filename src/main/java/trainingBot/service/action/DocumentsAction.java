@@ -108,7 +108,7 @@ public class DocumentsAction {
 
 
     @Autowired
-    public DocumentsAction(@Lazy Sendler sendler, UserStateService userStateService) {
+    public DocumentsAction(Sendler sendler, UserStateService userStateService) {
         this.sendler = sendler;
         this.userStateService = userStateService;
     }

@@ -2,7 +2,6 @@ package trainingBot.service.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,10 @@ public class MainMenuAction {
     private String feedbackMessage;
     @Value("${documents.message}")
     private String documentsMessage;
+    @Value("${info.search.message}")
+    private String infoSearchMessage;
+    @Value("${contact.search.message}")
+    private String contactSearchMessage;
     @Value("${cz.search.message}")
     private String czSearchMessage;
     @Value("${cz.search.empty.message}")
@@ -41,7 +44,7 @@ public class MainMenuAction {
 
     @Autowired
     public MainMenuAction(
-            @Lazy Sendler sendler,
+            Sendler sendler,
             UserRepository userRepository,
             UserStateService userStateService,
             StartAction startAction, CantataZnaetRepository cantataZnaetRepository
@@ -81,6 +84,16 @@ public class MainMenuAction {
     public void documents(long id) {
         sendler.sendDocumentsMenu(id, documentsMessage);
         userStateService.setUserState(id, UserState.DOCUMENTS_MENU);
+    }
+
+    public void infoSearch(long id) {
+        sendler.sendInfoSearchMenu(id, infoSearchMessage);
+        userStateService.setUserState(id, UserState.INFO_SEARCH);
+    }
+
+    public void contactSearch(long id) {
+        sendler.sendContactSearchMenu(id, contactSearchMessage);
+        userStateService.setUserState(id, UserState.CONTACT_SEARCH);
     }
 
     public void czSearchMessage(long id) {
