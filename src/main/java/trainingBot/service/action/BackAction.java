@@ -10,17 +10,19 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import trainingBot.service.redis.TrainingDataService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
+import trainingBot.view.Callback;
 import trainingBot.view.Sendler;
 
 @Service
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")})
 public class BackAction {
+
+
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final CoachAction coachAction;
     private final TrainingDataService trainingDataService;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
-
     @Value("${main.menu.message}")
     private String mainMenuMessage;
     @Value("${training.menu}")
@@ -31,7 +33,6 @@ public class BackAction {
     private String coachMenu;
     @Value("${training.city}")
     private String trainingCity;
-
 
     @Autowired
     public BackAction(
@@ -82,7 +83,11 @@ public class BackAction {
                     userStateService.setUserState(id, UserState.MARK_USERS);
                     coachAction.viewMarkUsersMenu(id, currentMessage);
                 }
-                case SELECT_TRAINING -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
+                case SELECT_MY_TRAINING -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
+                case SELECT_TRAINING -> {
+                    String category = trainingDataService.getCategory(id);
+                    usersOnTrainingsAction.viewTrainingsOnCategory(id, currentMessage, category);
+                }
                 case SELECT_COACH_TRAINING -> {
                     userStateService.setUserState(id, UserState.COACH_MENU);
                     coachAction.createdTrainings(id, currentMessage);
@@ -92,6 +97,19 @@ public class BackAction {
                 case FEEDBACK_USER_LIST -> {
                     userStateService.setUserState(id, UserState.ARCHIVE_TRAININGS);
                     coachAction.reviewTraining(id, currentMessage, trainingDataService.getTrainingId(id));
+                }
+                case TRAININGS_ON_CITY -> {
+                    String city = trainingDataService.getCity(id);
+
+                    if (Callback.MOSCOW.getCallbackText().equals(city)) {
+                        usersOnTrainingsAction.viewMoscowCategory(id, currentMessage, city);
+                    }
+                    if (Callback.SAINT_PETERSBURG.getCallbackText().equals(city)) {
+                        usersOnTrainingsAction.viewSaintsPetersburgCategory(id, currentMessage, city);
+                    }
+                    if (Callback.ONLINE_TRAININGS_CREATE.getCallbackText().equals(city)) {
+                        usersOnTrainingsAction.viewOnlineCategory(id, currentMessage);
+                    }
                 }
 
             }

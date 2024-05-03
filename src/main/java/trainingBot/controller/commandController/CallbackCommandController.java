@@ -108,8 +108,8 @@ public class CallbackCommandController implements CommandController {
             }
             if (data.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$")) {
                 switch (userState) {
-                    case TRAININGS_ON_CITY, MY_TRAININGS ->
-                            usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
+                    case TRAININGS_ON_CITY -> usersOnTrainingsAction.reviewTraining(id, currentMessage, data);
+                    case MY_TRAININGS -> usersOnTrainingsAction.reviewMyTraining(id, currentMessage, data);
                     case CREATED_TRAININGS, ARCHIVE_TRAININGS -> coachAction.reviewTraining(id, currentMessage, data);
                 }
             }

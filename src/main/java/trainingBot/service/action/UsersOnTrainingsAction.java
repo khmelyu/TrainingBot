@@ -108,7 +108,24 @@ public class UsersOnTrainingsAction {
         sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, trainingDataService.getCity(id), data);
         userStateService.setUserState(id, UserState.TRAININGS_ON_CITY);
     }
+    public void reviewMyTraining(long id, Message currentMessage, String data) {
+        trainingDataService.setTrainingId(id, data);
 
+        Optional<Trainings> trainingOptional = trainingsRepository.findById(UUID.fromString(data));
+        if (trainingOptional.isPresent()) {
+            Trainings training = trainingOptional.get();
+            String description = training.getDescription();
+            String pic = training.getPic();
+            String shortDescription;
+            if (description.length() <= 1024) {
+                shortDescription = description;
+            } else {
+                shortDescription = description.substring(0, 1024);
+            }
+            sendler.sendTrainingInfo(id, pic, currentMessage, shortDescription);
+            userStateService.setUserState(id, UserState.SELECT_MY_TRAINING);
+        }
+    }
     public void reviewTraining(long id, Message currentMessage, String data) {
         trainingDataService.setTrainingId(id, data);
 
