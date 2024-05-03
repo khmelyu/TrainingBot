@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.service.redis.TrainingDataService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
@@ -51,8 +52,11 @@ public class BackAction {
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
 
-    public void backActionInline(long id, Message currentMessage) {
+    public void backActionInline(Update update) {
+        long id = update.getCallbackQuery().getMessage().getChatId();
+        Message currentMessage = update.getCallbackQuery().getMessage();
         UserState userState = userStateService.getUserState(id);
+
         if (userState != null) {
             switch (userState) {
                 case COACH_MENU, ONLINE_TRAININGS, OFFLINE_TRAININGS, MY_TRAININGS -> {
@@ -63,7 +67,7 @@ public class BackAction {
                     sendler.sendCoachMenu(id, coachMenu, currentMessage);
                     userStateService.setUserState(id, UserState.COACH_MENU);
                 }
-                case CREATE_OFFLINE_TRAINING, CREATE_ONLINE_TRAINING, TRAININGS_ON_CITY_FOR_CREATE -> {
+                case CREATE_OFFLINE_TRAINING, CREATE_ONLINE_TRAINING -> {
                     sendler.sendCreateMenu(id, trainingType, currentMessage);
                     userStateService.setUserState(id, UserState.CREATE_TRAINING);
                 }
@@ -71,6 +75,46 @@ public class BackAction {
                     sendler.sendCityChoice(id, trainingCity, currentMessage);
                     userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
                 }
+                case TRAININGS_ON_CITY_FOR_CREATE -> {
+                    String city = trainingDataService.getCity(id);
+                    if (city.equals(Callback.MOSCOW.getCallbackText())) {
+                        userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
+                        coachAction.viewMoscowCategory(id, currentMessage, city);
+                    }
+                    if (city.equals(Callback.SAINT_PETERSBURG.getCallbackText())) {
+                        userStateService.setUserState(id, UserState.CREATE_OFFLINE_TRAINING);
+                        coachAction.viewSaintsPetersburgCategory(id, currentMessage, city);
+                    }
+                    if (city.equals(Callback.ONLINE_TRAININGS_CREATE.getCallbackText())) {
+                        userStateService.setUserState(id, UserState.CREATE_TRAINING);
+                        coachAction.viewOnlineCategory(id, currentMessage, city);
+                    }
+
+                }
+                case CALENDAR -> {
+                    String category = trainingDataService.getCategory(id);
+                    if (trainingDataService.getCity(id).equals(Callback.MOSCOW.getCallbackText())) {
+                        userStateService.setUserState(id, UserState.CREATE_MOSCOW_TRAINING);
+                    }
+                    if (trainingDataService.getCity(id).equals(Callback.SAINT_PETERSBURG.getCallbackText())) {
+                        userStateService.setUserState(id, UserState.CREATE_SAINT_PETERSBURG_TRAINING);
+                    }
+                    if (trainingDataService.getCity(id).equals(Callback.ONLINE_TRAININGS_CREATE.getCallbackText())) {
+                        userStateService.setUserState(id, UserState.CREATE_ONLINE_TRAINING);
+                    }
+                    coachAction.viewTrainingsOnCategory(id, currentMessage, category);
+                }
+
+                case TRAINING_START_TIME -> {
+                    String trainingListId = trainingDataService.getTrainingListId(id);
+                    coachAction.viewCalendar(id, currentMessage, trainingListId);
+                }
+
+                case TRAINING_END_TIME -> {
+                    String date = trainingDataService.getTrainingDate(id);
+                    coachAction.viewTrainingStartTime(id, currentMessage, date);
+                }
+
                 case MOSCOW_TRAININGS, SAINT_PETERSBURG_TRAININGS -> {
                     sendler.sendCityChoice(id, trainingCity, currentMessage);
                     userStateService.setUserState(id, UserState.OFFLINE_TRAININGS);
@@ -84,7 +128,7 @@ public class BackAction {
                     coachAction.viewMarkUsersMenu(id, currentMessage);
                 }
                 case CHECK_MY_DATA -> {
-                    userStateService.setUserState(id,UserState.TRAININGS_ON_CITY);
+                    userStateService.setUserState(id, UserState.TRAININGS_ON_CITY);
                     usersOnTrainingsAction.reviewTraining(id, currentMessage, trainingDataService.getTrainingId(id));
                 }
                 case SELECT_MY_TRAINING -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
@@ -119,7 +163,7 @@ public class BackAction {
             }
         } else {
             userStateService.setUserState(id, UserState.MY_TRAININGS);
-            backActionInline(id, currentMessage);
+            backActionInline(update);
         }
     }
 }

@@ -46,7 +46,7 @@ public class CallbackCommandController implements CommandController {
         for (Callback callback : Callback.values()) {
             if (callback.getCallbackData().equals(data)) {
                 switch (callback) {
-                    case BACK, ABORT_SIGNUP -> backAction.backActionInline(id, currentMessage);
+                    case BACK, ABORT_SIGNUP -> backAction.backActionInline(update);
                     case COACH_MENU -> coachAction.coachAction(id, currentMessage);
                     case CREATE_TRAININGS -> coachAction.creatingTraining(id, currentMessage);
                     case OFFLINE_TRAININGS_CREATE -> coachAction.viewTrainingCity(id, currentMessage);
@@ -96,9 +96,18 @@ public class CallbackCommandController implements CommandController {
                         usersOnTrainingsAction.viewTrainingsOnCategory(id, currentMessage, data);
                     }
                 }
-                case TRAININGS_ON_CITY_FOR_CREATE -> coachAction.viewCalendar(id, currentMessage, data);
-                case TRAINING_START_TIME -> coachAction.viewTrainingEndTime(id, currentMessage, data);
-                case TRAINING_END_TIME -> coachAction.setTrainingEndTime(update);
+                case TRAININGS_ON_CITY_FOR_CREATE -> {
+                    if (!data.equals("BACK"))
+                        coachAction.viewCalendar(id, currentMessage, data);
+                }
+                case TRAINING_START_TIME -> {
+                    if (!data.equals("BACK"))
+                        coachAction.viewTrainingEndTime(id, currentMessage, data);
+                }
+                case TRAINING_END_TIME -> {
+                    if (!data.equals("BACK"))
+                        coachAction.setTrainingEndTime(update);
+                }
                 case MARK_USERS -> {
                     if (data.contains(Callback.USER_MARK.getCallbackData())) {
                         coachAction.markUsers(id, currentMessage, data);

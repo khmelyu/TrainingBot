@@ -19,6 +19,18 @@ public class TrainingDataService {
         this.hashOps = redisTemplate.opsForHash();
     }
 
+    public void setTrainingListId(long userId, String trainingListId) {
+        hashOps.put(userId + USER_DATA_PREFIX, "training_list_id", trainingListId);
+    }
+
+    public String getTrainingListId(long userId) {
+        Object trainingListIdObject = hashOps.get(userId + USER_DATA_PREFIX, "training_list_id");
+        if (trainingListIdObject instanceof String) {
+            return  trainingListIdObject.toString();
+        }
+        return null;
+    }
+
     public void setTrainingId(long userId, String trainingId) {
         hashOps.put(userId + USER_DATA_PREFIX, "training_id", trainingId);
     }

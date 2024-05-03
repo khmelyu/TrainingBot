@@ -97,6 +97,11 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
+    public void sendAbort(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.abort();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
     public void sendMainMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu(who);
         sendMessageWithButton(who, what, replyKeyboardMarkup);

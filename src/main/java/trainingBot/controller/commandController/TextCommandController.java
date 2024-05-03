@@ -44,7 +44,7 @@ public class TextCommandController implements CommandController {
             for (Button button : Button.values()) {
                 if (button.getText().equals(text)) {
                     switch (button) {
-                        case BACK -> backAction.backAction(id);
+                        case BACK, ABORT -> backAction.backAction(id);
                         //MainMenu
                         case TRAININGS -> mainMenuAction.trainingsAction(id);
                         case DOCUMENTS -> mainMenuAction.documents(id);

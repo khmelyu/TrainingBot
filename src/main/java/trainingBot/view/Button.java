@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Button {
     BACK("Назад"),
+    ABORT("Отмена"),
     MY_DATA("Мои данные"),
     FEEDBACK("Обратная связь"),
     TRAININGS("Тренинги"),

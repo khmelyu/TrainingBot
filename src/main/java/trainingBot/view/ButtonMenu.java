@@ -48,6 +48,15 @@ public class ButtonMenu {
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup abort() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(createKeyboardRow(Button.ABORT));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
     public static ReplyKeyboardMarkup mainMenu(long id) {
         User user = userRepository.findById(id).orElse(null);
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();

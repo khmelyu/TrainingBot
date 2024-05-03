@@ -22,6 +22,7 @@ import trainingBot.service.NotificationUser;
 import trainingBot.service.redis.TrainingDataService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
+import trainingBot.view.Button;
 import trainingBot.view.Sendler;
 
 import java.sql.Date;
@@ -156,7 +157,6 @@ public class CoachAction {
     }
 
     public void viewTrainingsOnCategory(long id, Message currentMessage, String data) {
-
         trainingDataService.setCategory(id, data);
         sendler.sendTrainingsOnCategory(id, trainingChoice, currentMessage, trainingDataService.getCity(id), data);
         userStateService.setUserState(id, UserState.TRAININGS_ON_CITY_FOR_CREATE);
@@ -172,6 +172,7 @@ public class CoachAction {
             trainingDataService.setTrainingDescription(id, training.getDescription());
             trainingDataService.setPic(id, training.getPic());
             trainingDataService.setMaxUsers(id, String.valueOf(training.getMax_users()));
+            trainingDataService.setTrainingListId(id, data);
         }
 
         LocalDate currentDate = LocalDate.now();
@@ -204,7 +205,7 @@ public class CoachAction {
         String formattedEndTime = LocalTime.parse(data).format(DateTimeFormatter.ISO_LOCAL_TIME);
         trainingDataService.setEndTime(id, formattedEndTime);
         if (trainingDataService.getCity(id).equals(online)) {
-            sendler.sendTextMessage(id, trainingLink);
+            sendler.sendAbort(id, trainingLink);
             userStateService.setUserState(id, UserState.TRAINING_LINK);
             sendler.callbackAnswer(update);
         } else createTraining(update);
@@ -213,8 +214,10 @@ public class CoachAction {
     public void setTrainingLink(Update update) {
         long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
-        trainingDataService.setLink(id, text);
-        createTraining(update);
+        if(!text.equals(Button.ABORT.getText())){
+            trainingDataService.setLink(id, text);
+            createTraining(update);
+        }
     }
 
     public void createTraining(Update update) {
