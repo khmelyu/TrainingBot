@@ -75,7 +75,7 @@ public class Calendar {
         }
 
         List<InlineKeyboardButton> back = new ArrayList<>();
-        back.add(InlineKeyboardButton.builder().text("Назад").callbackData("Back").build());
+        back.add(InlineKeyboardButton.builder().text("Назад").callbackData("BACK").build());
         keyboard.add(back);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;

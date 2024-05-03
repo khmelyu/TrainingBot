@@ -71,6 +71,8 @@ public class CoachAction {
     private String createdTrainings;
     @Value("${training.link}")
     private String trainingLink;
+    @Value("${calendar.text}")
+    private String calendarText;
     @Value("${online}")
     private String online;
     @Value("${offline}")
@@ -173,12 +175,12 @@ public class CoachAction {
         }
 
         LocalDate currentDate = LocalDate.now();
-        sendler.sendCalendar(id, trainingDate, currentMessage, currentDate);
+        sendler.sendCalendar(id, trainingDate, currentMessage, currentDate, calendarText);
         userStateService.setUserState(id, UserState.CALENDAR);
     }
 
     public void viewChangeCalendar(long id, Message currentMessage, String data) {
-        sendler.sendChangeCalendar(id, trainingDate, currentMessage, data);
+        sendler.sendChangeCalendar(id, trainingDate, currentMessage, data, calendarText);
     }
 
     public void viewTrainingStartTime(long id, Message currentMessage, String data) {

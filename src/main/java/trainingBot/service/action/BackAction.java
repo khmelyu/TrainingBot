@@ -83,6 +83,10 @@ public class BackAction {
                     userStateService.setUserState(id, UserState.MARK_USERS);
                     coachAction.viewMarkUsersMenu(id, currentMessage);
                 }
+                case CHECK_MY_DATA -> {
+                    userStateService.setUserState(id,UserState.TRAININGS_ON_CITY);
+                    usersOnTrainingsAction.reviewTraining(id, currentMessage, trainingDataService.getTrainingId(id));
+                }
                 case SELECT_MY_TRAINING -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
                 case SELECT_TRAINING -> {
                     String category = trainingDataService.getCategory(id);

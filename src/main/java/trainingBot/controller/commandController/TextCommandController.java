@@ -52,7 +52,7 @@ public class TextCommandController implements CommandController {
                         case FEEDBACK -> mainMenuAction.feedback(id);
                         //MyData
                         case ITS_OK -> mainMenuAction.userDataOk(id);
-                        case CHANGE -> mainMenuAction.userDataFail(id);
+                        case CHANGE -> mainMenuAction.wrongUserData(id);
                         //Admin
                         case ADMIN -> adminAction.adminAction(id);
                         case UPDATE_STAT -> adminAction.updateStat(id);

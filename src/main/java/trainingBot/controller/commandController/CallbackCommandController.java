@@ -9,6 +9,7 @@ import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.service.action.BackAction;
 import trainingBot.service.action.CoachAction;
+import trainingBot.service.action.MainMenuAction;
 import trainingBot.service.action.UsersOnTrainingsAction;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
@@ -23,15 +24,17 @@ public class CallbackCommandController implements CommandController {
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
     private final UserStateService userStateService;
+    private final MainMenuAction mainMenuAction;
 
     @Autowired
-    public CallbackCommandController(UserStateService userStateService, TrainingsListRepository trainingsListRepository, BackAction backAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, TrainingsRepository trainingsRepository) {
+    public CallbackCommandController(UserStateService userStateService, TrainingsListRepository trainingsListRepository, BackAction backAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, TrainingsRepository trainingsRepository, MainMenuAction mainMenuAction) {
         this.backAction = backAction;
         this.coachAction = coachAction;
         this.usersOnTrainingsAction = usersOnTrainingsAction;
         this.trainingsListRepository = trainingsListRepository;
         this.userStateService = userStateService;
         this.trainingsRepository = trainingsRepository;
+        this.mainMenuAction = mainMenuAction;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class CallbackCommandController implements CommandController {
         for (Callback callback : Callback.values()) {
             if (callback.getCallbackData().equals(data)) {
                 switch (callback) {
-                    case BACK -> backAction.backActionInline(id, currentMessage);
+                    case BACK, ABORT_SIGNUP -> backAction.backActionInline(id, currentMessage);
                     case COACH_MENU -> coachAction.coachAction(id, currentMessage);
                     case CREATE_TRAININGS -> coachAction.creatingTraining(id, currentMessage);
                     case OFFLINE_TRAININGS_CREATE -> coachAction.viewTrainingCity(id, currentMessage);
@@ -67,6 +70,7 @@ public class CallbackCommandController implements CommandController {
                     case OFFLINE_TRAININGS -> usersOnTrainingsAction.viewTrainingCity(id, currentMessage);
                     case SIGN_UP -> usersOnTrainingsAction.checkUserData(id, currentMessage);
                     case YES -> usersOnTrainingsAction.signUpOnTraining(update);
+                    case NO -> mainMenuAction.wrongUserData(id);
                     case MY_TRAININGS -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
                     case ABORTING -> usersOnTrainingsAction.abortTrainings(update);
                     case IN_ARCHIVE -> coachAction.archiveTraining(update);

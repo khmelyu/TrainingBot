@@ -53,6 +53,8 @@ public class UsersOnTrainingsAction {
     private String myTrainings;
     @Value("${user.info}")
     private String userInfo;
+    @Value("${actual.data}")
+    private String actualData;
     @Value("${online}")
     private String online;
     @Value("${signup.message}")
@@ -167,7 +169,7 @@ public class UsersOnTrainingsAction {
     public void checkUserData(long id, Message currentMessage) {
         User user = userRepository.findById(id).orElseThrow();
         String data = user.userData();
-        sendler.sendCheckMyData(id, userInfo, currentMessage, data);
+        sendler.sendCheckMyData(id, actualData, currentMessage, data);
         userStateService.setUserState(id, UserState.CHECK_MY_DATA);
     }
 

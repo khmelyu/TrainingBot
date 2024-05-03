@@ -65,7 +65,7 @@ public class MainMenuAction {
         userStateService.setUserState(id, UserState.MAIN_MENU);
     }
 
-    public void userDataFail(long id) {
+    public void wrongUserData(long id) {
         startAction.startAction(id);
     }
 

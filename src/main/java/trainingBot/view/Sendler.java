@@ -217,14 +217,14 @@ public class Sendler {
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
-    public void sendCalendar(long who, String pic, Message currentMessage, LocalDate currentDate) {
+    public void sendCalendar(long who, String pic, Message currentMessage, LocalDate currentDate, String caption) {
         InlineKeyboardMarkup updatedKeyboard = calendar.createCalendar(currentDate, who);
-        updateMenu(who, pic, currentMessage, updatedKeyboard);
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
     }
 
-    public void sendChangeCalendar(long who, String pic, Message currentMessage, String data) {
+    public void sendChangeCalendar(long who, String pic, Message currentMessage, String data, String caption) {
         InlineKeyboardMarkup updatedKeyboard = calendar.changeMonth(data, who);
-        updateMenu(who, pic, currentMessage, updatedKeyboard);
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
     }
 
     public void sendStartTimeMenu(long who, String pic, Message currentMessage) {
