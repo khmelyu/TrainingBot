@@ -24,8 +24,13 @@ public class WebhookController {
 
     @PostMapping
     public void onUpdateReceived(@RequestBody Update update) {
-        updateReceiver.handle(update);
+        try {
+            updateReceiver.handle(update);
+        } catch (Exception e) {
+            logger.error("Error processing update: {}", update, e);
+        }
     }
+
 
     @PostMapping("/callback")
     public ResponseEntity<String> handleCallback(@RequestBody CallbackRequest request) {
