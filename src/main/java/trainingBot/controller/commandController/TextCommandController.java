@@ -97,6 +97,7 @@ public class TextCommandController implements CommandController {
                         case IT -> infoSearchAction.it(id);
                         case CORPORATE_CULTURE -> infoSearchAction.corporateCulture(id);
                         //ContactSearch
+                        case YES -> contactSearchAction.yesMenu(id);
                         case NO -> contactSearchAction.noMenu(id);
                         case PRODUCT_QUALITY -> contactSearchAction.productQuality(id);
                         case PROMOTION -> contactSearchAction.promotion(id);
@@ -106,6 +107,9 @@ public class TextCommandController implements CommandController {
                         case ORDER -> contactSearchAction.order(id);
                         case SICK_LEAVE_REQUEST -> contactSearchAction.sickLeaveRequest(id);
                         case CONTRACT -> contactSearchAction.contract(id);
+                        case STAFFER -> contactSearchAction.stafferSearchMessage(id);
+                        case GALLERY -> contactSearchAction.gallerySearchMessage(id);
+
 
                     }
                 }
@@ -122,8 +126,22 @@ public class TextCommandController implements CommandController {
                 case SET_CITY -> startAction.addCity(update);
                 case SET_GALLERY -> startAction.addGallery(update);
                 case SET_RATE -> startAction.addRate(update);
-                case CZ_SEARCH -> mainMenuAction.czSearchAction(id, text);
                 case TRAINING_LINK -> coachAction.setTrainingLink(update);
+                case CZ_SEARCH -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        mainMenuAction.czSearchAction(id, text);
+                    }
+                }
+                case CONTACT_SEARCH_STAFFER -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        contactSearchAction.stafferSearchAction(id, text);
+                    }
+                }
+                case CONTACT_SEARCH_GALLERY -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        contactSearchAction.gallerySearchAction(id, text);
+                    }
+                }
                 case FEEDBACK_ANSWER -> {
                     if (!text.equals(Button.BACK.getText())) {
                         usersOnTrainingsAction.sendingFeedback(id, text);

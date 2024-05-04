@@ -56,6 +56,9 @@ public enum Button {
     IT("IT\uD83D\uDCBB"),
     CORPORATE_CULTURE("Корпоративная культура\uD83D\uDC6B"),
 
+    GALLERY("Галлереи"),
+    STAFFER("Сотрудника офиса"),
+
     PRODUCT_QUALITY("Качество продукта"),
     PROMOTION("Акции"),
     TECH("Техника"),

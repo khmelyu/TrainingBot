@@ -183,4 +183,15 @@ public class ButtonMenu {
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup contactSearchYesMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.GALLERY, Button.STAFFER));
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
 }

@@ -97,7 +97,7 @@ public class MainMenuAction {
     }
 
     public void czSearchMessage(long id) {
-        sendler.sendTextMessage(id, czSearchMessage);
+        sendler.sendBack(id, czSearchMessage);
         userStateService.setUserState(id, UserState.CZ_SEARCH);
     }
 
@@ -106,15 +106,17 @@ public class MainMenuAction {
 
         if (cantataZnaet.isEmpty()) {
             sendler.sendTextMessage(id, czSearchEmptyMessage);
+
         } else {
-            StringBuilder formattedResults = new StringBuilder();
+            StringBuilder resultBuilder = new StringBuilder();
             for (CantataZnaet cz : cantataZnaet) {
-                formattedResults.append(cz.getTitle()).append("\n");
-                formattedResults.append(cz.getLink()).append("\n");
-                formattedResults.append("\n");
+                resultBuilder.append(cz.getTitle()).append("\n");
+                resultBuilder.append(cz.getLink()).append("\n");
+                resultBuilder.append("\n");
             }
-            sendler.sendTextMessage(id, String.valueOf(formattedResults));
+            sendler.sendMainMenu(id, String.valueOf(resultBuilder));
+            userStateService.setUserState(id, UserState.MAIN_MENU);
         }
-        userStateService.setUserState(id, UserState.MAIN_MENU);
+
     }
 }

@@ -157,6 +157,14 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
+    public void sendContactSearchYesMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.contactSearchYesMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+
+
+
 
 
     public void sendTrainingsMenu(Long who, String pic) {

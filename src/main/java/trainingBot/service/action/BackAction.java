@@ -21,8 +21,11 @@ public class BackAction {
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final CoachAction coachAction;
+    private final MainMenuAction mainMenuAction;
+    private final ContactSearchAction contactSearchAction;
     private final TrainingDataService trainingDataService;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
+
     @Value("${main.menu.message}")
     private String mainMenuMessage;
     @Value("${training.menu}")
@@ -37,19 +40,35 @@ public class BackAction {
     @Autowired
     public BackAction(
             Sendler sendler,
-            UserStateService userStateService, CoachAction coachAction, TrainingDataService trainingDataService, UsersOnTrainingsAction usersOnTrainingsAction
+            UserStateService userStateService, CoachAction coachAction, MainMenuAction mainMenuAction, ContactSearchAction contactSearchAction, TrainingDataService trainingDataService, UsersOnTrainingsAction usersOnTrainingsAction
     ) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.coachAction = coachAction;
+        this.mainMenuAction = mainMenuAction;
+        this.contactSearchAction = contactSearchAction;
         this.trainingDataService = trainingDataService;
         this.usersOnTrainingsAction = usersOnTrainingsAction;
     }
 
     public void backAction(long id) {
-        sendler.sendMainMenu(id, mainMenuMessage);
-        userStateService.setUserState(id, UserState.MAIN_MENU);
+        UserState userState = userStateService.getUserState(id);
+        if (userState != null) {
+            switch (userState) {
+                case WORK_NOTES_MENU, CERTIFICATES_MENU, COMPETENCIES_MENU -> mainMenuAction.documents(id);
+                case CONTACT_SEARCH_NO, CONTACT_SEARCH_YES -> mainMenuAction.contactSearch(id);
+                case CONTACT_SEARCH_STAFFER, CONTACT_SEARCH_GALLERY -> contactSearchAction.yesMenu(id);
+                default -> {
+                    sendler.sendMainMenu(id, mainMenuMessage);
+                    userStateService.setUserState(id, UserState.MAIN_MENU);
+                }
+            }
+        } else {
+            userStateService.setUserState(id, UserState.DOCUMENTS_MENU);
+            backAction(id);
+        }
     }
+
 
     public void backActionInline(Update update) {
         long id = update.getCallbackQuery().getMessage().getChatId();
