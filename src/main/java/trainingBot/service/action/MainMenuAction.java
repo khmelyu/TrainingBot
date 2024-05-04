@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import trainingBot.model.entity.CantataZnaet;
 import trainingBot.model.entity.User;
@@ -102,11 +104,12 @@ public class MainMenuAction {
     }
 
     public void czSearchAction(long id, String text) {
-        List<CantataZnaet> cantataZnaet = cantataZnaetRepository.findByTitleLike("%" + text.toLowerCase() + "%");
+        int maxResults = 25;
+        Pageable pageable = PageRequest.of(0, maxResults);
+        List<CantataZnaet> cantataZnaet = cantataZnaetRepository.findByTitleLike("%" + text.toLowerCase() + "%", pageable);
 
         if (cantataZnaet.isEmpty()) {
             sendler.sendTextMessage(id, czSearchEmptyMessage);
-
         } else {
             StringBuilder resultBuilder = new StringBuilder();
             for (CantataZnaet cz : cantataZnaet) {
@@ -117,6 +120,6 @@ public class MainMenuAction {
             sendler.sendMainMenu(id, String.valueOf(resultBuilder));
             userStateService.setUserState(id, UserState.MAIN_MENU);
         }
-
     }
+
 }
