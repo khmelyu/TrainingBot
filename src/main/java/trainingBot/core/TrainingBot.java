@@ -1,14 +1,11 @@
 package trainingBot.core;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-// НАДО НАХУЙ УБРАТЬ ЭТО ПОЗОРИЩЕ И НАПИСАТЬ ЭКЗЕКЬЮТ В СЭНДЛЕР ИЛИ ОТДЕЛЬНЫМ СЕРВИСОМ!
-@Slf4j
-@Component
+@Service
 public class TrainingBot extends TelegramLongPollingBot {
 
     @Value("${bot.name}")
@@ -30,6 +27,7 @@ public class TrainingBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
     }
 
 }
