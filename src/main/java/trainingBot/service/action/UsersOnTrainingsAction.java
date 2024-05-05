@@ -7,11 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import trainingBot.core.TrainingBot;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.User;
 import trainingBot.model.entity.UsersToTrainings;
@@ -39,7 +36,6 @@ public class UsersOnTrainingsAction {
     private final UserRepository userRepository;
     private final UsersToTrainingsRepository usersToTrainingsRepository;
     private final NotificationUser notificationUser;
-    private final TrainingBot trainingBot;
 
 
     @Value("${training.category}")
@@ -68,7 +64,7 @@ public class UsersOnTrainingsAction {
     private String trainingFeedbackEnd;
 
     @Autowired
-    public UsersOnTrainingsAction(Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser, TrainingBot trainingBot) {
+    public UsersOnTrainingsAction(Sendler sendler, UserStateService userStateService, TrainingDataService trainingDataService, TrainingsRepository trainingsRepository, UserRepository userRepository, UsersToTrainingsRepository usersToTrainingsRepository, NotificationUser notificationUser) {
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.trainingDataService = trainingDataService;
@@ -76,7 +72,6 @@ public class UsersOnTrainingsAction {
         this.userRepository = userRepository;
         this.usersToTrainingsRepository = usersToTrainingsRepository;
         this.notificationUser = notificationUser;
-        this.trainingBot = trainingBot;
     }
 
     public void viewOnlineCategory(long id, Message currentMessage) {
@@ -229,13 +224,7 @@ public class UsersOnTrainingsAction {
             }
         }
         userStateService.setUserState(id, UserState.MAIN_MENU);
-        String callbackQueryId = update.getCallbackQuery().getId();
-        AnswerCallbackQuery answer = AnswerCallbackQuery.builder().callbackQueryId(callbackQueryId).text("").showAlert(false).build();
-        try {
-            trainingBot.execute(answer);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+        sendler.callbackAnswer(update);
     }
 
     public void viewMyTrainings(long id, Message currentMessage) {
@@ -255,13 +244,7 @@ public class UsersOnTrainingsAction {
             notificationUser.notificationWaitingList(trainingDataService.getTrainingId(id));
         }
         userStateService.setUserState(id, UserState.MAIN_MENU);
-        String callbackQueryId = update.getCallbackQuery().getId();
-        AnswerCallbackQuery answer = AnswerCallbackQuery.builder().callbackQueryId(callbackQueryId).text("").showAlert(false).build();
-        try {
-            trainingBot.execute(answer);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+        sendler.callbackAnswer(update);
     }
 
     public void feedbackAnswer(Update update) {
