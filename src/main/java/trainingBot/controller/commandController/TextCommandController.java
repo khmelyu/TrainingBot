@@ -21,9 +21,10 @@ public class TextCommandController implements CommandController {
     private final ContactSearchAction contactSearchAction;
     private final CoachAction coachAction;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
+    private final MarathonAction marathonAction;
 
     @Autowired
-    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction) {
+    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, MarathonAction marathonAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.adminAction = adminAction;
@@ -34,6 +35,7 @@ public class TextCommandController implements CommandController {
         this.contactSearchAction = contactSearchAction;
         this.coachAction = coachAction;
         this.usersOnTrainingsAction = usersOnTrainingsAction;
+        this.marathonAction = marathonAction;
     }
 
     @Override
@@ -57,6 +59,7 @@ public class TextCommandController implements CommandController {
                         case CONTACTS_SEARCH -> mainMenuAction.contactSearch(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
+                        case MARATHON -> mainMenuAction.marathonInfo(id);
                         //MyData
                         case ITS_OK -> mainMenuAction.userDataOk(id);
                         case CHANGE -> mainMenuAction.wrongUserData(id);
@@ -109,8 +112,21 @@ public class TextCommandController implements CommandController {
                         case CONTRACT -> contactSearchAction.contract(id);
                         case STAFFER -> contactSearchAction.stafferSearchMessage(id);
                         case GALLERY -> contactSearchAction.gallerySearchMessage(id);
-
-
+                        //Marathon
+                        case SIGNUP -> marathonAction.marathonUserData(id);
+                        case DATA_OK -> marathonAction.sexChoice(id);
+                        case WARM_UP -> marathonAction.warmUpMessage(id);
+                        case OKAY -> marathonAction.coachMessage(id);
+                        case NICE_TO_MEET_YOU -> marathonAction.nutritionistMessage(id);
+                        case HELLO_ALEX -> marathonAction.instructionMessage(id);
+                        case OF_COURSE -> marathonAction.instruction2Message(id);
+                        case DEAL -> marathonAction.warmUpTimeMessage(id);
+                        case GOOD -> marathonAction.checkCanal(id);
+                        case DONE -> marathonAction.helper(id);
+                        case UNDERSTAND -> marathonAction.finish(id);
+                        case BY_MONDAY -> marathonAction.exit(id);
+                        case MY_POINTS -> marathonAction.points(id);
+                        case MARATHON_ABORT -> marathonAction.abort(id);
                     }
                 }
             }
@@ -147,6 +163,13 @@ public class TextCommandController implements CommandController {
                         usersOnTrainingsAction.sendingFeedback(id, text);
                     }
                 }
+                case SEX_CHOICE -> {
+                    if (!text.equals(Button.ABORT.getText())) {
+                        marathonAction.helloMessage(id, text);
+                    }
+                }
+                case MARATHON_TIME_CHOICE -> marathonAction.timeZoneMessage(id, text);
+                case MARATHON_TIMEZONE_CHOICE -> marathonAction.signUp(id, text);
             }
         } else {
             userStateService.setUserState(id, UserState.MAIN_MENU);

@@ -7,10 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.WebhookController;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
-import trainingBot.service.action.BackAction;
-import trainingBot.service.action.CoachAction;
-import trainingBot.service.action.MainMenuAction;
-import trainingBot.service.action.UsersOnTrainingsAction;
+import trainingBot.service.action.*;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Callback;
@@ -25,9 +22,10 @@ public class CallbackCommandController implements CommandController {
     private final TrainingsRepository trainingsRepository;
     private final UserStateService userStateService;
     private final MainMenuAction mainMenuAction;
+    private final MarathonAction marathonAction;
 
     @Autowired
-    public CallbackCommandController(UserStateService userStateService, TrainingsListRepository trainingsListRepository, BackAction backAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, TrainingsRepository trainingsRepository, MainMenuAction mainMenuAction) {
+    public CallbackCommandController(UserStateService userStateService, TrainingsListRepository trainingsListRepository, BackAction backAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, TrainingsRepository trainingsRepository, MainMenuAction mainMenuAction, MarathonAction marathonAction) {
         this.backAction = backAction;
         this.coachAction = coachAction;
         this.usersOnTrainingsAction = usersOnTrainingsAction;
@@ -35,6 +33,7 @@ public class CallbackCommandController implements CommandController {
         this.userStateService = userStateService;
         this.trainingsRepository = trainingsRepository;
         this.mainMenuAction = mainMenuAction;
+        this.marathonAction = marathonAction;
     }
 
     @Override
@@ -132,6 +131,15 @@ public class CallbackCommandController implements CommandController {
         }
         if (data.contains(Callback.SELECT_FEEDBACK.getCallbackData())) {
             coachAction.viewFeedback(id, currentMessage, data);
+        }
+        if (data.equals("+1POINT")) {
+            marathonAction.onePointPlus(id, data, currentMessage);
+        }
+        if (data.equals("+2POINT")) {
+            marathonAction.twoPointsPlus(id, data, currentMessage);
+        }
+        if (data.equals("+3POINT")) {
+            marathonAction.threePointsPlus(id, data, currentMessage);
         }
     }
 

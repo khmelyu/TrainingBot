@@ -50,7 +50,7 @@ public class CallbackMenu {
 
     }
 
-    private InlineKeyboardButton createButton(String text, String url) {
+    public InlineKeyboardButton createButton(String text, String url) {
         InlineKeyboardButton button = new InlineKeyboardButton();
         button.setText(text);
         button.setUrl(url);

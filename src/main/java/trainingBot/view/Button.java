@@ -14,6 +14,27 @@ public enum Button {
     CONTACTS_SEARCH("Поиск контактов"),
     INFO_SEARCH("Где искать информацию?"),
     ADMIN("Админ панель"),
+    MARATHON("За день до лета"),
+
+    MY_POINTS("Мои очки"),
+
+    SIGNUP("Участвовать"),
+    MARATHON_ABORT("Отписаться"),
+    DATA_OK("Да, это я"),
+    MALE("МУЖ"),
+    FEMALE("ЖЕН"),
+    WARM_UP("Что за разминка?"),
+    OKAY("Окей"),
+    NICE_TO_MEET_YOU("Очень приятно"),
+    HELLO_ALEX("Привет, Лёша!"),
+    OF_COURSE("Конечно"),
+    DEAL("Договорились"),
+    GOOD("Хорошо"),
+    DONE("Готово"),
+    UNDERSTAND("Понятно"),
+    BY_MONDAY("До понедельника"),
+
+
 
     YES("Да"),
     NO("Нет"),

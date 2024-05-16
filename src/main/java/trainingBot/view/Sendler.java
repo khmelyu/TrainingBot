@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class Sendler {
@@ -45,6 +48,17 @@ public class Sendler {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteMessage(long chatId, Message currentMessage) {
+        String chatIdString = String.valueOf(chatId);
+        Integer messageId = currentMessage.getMessageId();
+        try {
+            trainingBot.execute(new DeleteMessage(chatIdString, messageId));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void sendTextMessage(Long who, String what) {
         SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).disableWebPagePreview(true).build();
@@ -83,6 +97,25 @@ public class Sendler {
         }
     }
 
+    public void sendLinkWithButton(Long who, String what, String url, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        String[] words = what.split("\\s+");
+        List<String> wordsWithLink = new ArrayList<>();
+        for (String word : words) {
+            if (word.equals(words[words.length - 1])) {
+                wordsWithLink.add("<a href=\"" + url + "\">" + word + "</a>");
+            } else {
+                wordsWithLink.add(word);
+            }
+        }
+        String messageText = String.join(" ", wordsWithLink);
+        SendMessage sm = SendMessage.builder().chatId(who.toString()).text(messageText).parseMode(ParseMode.HTML).disableWebPagePreview(true).replyMarkup(replyKeyboardMarkup).build();
+        try {
+            trainingBot.execute(sm);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void sendMessageWithButton(Long who, String what, ReplyKeyboardMarkup replyKeyboardMarkup) {
         SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).replyMarkup(replyKeyboardMarkup).build();
         try {
@@ -104,6 +137,81 @@ public class Sendler {
 
     public void sendMainMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.mainMenu(who);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendMarathonMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.marathonMenu(who);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendMarathonDataMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.marathonData();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendSexMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.sexMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendWarmUpMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.warmUpMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendOkayMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.okayMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendCoachLink(long who, String what, String url) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.coachLinkMenu();
+        sendLinkWithButton(who, what, url, replyKeyboardMarkup);
+    }
+
+    public void sendNutritionistLink(long who, String what, String url) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.nutritionistLinkMenu();
+        sendLinkWithButton(who, what, url, replyKeyboardMarkup);
+    }
+
+    public void sendInstructionMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.instructionMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendInstruction2Menu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.instruction2Menu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendMarathonTime(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.marathonTime();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendTimeZone(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.timeZone();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendGoodButton(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.goodButton();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendDoneButton(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.doneButton();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendUnderstandButton(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.understandButton();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendByMondayButton(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.byMondayButton();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
@@ -161,10 +269,6 @@ public class Sendler {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.contactSearchYesMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
-
-
-
-
 
 
     public void sendTrainingsMenu(Long who, String pic) {
@@ -325,12 +429,12 @@ public class Sendler {
         }
     }
 
-    public void sendUserListMenu (long who, String pic, Message currentMessage, String trainingId) {
+    public void sendUserListMenu(long who, String pic, Message currentMessage, String trainingId) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.userListMenu(trainingId);
         updateMenu(who, pic, currentMessage, updatedKeyboard);
     }
 
-    public void sendUserFeedback (long who, String pic, Message currentMessage, String caption) {
+    public void sendUserFeedback(long who, String pic, Message currentMessage, String caption) {
         InlineKeyboardMarkup updatedKeyboard = callbackMenu.backMenu();
         updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
     }

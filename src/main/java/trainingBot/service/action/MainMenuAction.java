@@ -43,6 +43,9 @@ public class MainMenuAction {
     private String czSearchMessage;
     @Value("${cz.search.empty.message}")
     private String czSearchEmptyMessage;
+    @Value("${marathon.info}")
+    private String marathonInfo;
+
 
     @Autowired
     public MainMenuAction(
@@ -120,6 +123,11 @@ public class MainMenuAction {
             sendler.sendMainMenu(id, String.valueOf(resultBuilder));
             userStateService.setUserState(id, UserState.MAIN_MENU);
         }
+    }
+
+
+    public void marathonInfo(long id) {
+        sendler.sendMarathonMenu(id, marathonInfo);
     }
 
 }

@@ -84,7 +84,7 @@ public class StartAction {
 
     public void restart(long id) {
         String msg;
-        if (userStateService.getUserState(id).equals(UserState.USER_DATA) || userStateService.getUserState(id).equals(UserState.CHECK_MY_DATA)) {
+        if (userStateService.getUserState(id).equals(UserState.USER_DATA) || userStateService.getUserState(id).equals(UserState.CHECK_MY_DATA) || userStateService.getUserState(id).equals(UserState.MARATHON_DATA)) {
             msg = userDataFail;
         } else {
             msg = startMessage;
