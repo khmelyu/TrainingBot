@@ -49,7 +49,6 @@ public enum Button {
     WORKNOTE_SECOND("2 уровень"),
     WORKNOTE_THIRD("3 уровень"),
     WORKNOTE_FOURTH("4 уровень"),
-    WORKNOTE_FIFTH("5 уровень"),
 
     CERTIFICATES("Сертификаты"),
     TEA("Чай"),

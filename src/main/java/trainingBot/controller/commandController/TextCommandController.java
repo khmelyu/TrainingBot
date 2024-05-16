@@ -72,7 +72,6 @@ public class TextCommandController implements CommandController {
                         case WORKNOTE_SECOND -> documentsAction.secondLevelNote(id);
                         case WORKNOTE_THIRD -> documentsAction.thirdLevelNote(id);
                         case WORKNOTE_FOURTH -> documentsAction.fourthLevelNote(id);
-                        case WORKNOTE_FIFTH -> documentsAction.fifthLevelNote(id);
 
                         case PATTERNS -> documentsAction.patterns(id);
                         case SALARY -> documentsAction.salary(id);

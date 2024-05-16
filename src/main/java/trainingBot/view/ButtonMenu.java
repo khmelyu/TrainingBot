@@ -277,7 +277,7 @@ public class ButtonMenu {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         keyboard.add(createKeyboardRow(Button.WORKNOTE_TRAINEE, Button.WORKNOTE_SECOND, Button.WORKNOTE_THIRD));
-        keyboard.add(createKeyboardRow(Button.WORKNOTE_FOURTH, Button.WORKNOTE_FIFTH, Button.BACK));
+        keyboard.add(createKeyboardRow(Button.WORKNOTE_FOURTH, Button.BACK));
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;

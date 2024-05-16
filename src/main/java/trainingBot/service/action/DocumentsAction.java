@@ -35,11 +35,6 @@ public class DocumentsAction {
     private String worknoteFourthText;
     @Value("${worknote.fourth.link}")
     private String worknoteFourthLink;
-    @Value("${worknote.fifth.message}")
-    private String worknoteFifthText;
-    @Value("${worknote.fifth.link}")
-    private String worknoteFifthLink;
-
 
     @Value("${pattern.message}")
     private String patternMessage;
@@ -134,9 +129,6 @@ public class DocumentsAction {
         sendler.sendLink(id, worknoteFourthText, worknoteFourthLink);
     }
 
-    public void fifthLevelNote(long id) {
-        sendler.sendLink(id, worknoteFifthText, worknoteFifthLink);
-    }
 
 
     public void patterns(long id) {
