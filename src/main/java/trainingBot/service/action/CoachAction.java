@@ -266,7 +266,7 @@ public class CoachAction {
         logger.info("User: {} created new training. Training id: {}", id, training.getId());
         trainingDataService.clearTemplate(id);
 
-        sendler.sendTextMessage(id, trainingCreateComplete);
+        sendler.sendMainMenu(id, trainingCreateComplete);
         userStateService.setUserState(id, UserState.MAIN_MENU);
         if (update.hasCallbackQuery()) {
             sendler.callbackAnswer(update);
