@@ -117,7 +117,7 @@ public class Sendler {
     }
 
     private void sendMessageWithButton(Long who, String what, ReplyKeyboardMarkup replyKeyboardMarkup) {
-        SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).replyMarkup(replyKeyboardMarkup).build();
+        SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).disableWebPagePreview(true).replyMarkup(replyKeyboardMarkup).build();
         try {
             trainingBot.execute(sm);
         } catch (TelegramApiException e) {
@@ -165,9 +165,9 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
-    public void sendCoachLink(long who, String what, String url) {
+    public void sendCoach(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.coachLinkMenu();
-        sendLinkWithButton(who, what, url, replyKeyboardMarkup);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
     public void sendNutritionistLink(long who, String what, String url) {

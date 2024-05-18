@@ -20,19 +20,19 @@ public enum Button {
 
     SIGNUP("Участвовать"),
     MARATHON_ABORT("Отписаться"),
-    DATA_OK("Да, это я"),
+    DATA_OK("Да, это я!"),
     MALE("МУЖ"),
     FEMALE("ЖЕН"),
     WARM_UP("Что за разминка?"),
     OKAY("Окей"),
     NICE_TO_MEET_YOU("Очень приятно"),
     HELLO_ALEX("Привет, Лёша!"),
-    OF_COURSE("Конечно"),
-    DEAL("Договорились"),
-    GOOD("Хорошо"),
-    DONE("Готово"),
-    UNDERSTAND("Понятно"),
-    BY_MONDAY("До понедельника"),
+    OF_COURSE("Конечно!"),
+    DEAL("Договорились!"),
+    GOOD("Хорошо!"),
+    DONE("Готово!"),
+    UNDERSTAND("Понятно!"),
+    BY_MONDAY("До понедельника!"),
 
 
 

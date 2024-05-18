@@ -373,8 +373,8 @@ public class CoachAction {
             } catch (InterruptedException e) {
                 logger.warn("User: {} didn't get a request for feedback for training {}", userId, trainingId);
             }
-            sendler.sendTextMessage(id, trainingFeedbackCoachMessage);
         }
+        sendler.sendTextMessage(id, trainingFeedbackCoachMessage);
         sendler.callbackAnswer(update);
     }
 

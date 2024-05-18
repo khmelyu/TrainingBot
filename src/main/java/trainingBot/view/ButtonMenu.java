@@ -67,7 +67,7 @@ public class ButtonMenu {
         keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.CONTACTS_SEARCH));
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
-        // keyboard.add(createKeyboardRow(Button.MARATHON));
+         keyboard.add(createKeyboardRow(Button.MARATHON));
         if (user != null && user.isAdmin()) {
             keyboard.add(createKeyboardRow(Button.ADMIN));
         }

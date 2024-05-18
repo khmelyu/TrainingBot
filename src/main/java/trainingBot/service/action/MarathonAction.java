@@ -40,14 +40,8 @@ public class MarathonAction {
     private String marathonWarmUpMale;
     @Value("${marathon.warmup.female}")
     private String marathonWarmUpFemale;
-    @Value("${marathon.coach.male.text}")
-    private String marathonCoachMaleText;
-    @Value("${marathon.coach.male.link}")
-    private String marathonCoachMaleLink;
-    @Value("${marathon.coach.female.text}")
-    private String marathonCoachFemaleText;
-    @Value("${marathon.coach.female.link}")
-    private String marathonCoachFemaleLink;
+    @Value("${marathon.coach}")
+    private String marathonCoach;
     @Value("${marathon.nutritionist.text}")
     private String marathonNutritionistText;
     @Value("${marathon.nutritionist.link}")
@@ -132,16 +126,7 @@ public class MarathonAction {
     }
 
     public void coachMessage(long id) {
-        String msg;
-        String link;
-        if (marathonDataService.getSex(id).equals("female")) {
-            msg = marathonCoachFemaleText;
-            link = marathonCoachFemaleLink;
-        } else {
-            msg = marathonCoachMaleText;
-            link = marathonCoachMaleLink;
-        }
-        sendler.sendCoachLink(id, msg, link);
+        sendler.sendCoach(id, marathonCoach);
     }
 
     public void nutritionistMessage(long id) {
