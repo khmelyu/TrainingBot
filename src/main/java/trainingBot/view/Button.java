@@ -16,7 +16,7 @@ public enum Button {
     ADMIN("Админ панель"),
     MARATHON("За день до лета"),
 
-    MY_POINTS("Мои очки"),
+    MY_POINTS("Мои ананасики \uD83C\uDF4D"),
 
     SIGNUP("Участвовать"),
     MARATHON_ABORT("Отписаться"),
