@@ -126,6 +126,7 @@ public class TextCommandController implements CommandController {
                         case BY_MONDAY -> marathonAction.exit(id);
                         case MY_POINTS -> marathonAction.points(id);
                         case MARATHON_ABORT -> marathonAction.abort(id);
+                        case MEMBERS -> marathonAction.membersCount(id);
                     }
                 }
             }

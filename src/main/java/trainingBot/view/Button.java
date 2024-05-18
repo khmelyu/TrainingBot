@@ -18,6 +18,8 @@ public enum Button {
 
     MY_POINTS("Мои ананасики \uD83C\uDF4D"),
 
+    MEMBERS("!участники"),
+
     SIGNUP("Участвовать"),
     MARATHON_ABORT("Отписаться"),
     DATA_OK("Да, это я!"),

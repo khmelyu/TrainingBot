@@ -1,5 +1,7 @@
 package trainingBot.service.action;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -23,6 +25,8 @@ import java.util.regex.Pattern;
 @Service
 @PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")
 public class MarathonAction {
+
+    private final Logger logger = LoggerFactory.getLogger(MarathonAction.class);
 
     private final UserRepository userRepository;
     private final Sendler sendler;
@@ -173,6 +177,7 @@ public class MarathonAction {
             marathonRepository.save(marathon);
             userStateService.setUserState(id, UserState.MARATHON);
             sendler.sendGoodButton(id, marathonChangeTime);
+            logger.info("User: {} join on marathon", id);
         }
     }
 
@@ -215,7 +220,7 @@ public class MarathonAction {
         sendler.sendMainMenu(id, marathonAbort);
     }
     @Transactional
-    public void onePointPlus (long id, String data, Message currentMessage){
+    public void onePointPlus (long id, Message currentMessage){
         sendler.deleteMessage(id, currentMessage);
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
@@ -226,7 +231,7 @@ public class MarathonAction {
         }
     }
     @Transactional
-    public void twoPointsPlus (long id, String data, Message currentMessage){
+    public void twoPointsPlus (long id, Message currentMessage){
         sendler.deleteMessage(id, currentMessage);
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
@@ -238,7 +243,7 @@ public class MarathonAction {
     }
 
     @Transactional
-    public void threePointsPlus (long id, String data, Message currentMessage){
+    public void threePointsPlus (long id, Message currentMessage){
         sendler.deleteMessage(id, currentMessage);
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
@@ -247,6 +252,11 @@ public class MarathonAction {
             marathonRepository.save(marathon);
             sendler.sendTextMessage(id, marathonThreePoints);
         }
+    }
+
+    public void membersCount(long id) {
+        int count = marathonRepository.countAll();
+        sendler.sendTextMessage(id, "Записано участников на марафон: " + count);
     }
 
 }
