@@ -67,7 +67,10 @@ public class ButtonMenu {
         keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.CONTACTS_SEARCH));
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
-         keyboard.add(createKeyboardRow(Button.MARATHON));
+        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
+        if (optionalMarathon.isPresent() && optionalMarathon.get().isActual()) {
+                keyboard.add(createKeyboardRow(Button.MARATHON));
+            }
         if (user != null && user.isAdmin()) {
             keyboard.add(createKeyboardRow(Button.ADMIN));
         }
@@ -238,6 +241,20 @@ public class ButtonMenu {
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
+
+    public static ReplyKeyboardMarkup yesNoMarathonMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.MARATHON_NO, Button.MARATHON_YES));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+
+
+
 
 
     public static ReplyKeyboardMarkup myData() {

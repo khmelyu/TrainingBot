@@ -26,15 +26,17 @@ public enum Button {
     MALE("МУЖ"),
     FEMALE("ЖЕН"),
     WARM_UP("Что за разминка?"),
-    OKAY("Окей"),
+    OKAY("Окей!!"),
     NICE_TO_MEET_YOU("Очень приятно"),
     HELLO_ALEX("Привет, Лёша!"),
     OF_COURSE("Конечно!"),
     DEAL("Договорились!"),
-    GOOD("Хорошо!"),
+    GOOD("Хорошо!!!"),
     DONE("Готово!"),
     UNDERSTAND("Понятно!"),
     BY_MONDAY("До понедельника!"),
+    MARATHON_YES("Да, я сдаюсь"),
+    MARATHON_NO("Буду продолжать!"),
 
 
 

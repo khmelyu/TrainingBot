@@ -8,14 +8,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import trainingBot.model.entity.CantataZnaet;
+import trainingBot.model.entity.Marathon;
 import trainingBot.model.entity.User;
 import trainingBot.model.rep.CantataZnaetRepository;
+import trainingBot.model.rep.MarathonRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")})
@@ -25,6 +28,7 @@ public class MainMenuAction {
     private final StartAction startAction;
     private final UserStateService userStateService;
     private final CantataZnaetRepository cantataZnaetRepository;
+    private final MarathonRepository marathonRepository;
 
 
     @Value("${user.data.ok}")
@@ -52,13 +56,14 @@ public class MainMenuAction {
             Sendler sendler,
             UserRepository userRepository,
             UserStateService userStateService,
-            StartAction startAction, CantataZnaetRepository cantataZnaetRepository
+            StartAction startAction, CantataZnaetRepository cantataZnaetRepository, MarathonRepository marathonRepository
     ) {
         this.userRepository = userRepository;
         this.sendler = sendler;
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.cantataZnaetRepository = cantataZnaetRepository;
+        this.marathonRepository = marathonRepository;
     }
 
     public void userData(long id) {
@@ -127,7 +132,11 @@ public class MainMenuAction {
 
 
     public void marathonInfo(long id) {
-        sendler.sendMarathonMenu(id, marathonInfo);
+        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
+        if (optionalMarathon.isPresent()) {
+            sendler.sendMarathonMenu(id, marathonInfo);
+            userStateService.setUserState(id, UserState.MARATHON);
+        }
     }
 
 }

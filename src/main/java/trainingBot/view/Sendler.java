@@ -215,6 +215,13 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
+    public void sendAbortMarathon(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.yesNoMarathonMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+
+
     public void sendMyDataMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.myData();
         sendMessageWithButton(who, what, replyKeyboardMarkup);

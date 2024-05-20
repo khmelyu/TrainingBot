@@ -18,6 +18,7 @@ import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Button;
 import trainingBot.view.Sendler;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,13 +75,14 @@ public class MarathonAction {
     private String mainMenu;
     @Value("${marathon.abort}")
     private String marathonAbort;
+    @Value("${marathon.abort.yes}")
+    private String marathonAbortYes;
     @Value("${marathon.one.point}")
     private String marathonOnePoint;
     @Value("${marathon.two.points}")
     private String marathonTwoPoints;
     @Value("${marathon.three.points}")
     private String marathonThreePoints;
-
 
 
     @Autowired
@@ -214,13 +216,19 @@ public class MarathonAction {
         }
         sendler.sendTextMessage(id, point + " - \uD83C\uDF4D");
     }
-    @Transactional
+
     public void abort(long id) {
-        marathonRepository.abort(id);
-        sendler.sendMainMenu(id, marathonAbort);
+        sendler.sendAbortMarathon(id, marathonAbort);
     }
+
     @Transactional
-    public void onePointPlus (long id, Message currentMessage){
+    public void abortYes(long id) {
+        marathonRepository.abort(id);
+        sendler.sendMainMenu(id, marathonAbortYes);
+    }
+
+    @Transactional
+    public void onePointPlus(long id, Message currentMessage) {
         sendler.deleteMessage(id, currentMessage);
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
@@ -230,8 +238,9 @@ public class MarathonAction {
             sendler.sendTextMessage(id, marathonOnePoint);
         }
     }
+
     @Transactional
-    public void twoPointsPlus (long id, Message currentMessage){
+    public void twoPointsPlus(long id, Message currentMessage) {
         sendler.deleteMessage(id, currentMessage);
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
@@ -243,7 +252,7 @@ public class MarathonAction {
     }
 
     @Transactional
-    public void threePointsPlus (long id, Message currentMessage){
+    public void threePointsPlus(long id, Message currentMessage) {
         sendler.deleteMessage(id, currentMessage);
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
@@ -254,9 +263,37 @@ public class MarathonAction {
         }
     }
 
+
+
     public void membersCount(long id) {
-        int count = marathonRepository.countAll();
-        sendler.sendTextMessage(id, "Записано участников на марафон: " + count);
+        int MESSAGE_LIMIT = 1000;
+        List<Marathon> marathons = marathonRepository.findAll();
+
+        StringBuilder message = new StringBuilder("Записано участников на марафон: " + marathons.size() + "\n\n");
+
+        for (Marathon marathon : marathons) {
+            Optional<User> userOptional = userRepository.findById(marathon.getId());
+
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                message.append("Имя: ").append(user.getName()).append("\n")
+                        .append("Фамилия: ").append(user.getLastname()).append("\n")
+                        .append("Часовой пояс: +").append(marathon.getTime_zone()).append("\n")
+                        .append("Время тренировки: ").append(marathon.getTraining_time()).append("\n")
+                        .append("Очки: ").append(marathon.getPoints()).append("\n")
+                        .append("__________________").append("\n\n");
+
+                if (message.length() > MESSAGE_LIMIT) {
+                    sendler.sendTextMessage(id, message.toString());
+                    message.setLength(0); // Очистка StringBuilder
+                }
+            }
+        }
+
+        if (message.length() > 0) {
+            sendler.sendTextMessage(id, message.toString());
+        }
     }
+
 
 }

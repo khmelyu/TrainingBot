@@ -50,7 +50,7 @@ public class TextCommandController implements CommandController {
             for (Button button : Button.values()) {
                 if (button.getText().equals(text)) {
                     switch (button) {
-                        case BACK, ABORT -> backAction.backAction(id);
+                        case BACK, ABORT, MARATHON_NO -> backAction.backAction(id);
                         //MainMenu
                         case TRAININGS -> mainMenuAction.trainingsAction(id);
                         case CZ_SEARCH -> mainMenuAction.czSearchMessage(id);
@@ -126,6 +126,7 @@ public class TextCommandController implements CommandController {
                         case BY_MONDAY -> marathonAction.exit(id);
                         case MY_POINTS -> marathonAction.points(id);
                         case MARATHON_ABORT -> marathonAction.abort(id);
+                        case MARATHON_YES -> marathonAction.abortYes(id);
                         case MEMBERS -> marathonAction.membersCount(id);
                     }
                 }
@@ -170,6 +171,7 @@ public class TextCommandController implements CommandController {
                 }
                 case MARATHON_TIME_CHOICE -> marathonAction.timeZoneMessage(id, text);
                 case MARATHON_TIMEZONE_CHOICE -> marathonAction.signUp(id, text);
+
             }
         } else {
             userStateService.setUserState(id, UserState.MAIN_MENU);
