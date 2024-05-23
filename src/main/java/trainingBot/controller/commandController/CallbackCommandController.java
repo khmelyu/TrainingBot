@@ -132,14 +132,12 @@ public class CallbackCommandController implements CommandController {
         if (data.contains(Callback.SELECT_FEEDBACK.getCallbackData())) {
             coachAction.viewFeedback(id, currentMessage, data);
         }
-        if (data.equals("+1POINT")) {
-            marathonAction.onePointPlus(id, currentMessage);
+        if (data.contains("+1POINT")) {
+            marathonAction.onePointPlus(id, currentMessage, data);
         }
-        if (data.equals("+2POINT")) {
-            marathonAction.twoPointsPlus(id, currentMessage);
-        }
-        if (data.equals("+3POINT")) {
-            marathonAction.threePointsPlus(id, currentMessage);
+
+        if (data.contains("+3POINT")) {
+            marathonAction.threePointsPlus(id, currentMessage, data);
         }
     }
 

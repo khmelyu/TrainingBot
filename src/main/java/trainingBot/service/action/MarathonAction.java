@@ -18,6 +18,7 @@ import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Button;
 import trainingBot.view.Sendler;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -79,10 +80,10 @@ public class MarathonAction {
     private String marathonAbortYes;
     @Value("${marathon.one.point}")
     private String marathonOnePoint;
-    @Value("${marathon.two.points}")
-    private String marathonTwoPoints;
     @Value("${marathon.three.points}")
     private String marathonThreePoints;
+    @Value("${marathon.answer.late}")
+    private String marathonAnswerLate;
 
 
     @Autowired
@@ -228,42 +229,48 @@ public class MarathonAction {
     }
 
     @Transactional
-    public void onePointPlus(long id, Message currentMessage) {
-        sendler.deleteMessage(id, currentMessage);
-        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
-        if (optionalMarathon.isPresent()) {
-            Marathon marathon = optionalMarathon.get();
-            marathon.setPoints(marathon.getPoints() + 1);
-            marathonRepository.save(marathon);
-            sendler.sendTextMessage(id, marathonOnePoint);
+    public void onePointPlus(long id, Message currentMessage, String data) {
+        if (data.length() > 10) {
+            LocalDate messageDate = LocalDate.parse(data.substring(10));
+            LocalDate currentDate = LocalDate.now();
+            if (messageDate.equals(currentDate)) {
+                Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
+                if (optionalMarathon.isPresent()) {
+                    Marathon marathon = optionalMarathon.get();
+                    marathon.setPoints(marathon.getPoints() + 1);
+                    marathonRepository.save(marathon);
+                    sendler.deleteMessage(id, currentMessage);
+                    sendler.sendTextMessage(id, marathonOnePoint);
+                } else {
+                    sendler.sendTextMessage(id, marathonAnswerLate);
+                }
+            }
+        } else {
+            sendler.sendTextMessage(id, marathonAnswerLate);
         }
     }
 
     @Transactional
-    public void twoPointsPlus(long id, Message currentMessage) {
-        sendler.deleteMessage(id, currentMessage);
-        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
-        if (optionalMarathon.isPresent()) {
-            Marathon marathon = optionalMarathon.get();
-            marathon.setPoints(marathon.getPoints() + 2);
-            marathonRepository.save(marathon);
-            sendler.sendTextMessage(id, marathonTwoPoints);
+    public void threePointsPlus(long id, Message currentMessage, String data) {
+        if (data.length() > 10) {
+            LocalDate messageDate = LocalDate.parse(data.substring(10));
+            LocalDate currentDate = LocalDate.now();
+            if (messageDate.equals(currentDate)) {
+                Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
+                if (optionalMarathon.isPresent()) {
+                    Marathon marathon = optionalMarathon.get();
+                    marathon.setPoints(marathon.getPoints() + 3);
+                    marathonRepository.save(marathon);
+                    sendler.deleteMessage(id, currentMessage);
+                    sendler.sendTextMessage(id, marathonThreePoints);
+                } else {
+                    sendler.sendTextMessage(id, marathonAnswerLate);
+                }
+            }
+        } else {
+            sendler.sendTextMessage(id, marathonAnswerLate);
         }
     }
-
-    @Transactional
-    public void threePointsPlus(long id, Message currentMessage) {
-        sendler.deleteMessage(id, currentMessage);
-        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
-        if (optionalMarathon.isPresent()) {
-            Marathon marathon = optionalMarathon.get();
-            marathon.setPoints(marathon.getPoints() + 3);
-            marathonRepository.save(marathon);
-            sendler.sendTextMessage(id, marathonThreePoints);
-        }
-    }
-
-
 
     public void membersCount(long id) {
         int MESSAGE_LIMIT = 1000;
