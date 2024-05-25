@@ -241,9 +241,9 @@ public class MarathonAction {
                     marathonRepository.save(marathon);
                     sendler.deleteMessage(id, currentMessage);
                     sendler.sendTextMessage(id, marathonOnePoint);
-                } else {
-                    sendler.sendTextMessage(id, marathonAnswerLate);
                 }
+            } else {
+                sendler.sendTextMessage(id, marathonAnswerLate);
             }
         } else {
             sendler.sendTextMessage(id, marathonAnswerLate);
@@ -263,9 +263,9 @@ public class MarathonAction {
                     marathonRepository.save(marathon);
                     sendler.deleteMessage(id, currentMessage);
                     sendler.sendTextMessage(id, marathonThreePoints);
-                } else {
-                    sendler.sendTextMessage(id, marathonAnswerLate);
                 }
+            } else {
+                sendler.sendTextMessage(id, marathonAnswerLate);
             }
         } else {
             sendler.sendTextMessage(id, marathonAnswerLate);
