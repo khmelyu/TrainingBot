@@ -130,7 +130,7 @@ public class CallbackCommandController implements CommandController {
             usersOnTrainingsAction.feedbackAnswer(update);
         }
         if (data.contains(Callback.SELECT_FEEDBACK.getCallbackData())) {
-            coachAction.viewFeedback(id, currentMessage, data);
+            coachAction.viewFeedback(update);
         }
         if (data.contains("+1POINT")) {
             marathonAction.onePointPlus(id, currentMessage, data);

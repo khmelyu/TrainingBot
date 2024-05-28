@@ -421,7 +421,10 @@ public class CoachAction {
         userStateService.setUserState(id, UserState.FEEDBACK_USER_LIST);
     }
 
-    public void viewFeedback(long id, Message currentMessage, String data) {
+    public void viewFeedback(Update update) {
+        long id =  update.getCallbackQuery().getMessage().getChatId();
+        Message currentMessage = update.getCallbackQuery().getMessage();
+        String data = update.getCallbackQuery().getData();
         long userId = Long.parseLong(data.substring(16));
         User user = userRepository.findById(userId).orElseThrow();
         String userData = user.userData();
@@ -435,8 +438,13 @@ public class CoachAction {
         } else {
             message.append(feedbackIsEmpty);
         }
+        if (message.length() < 1024) {
+            sendler.sendUserFeedback(id, infoAndFeedback, currentMessage, String.valueOf(message));
+            userStateService.setUserState(id, UserState.FEEDBACK_VIEW);
+        } else {
+            sendler.sendTextMessage(id, String.valueOf(message));
+            sendler.callbackAnswer(update);
+        }
 
-        sendler.sendUserFeedback(id, infoAndFeedback, currentMessage, String.valueOf(message));
-        userStateService.setUserState(id, UserState.FEEDBACK_VIEW);
     }
 }
