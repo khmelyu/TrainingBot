@@ -267,7 +267,7 @@ public class CallbackMenu {
     public InlineKeyboardMarkup userListMenu(String trainingId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        for (User user : usersToTrainingsRepository.findByTrainingId(UUID.fromString(trainingId))) {
+        for (User user : usersToTrainingsRepository.findActualUsersByTrainingId(UUID.fromString(trainingId))) {
             keyboard.add(createRow(InlineKeyboardButton.builder().text(user.getLastname() + "\n" + user.getName()).callbackData(Callback.SELECT_FEEDBACK.getCallbackData() + user.getId()).build()));
         }
         keyboard.add(createRow(createButton(Callback.BACK)));

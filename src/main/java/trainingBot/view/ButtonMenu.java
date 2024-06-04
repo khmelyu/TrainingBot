@@ -87,7 +87,7 @@ public class ButtonMenu {
             Marathon marathon = optionalMarathon.get();
             if (marathon.isActual()) {
                 keyboard.add(createKeyboardRow(Button.MY_POINTS));
-                keyboard.add(createKeyboardRow(Button.MARATHON_ABORT));
+                keyboard.add(createKeyboardRow(Button.MARATHON_FEEDBACK));
             } else {
                 keyboard.add(createKeyboardRow(Button.SIGNUP));
             }

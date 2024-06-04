@@ -58,6 +58,8 @@ public class BackAction {
                 case WORK_NOTES_MENU, CERTIFICATES_MENU, COMPETENCIES_MENU -> mainMenuAction.documents(id);
                 case CONTACT_SEARCH_NO, CONTACT_SEARCH_YES -> mainMenuAction.contactSearch(id);
                 case CONTACT_SEARCH_STAFFER, CONTACT_SEARCH_GALLERY -> contactSearchAction.yesMenu(id);
+                case MARATHON_FEEDBACK -> mainMenuAction.marathonInfo(id);
+
                 default -> {
                     sendler.sendMainMenu(id, mainMenuMessage);
                     userStateService.setUserState(id, UserState.MAIN_MENU);
@@ -177,7 +179,6 @@ public class BackAction {
                         usersOnTrainingsAction.viewOnlineCategory(id, currentMessage);
                     }
                 }
-
             }
         } else {
             userStateService.setUserState(id, UserState.MY_TRAININGS);

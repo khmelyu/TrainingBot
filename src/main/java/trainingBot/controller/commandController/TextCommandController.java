@@ -128,6 +128,7 @@ public class TextCommandController implements CommandController {
                         case MARATHON_ABORT -> marathonAction.abort(id);
                         case MARATHON_YES -> marathonAction.abortYes(id);
                         case MEMBERS -> marathonAction.membersCount(id);
+                        case MARATHON_FEEDBACK -> marathonAction.marathonFeedbackMessage(id);
                     }
                 }
             }
@@ -167,6 +168,11 @@ public class TextCommandController implements CommandController {
                 case SEX_CHOICE -> {
                     if (!text.equals(Button.ABORT.getText())) {
                         marathonAction.helloMessage(id, text);
+                    }
+                }
+                case MARATHON_FEEDBACK -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        marathonAction.marathonSendingFeedback(id, text);
                     }
                 }
                 case MARATHON_TIME_CHOICE -> marathonAction.timeZoneMessage(id, text);

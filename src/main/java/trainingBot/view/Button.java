@@ -22,6 +22,7 @@ public enum Button {
 
     SIGNUP("Участвовать"),
     MARATHON_ABORT("Отписаться"),
+    MARATHON_FEEDBACK("Оставить ОС"),
     DATA_OK("Да, это я!"),
     MALE("МУЖ"),
     FEMALE("ЖЕН"),

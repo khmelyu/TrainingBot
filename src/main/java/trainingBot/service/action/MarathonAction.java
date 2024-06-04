@@ -84,6 +84,10 @@ public class MarathonAction {
     private String marathonThreePoints;
     @Value("${marathon.answer.late}")
     private String marathonAnswerLate;
+    @Value("${marathon.feedback}")
+    private String marathonFeedback;
+    @Value("${marathon.feedback.answer}")
+    private String marathonFeedbackAnswer;
 
 
     @Autowired
@@ -292,7 +296,7 @@ public class MarathonAction {
 
                 if (message.length() > MESSAGE_LIMIT) {
                     sendler.sendTextMessage(id, message.toString());
-                    message.setLength(0); // Очистка StringBuilder
+                    message.setLength(0);
                 }
             }
         }
@@ -302,5 +306,17 @@ public class MarathonAction {
         }
     }
 
+    public void marathonFeedbackMessage(long id) {
+        sendler.sendBack(id, marathonFeedback);
+        userStateService.setUserState(id, UserState.MARATHON_FEEDBACK);
+    }
+
+    @Transactional
+    public void marathonSendingFeedback(long id, String text) {
+        marathonRepository.saveMarathonFeedback(text, id);
+        logger.info("User: {} send feedback \"{}\" for marathon", id, text);
+        sendler.sendMainMenu(id, marathonFeedbackAnswer);
+        userStateService.setUserState(id, UserState.MAIN_MENU);
+    }
 
 }

@@ -46,8 +46,8 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
     @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false AND (t.date > current_date() OR (t.date = current_date() AND t.start_time > current_time())) ORDER BY t.date")
     List<Trainings> findByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT u.user FROM users_to_trainings u WHERE u.trainings.id = :trainingId")
-    List<User> findByTrainingId(@Param("trainingId") UUID trainingId);
+    @Query("SELECT u.user FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.actual = true AND  u.presence = true AND u.waiting_list = false")
+    List<User> findActualUsersByTrainingId(@Param("trainingId") UUID trainingId);
 
     @Query("SELECT u.feedback FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.user.id = :userId")
     String viewFeedback(@Param("trainingId") UUID trainingId, @Param("userId") long userId);

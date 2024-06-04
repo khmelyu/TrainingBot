@@ -16,4 +16,5 @@ public class Marathon {
     private int time_zone;
     private int points;
     private boolean actual;
+    private String feedback;
 }
