@@ -67,10 +67,11 @@ public class ButtonMenu {
         keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.CONTACTS_SEARCH));
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
-        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
-        if (optionalMarathon.isPresent() && optionalMarathon.get().isActual()) {
-                keyboard.add(createKeyboardRow(Button.MARATHON));
-            }
+
+//        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
+//        if (optionalMarathon.isPresent() && optionalMarathon.get().isActual()) {
+//                keyboard.add(createKeyboardRow(Button.MARATHON));
+//            }
         if (user != null && user.isAdmin()) {
             keyboard.add(createKeyboardRow(Button.ADMIN));
         }
