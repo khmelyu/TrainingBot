@@ -67,6 +67,7 @@ public class ButtonMenu {
         keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.CONTACTS_SEARCH));
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
+        keyboard.add(createKeyboardRow(Button.JUMANJI));
 
 //        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
 //        if (optionalMarathon.isPresent() && optionalMarathon.get().isActual()) {
@@ -79,6 +80,34 @@ public class ButtonMenu {
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
+
+    public static ReplyKeyboardMarkup jumanjiMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.READY, Button.BACK));
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup jumanjiOkMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.FIND_TEAM));
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup jumanjiJoinTeam() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.JOIN_TEAM));
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
 
     public static ReplyKeyboardMarkup marathonMenu(long id) {
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();

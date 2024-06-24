@@ -22,9 +22,10 @@ public class TextCommandController implements CommandController {
     private final CoachAction coachAction;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
     private final MarathonAction marathonAction;
+    private final JumanjiAction jumanjiAction;
 
     @Autowired
-    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, MarathonAction marathonAction) {
+    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, MarathonAction marathonAction, JumanjiAction jumanjiAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.adminAction = adminAction;
@@ -36,6 +37,7 @@ public class TextCommandController implements CommandController {
         this.coachAction = coachAction;
         this.usersOnTrainingsAction = usersOnTrainingsAction;
         this.marathonAction = marathonAction;
+        this.jumanjiAction = jumanjiAction;
     }
 
     @Override
@@ -59,6 +61,8 @@ public class TextCommandController implements CommandController {
                         case CONTACTS_SEARCH -> mainMenuAction.contactSearch(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
+                        case JUMANJI -> mainMenuAction.jumanji(id);
+                        case READY -> jumanjiAction.jumanjiUserData(id);
 //                        case MARATHON -> mainMenuAction.marathonInfo(id);
                         //MyData
                         case ITS_OK -> mainMenuAction.userDataOk(id);
@@ -111,24 +115,30 @@ public class TextCommandController implements CommandController {
                         case CONTRACT -> contactSearchAction.contract(id);
                         case STAFFER -> contactSearchAction.stafferSearchMessage(id);
                         case GALLERY -> contactSearchAction.gallerySearchMessage(id);
+
+                        //Jumanji
+
+                        case DATA_OK -> jumanjiAction.jumanjiOk(id);
+                        case FIND_TEAM -> jumanjiAction.jumanjiChoiceTeam(id);
+                        case JOIN_TEAM -> jumanjiAction.jumanjiEnd(id);
                         //Marathon
-                        case SIGNUP -> marathonAction.marathonUserData(id);
-                        case DATA_OK -> marathonAction.sexChoice(id);
-                        case WARM_UP -> marathonAction.warmUpMessage(id);
-                        case OKAY -> marathonAction.coachMessage(id);
-                        case NICE_TO_MEET_YOU -> marathonAction.nutritionistMessage(id);
-                        case HELLO_ALEX -> marathonAction.instructionMessage(id);
-                        case OF_COURSE -> marathonAction.instruction2Message(id);
-                        case DEAL -> marathonAction.warmUpTimeMessage(id);
-                        case GOOD -> marathonAction.checkCanal(id);
-                        case DONE -> marathonAction.helper(id);
-                        case UNDERSTAND -> marathonAction.finish(id);
-                        case BY_MONDAY -> marathonAction.exit(id);
-                        case MY_POINTS -> marathonAction.points(id);
-                        case MARATHON_ABORT -> marathonAction.abort(id);
-                        case MARATHON_YES -> marathonAction.abortYes(id);
-                        case MEMBERS -> marathonAction.membersCount(id);
-                        case MARATHON_FEEDBACK -> marathonAction.marathonFeedbackMessage(id);
+//                        case SIGNUP -> marathonAction.marathonUserData(id);
+//                        case DATA_OK -> marathonAction.sexChoice(id);
+//                        case WARM_UP -> marathonAction.warmUpMessage(id);
+//                        case OKAY -> marathonAction.coachMessage(id);
+//                        case NICE_TO_MEET_YOU -> marathonAction.nutritionistMessage(id);
+//                        case HELLO_ALEX -> marathonAction.instructionMessage(id);
+//                        case OF_COURSE -> marathonAction.instruction2Message(id);
+//                        case DEAL -> marathonAction.warmUpTimeMessage(id);
+//                        case GOOD -> marathonAction.checkCanal(id);
+//                        case DONE -> marathonAction.helper(id);
+//                        case UNDERSTAND -> marathonAction.finish(id);
+//                        case BY_MONDAY -> marathonAction.exit(id);
+//                        case MY_POINTS -> marathonAction.points(id);
+//                        case MARATHON_ABORT -> marathonAction.abort(id);
+//                        case MARATHON_YES -> marathonAction.abortYes(id);
+//                        case MEMBERS -> marathonAction.membersCount(id);
+//                        case MARATHON_FEEDBACK -> marathonAction.marathonFeedbackMessage(id);
                     }
                 }
             }

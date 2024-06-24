@@ -8,9 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import trainingBot.model.entity.CantataZnaet;
+import trainingBot.model.entity.Jumanji;
 import trainingBot.model.entity.Marathon;
 import trainingBot.model.entity.User;
 import trainingBot.model.rep.CantataZnaetRepository;
+import trainingBot.model.rep.JumanjiRepository;
 import trainingBot.model.rep.MarathonRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.service.redis.UserState;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8")})
+@PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:jumanji.txt", encoding = "UTF-8")})
 public class MainMenuAction {
     private final Sendler sendler;
     private final UserRepository userRepository;
@@ -29,6 +31,7 @@ public class MainMenuAction {
     private final UserStateService userStateService;
     private final CantataZnaetRepository cantataZnaetRepository;
     private final MarathonRepository marathonRepository;
+    private final JumanjiRepository jumanjiRepository;
 
 
     @Value("${user.data.ok}")
@@ -49,6 +52,12 @@ public class MainMenuAction {
     private String czSearchEmptyMessage;
     @Value("${marathon.info}")
     private String marathonInfo;
+    @Value("${jumanji.message}")
+    private String jumanjiMessage;
+    @Value("${jumanji.repeat}")
+    private String jumanjiRepeat;
+    @Value("${jumanji.pic.main}")
+    private String jumanjiPicMain;
 
 
     @Autowired
@@ -56,7 +65,7 @@ public class MainMenuAction {
             Sendler sendler,
             UserRepository userRepository,
             UserStateService userStateService,
-            StartAction startAction, CantataZnaetRepository cantataZnaetRepository, MarathonRepository marathonRepository
+            StartAction startAction, CantataZnaetRepository cantataZnaetRepository, MarathonRepository marathonRepository, JumanjiRepository jumanjiRepository
     ) {
         this.userRepository = userRepository;
         this.sendler = sendler;
@@ -64,6 +73,7 @@ public class MainMenuAction {
         this.startAction = startAction;
         this.cantataZnaetRepository = cantataZnaetRepository;
         this.marathonRepository = marathonRepository;
+        this.jumanjiRepository = jumanjiRepository;
     }
 
     public void userData(long id) {
@@ -130,7 +140,14 @@ public class MainMenuAction {
         }
     }
 
-
+    public void jumanji(long id) {
+        Optional<Jumanji> optionalJumanji = jumanjiRepository.findById(id);
+        if (optionalJumanji.isPresent()) {
+            sendler.sendTextMessage(id, jumanjiRepeat);
+        } else {
+            sendler.sendJumanji(id, jumanjiMessage, jumanjiPicMain);
+        }
+    }
     public void marathonInfo(long id) {
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {

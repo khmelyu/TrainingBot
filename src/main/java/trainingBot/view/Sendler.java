@@ -69,6 +69,46 @@ public class Sendler {
         }
     }
 
+    public void sendTextAndImage(Long who, String what, String photoId) {
+        InputFile inputFile = new InputFile(photoId);
+        SendPhoto sendPhoto = new SendPhoto(who.toString(), inputFile);
+
+        sendPhoto.setCaption(what);
+        try {
+            trainingBot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendTextAndImageAndButton(Long who, String what, String photoId, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        InputFile inputFile = new InputFile(photoId);
+        SendPhoto sendPhoto = new SendPhoto(who.toString(), inputFile);
+        sendPhoto.setCaption(what);
+        sendPhoto.setReplyMarkup(replyKeyboardMarkup);
+        try {
+            sendPhoto.setCaption(what);
+            trainingBot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendJumanji(long who, String what, String pic) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.jumanjiMenu();
+        sendTextAndImageAndButton(who, what, pic, replyKeyboardMarkup);
+    }
+
+    public void sendJumanjiOk(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.jumanjiOkMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendJumanjiJoin(long who, String what, String pic) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.jumanjiJoinTeam();
+        sendTextAndImageAndButton(who, what, pic, replyKeyboardMarkup);
+    }
+
     public void sendFile(Long who, String what, String filePath) {
         try {
             File file = new File(filePath);
@@ -219,8 +259,6 @@ public class Sendler {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.yesNoMarathonMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
-
-
 
     public void sendMyDataMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.myData();

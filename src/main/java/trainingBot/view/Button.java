@@ -16,6 +16,8 @@ public enum Button {
     ADMIN("Админ панель"),
     MARATHON("За день до лета"),
 
+    JUMANJI("Джуманджи"),
+
     MY_POINTS("Мои ананасики \uD83C\uDF4D"),
 
     MEMBERS("!участники"),
@@ -38,6 +40,10 @@ public enum Button {
     BY_MONDAY("До понедельника!"),
     MARATHON_YES("Да, я сдаюсь"),
     MARATHON_NO("Буду продолжать!"),
+
+    READY("Я готов!"),
+    FIND_TEAM("Найти своих"),
+    JOIN_TEAM("Присоединиться к стае"),
 
 
 
