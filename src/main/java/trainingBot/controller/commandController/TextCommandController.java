@@ -61,9 +61,9 @@ public class TextCommandController implements CommandController {
                         case CONTACTS_SEARCH -> mainMenuAction.contactSearch(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
-                        case JUMANJI -> mainMenuAction.jumanji(id);
-                        case READY -> jumanjiAction.jumanjiUserData(id);
-//                        case MARATHON -> mainMenuAction.marathonInfo(id);
+//                         case JUMANJI -> mainMenuAction.jumanji(id);
+//                         case READY -> jumanjiAction.jumanjiUserData(id);
+//                         case MARATHON -> mainMenuAction.marathonInfo(id);
                         //MyData
                         case ITS_OK -> mainMenuAction.userDataOk(id);
                         case CHANGE -> mainMenuAction.wrongUserData(id);
