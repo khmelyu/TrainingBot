@@ -180,6 +180,11 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
+    public void sendGiftMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.giftMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
     public void sendMarathonMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.marathonMenu(who);
         sendMessageWithButton(who, what, replyKeyboardMarkup);
@@ -260,10 +265,6 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
-    public void sendMyDataMenu(long who, String what) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.myData();
-        sendMessageWithButton(who, what, replyKeyboardMarkup);
-    }
 
     public void sendAdminMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.adminMenu();
@@ -350,6 +351,37 @@ public class Sendler {
             trainingBot.execute(editMessageMedia);
 
 
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMyDataMenu(Long who, String what, String pic) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.myDataMenu();
+
+        InputFile inputFile = new InputFile(pic);
+
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(who.toString());
+        sendPhoto.setPhoto(inputFile);
+        sendPhoto.setCaption(what);
+        sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            trainingBot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMyDataMenu(Long who, String what) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.myDataMenu();
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(who.toString());
+        sendMessage.setText(what);
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            trainingBot.execute(sendMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }

@@ -34,8 +34,18 @@ public class MainMenuAction {
     private final JumanjiRepository jumanjiRepository;
 
 
+    @Value("${main.menu.message}")
+    private String mainMenuMessage;
     @Value("${user.data.ok}")
     private String userDataOk;
+    @Value("${user.data}")
+    private String userData;
+    @Value("${user.new.data}")
+    private String userNewData;
+    @Value("${need.update.data}")
+    private String needUpdateData;
+    @Value("${need.update.data.message}")
+    private String needUpdateDataMessage;
     @Value("${training.menu}")
     private String trainingMenu;
     @Value("${feedback.message}")
@@ -59,6 +69,10 @@ public class MainMenuAction {
     @Value("${jumanji.pic.main}")
     private String jumanjiPicMain;
 
+    @Value("${gift.menu.start.message}")
+    private String giftMenuStartMessage;
+
+
 
     @Autowired
     public MainMenuAction(
@@ -77,10 +91,31 @@ public class MainMenuAction {
     }
 
     public void userData(long id) {
+        if (!userRepository.departmentIsNull(id)) {
+            User user = userRepository.findById(id).orElseThrow();
+            String msg = user.userData();
+            sendler.sendMyDataMenu(id, msg, userData);
+        } else {
+            needUpdateUserData(id);
+        }
+    }
+
+    public void updateUserData(long id) {
         User user = userRepository.findById(id).orElseThrow();
         String msg = user.userData();
-        sendler.sendMyDataMenu(id, msg);
-        userStateService.setUserState(id, UserState.USER_DATA);
+        if (userRepository.departmentIsNull(id)) {
+            needUpdateUserData(id);
+        } else if (!userRepository.departmentIsNull(id) && userStateService.getUserState(id).equals(UserState.REGISTER)) {
+            sendler.sendMyDataMenu(id, msg, userNewData);
+            sendler.sendMainMenu(id, mainMenuMessage);
+            userStateService.setUserState(id, UserState.MAIN_MENU);
+        } else {
+            sendler.sendMyDataMenu(id, msg, userNewData);
+        }
+    }
+
+    public void needUpdateUserData(long id) {
+        sendler.sendMyDataMenu(id, needUpdateDataMessage, needUpdateData);
     }
 
     public void userDataOk(long id) {
@@ -93,8 +128,12 @@ public class MainMenuAction {
     }
 
     public void trainingsAction(long id) {
-        sendler.sendTrainingsMenu(id, trainingMenu);
-        userStateService.setUserState(id, UserState.TRAININGS_MENU);
+        if (!userRepository.departmentIsNull(id)) {
+            sendler.sendTrainingsMenu(id, trainingMenu);
+            userStateService.setUserState(id, UserState.TRAININGS_MENU);
+        } else {
+            needUpdateUserData(id);
+        }
     }
 
     public void feedback(long id) {
@@ -148,12 +187,17 @@ public class MainMenuAction {
             sendler.sendJumanji(id, jumanjiMessage, jumanjiPicMain);
         }
     }
+
     public void marathonInfo(long id) {
         Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
         if (optionalMarathon.isPresent()) {
             sendler.sendMarathonMenu(id, marathonInfo);
             userStateService.setUserState(id, UserState.MARATHON);
         }
+    }
+
+    public void orderGift (long id) {
+        sendler.sendGiftMenu(id, giftMenuStartMessage);
     }
 
 }

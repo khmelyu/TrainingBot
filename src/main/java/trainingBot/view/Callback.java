@@ -14,7 +14,6 @@ public enum Callback {
     OFFLINE_TRAININGS_CREATE("Офлайн", "OFFLINE_TRAININGS_CREATE"),
     MOSCOW("Мск", "MOSCOW"),
     SAINT_PETERSBURG("СПб", "SAINT_PETERSBURG"),
-    CALENDAR("Календарь", "https://t.me/ReefCareBot/calendar"),
 
     CREATED_TRAININGS("Созданные тренинги", "CREATED_TRAININGS"),
     ARCHIVE_TRAININGS("Архив тренингов", "ARCHIVE_TRAININGS"),

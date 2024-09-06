@@ -50,6 +50,9 @@ public enum Button {
     YES("Да"),
     NO("Нет"),
 
+    GIFT_YES("Да!"),
+    GIFT_NO("Я еще подумаю"),
+
     ITS_OK("Все верно"),
     CHANGE("Изменить"),
 

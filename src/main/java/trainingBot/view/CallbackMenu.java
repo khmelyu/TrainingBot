@@ -34,6 +34,10 @@ public class CallbackMenu {
     private String calendarName;
     @Value("${calendar.link}")
     private String calendarLink;
+    @Value("${account.name}")
+    private String accountName;
+    @Value("${account.link}")
+    private String accountLink;
 
     @Autowired
     public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UsersToTrainingsRepository usersToTrainingsRepository, UserStateService userStateService, UserListService userListService) {
@@ -57,7 +61,6 @@ public class CallbackMenu {
         return button;
     }
 
-
     public List<InlineKeyboardButton> createRow(InlineKeyboardButton... buttons) {
         return new ArrayList<>(Arrays.asList(buttons));
     }
@@ -80,6 +83,17 @@ public class CallbackMenu {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
+
+    public InlineKeyboardMarkup myDataMenu() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(accountName, accountLink)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
 
     public InlineKeyboardMarkup trainingsMenu(long id) {
         User user = userRepository.findById(id).orElse(null);

@@ -20,6 +20,9 @@ public class StartAction {
     private final Sendler sendler;
     private final UserStateService userStateService;
     private final UserRepository userRepository;
+
+    @Value("${main.menu.message}")
+    private String mainMenuMessage;
     @Value("${start.message}")
     private String startMessage;
     @Value("${start.login.message}")
@@ -34,20 +37,6 @@ public class StartAction {
     private String login;
     @Value("${start.password}")
     private String password;
-    @Value("${add.name.message}")
-    private String addNameMessage;
-    @Value("${add.lastname.message}")
-    private String addLastNameMessage;
-    @Value("${add.phone.message}")
-    private String addPhoneMessage;
-    @Value("${add.city.message}")
-    private String addCityMessage;
-    @Value("${add.gallery.message}")
-    private String addGalleryMessage;
-    @Value("${add.rate.message}")
-    private String addRateMessage;
-    @Value("${main.menu.message}")
-    private String mainMenu;
     @Value("${user.data.fail}")
     private String userDataFail;
 
@@ -84,86 +73,17 @@ public class StartAction {
 
     public void restart(long id) {
         String msg;
-        if (userStateService.getUserState(id).equals(UserState.USER_DATA) || userStateService.getUserState(id).equals(UserState.CHECK_MY_DATA) || userStateService.getUserState(id).equals(UserState.MARATHON_DATA)) {
-            msg = userDataFail;
-        } else {
+        if (userStateService.getUserState(id).equals(UserState.PASSWORD)) {
             msg = startMessage;
+            User user = userRepository.findById(id).orElse(new User());
+            user.setId(id);
+            userRepository.save(user);
+            sendler.sendMyDataMenu(id, msg);
+            userStateService.setUserState(id, UserState.REGISTER);
+        } else {
+            sendler.sendMainMenu(id, mainMenuMessage);
         }
-        sendler.sendTextMessage(id, msg);
-        sendler.sendTextMessage(id, addNameMessage);
-        userStateService.setUserState(id, UserState.START);
-    }
 
-    public void inputName(Update update) {
-        long id = update.getMessage().getChatId();
-        userStateService.setUserState(id, UserState.SET_NAME);
-        addName(update);
-    }
-
-    public void addName(Update update) {
-        long id = update.getMessage().getChatId();
-        String userName = update.getMessage().getText();
-        User user = userRepository.findById(id).orElse(new User());
-        user.setId(id);
-        user.setName(userName);
-        userRepository.save(user);
-        userStateService.setUserState(id, UserState.SET_LASTNAME);
-        sendler.sendTextMessage(id, addLastNameMessage);
-    }
-
-    public void addLastName(Update update) {
-        long id = update.getMessage().getChatId();
-        String userLastName = update.getMessage().getText();
-        User user = userRepository.findById(id).orElse(new User());
-        user.setId(id);
-        user.setLastname(userLastName);
-        userRepository.save(user);
-        userStateService.setUserState(id, UserState.SET_PHONE);
-        sendler.sendTextMessage(id, addPhoneMessage);
-    }
-
-    public void addPhone(Update update) {
-        long id = update.getMessage().getChatId();
-        String userPhone = update.getMessage().getText();
-        User user = userRepository.findById(id).orElse(new User());
-        user.setId(id);
-        user.setPhone(userPhone);
-        userRepository.save(user);
-        userStateService.setUserState(id, UserState.SET_CITY);
-        sendler.sendTextMessage(id, addCityMessage);
-    }
-
-    public void addCity(Update update) {
-        long id = update.getMessage().getChatId();
-        String userCity = update.getMessage().getText();
-        User user = userRepository.findById(id).orElse(new User());
-        user.setId(id);
-        user.setCity(userCity);
-        userRepository.save(user);
-        userStateService.setUserState(id, UserState.SET_GALLERY);
-        sendler.sendTextMessage(id, addGalleryMessage);
-    }
-
-    public void addGallery(Update update) {
-        long id = update.getMessage().getChatId();
-        String userGallery = update.getMessage().getText();
-        User user = userRepository.findById(id).orElse(new User());
-        user.setId(id);
-        user.setGallery(userGallery);
-        userRepository.save(user);
-        userStateService.setUserState(id, UserState.SET_RATE);
-        sendler.sendTextMessage(id, addRateMessage);
-    }
-
-    public void addRate(Update update) {
-        long id = update.getMessage().getChatId();
-        String userRate = update.getMessage().getText();
-        User user = userRepository.findById(id).orElse(new User());
-        user.setId(id);
-        user.setRate(userRate);
-        userRepository.save(user);
-        userStateService.setUserState(id, UserState.MAIN_MENU);
-        sendler.sendMainMenu(id, mainMenu);
     }
 }
 

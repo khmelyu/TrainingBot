@@ -17,16 +17,39 @@ public class User {
     private String city;
     private String gallery;
     private String rate;
+    private String position;
+    private String department;
+    private String level;
+    private String seniority;
+    private String division;
     @Getter
     private boolean coach;
     private boolean admin;
 
     public String userData() {
-        return "Имя: " + this.name + "\n" +
-                "Фамилия: " + this.lastname + "\n" +
-                "Телефон: " + this.phone + "\n" +
-                "Город: " + this.city + "\n" +
-                "Галерея: " + this.gallery + "\n" +
-                "Ставка: " + this.rate + "\n";
+        if (this.department != null && this.department.equals("Офис")) {
+            return "Имя: " + this.name + "\n" +
+                    "Фамилия: " + this.lastname + "\n" +
+                    "Телефон: " + this.phone + "\n" +
+                    "Город: " + this.city + "\n" +
+                    "Подразделение: " + this.department + "\n" +
+                    "Отдел: " + this.division;
+        } else if (this.department != null && this.department.equals("Галерея")) {
+            return "Имя: " + this.name + "\n" +
+                    "Фамилия: " + this.lastname + "\n" +
+                    "Телефон: " + this.phone + "\n" +
+                    "Город: " + this.city + "\n" +
+                    "Подразделение: " + this.department + "\n" +
+                    "Уровень: " + this.level + "\n" +
+                    "Стаж: " + this.seniority + "\n" +
+                    "Должность: " + this.position + "\n" +
+                    "Галерея: " + this.gallery;
+        } else {
+            return "Имя: " + this.name + "\n" +
+                    "Фамилия: " + this.lastname + "\n" +
+                    "Телефон: " + this.phone + "\n" +
+                    "Город: " + this.city + "\n" +
+                    "Подразделение: " + this.department;
+        }
     }
 }

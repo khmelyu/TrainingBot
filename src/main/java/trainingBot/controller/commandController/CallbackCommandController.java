@@ -67,9 +67,9 @@ public class CallbackCommandController implements CommandController {
                     case CREATED_TRAININGS -> coachAction.createdTrainings(id, currentMessage);
                     case ONLINE_TRAININGS -> usersOnTrainingsAction.viewOnlineCategory(id, currentMessage);
                     case OFFLINE_TRAININGS -> usersOnTrainingsAction.viewTrainingCity(id, currentMessage);
-                    case SIGN_UP -> usersOnTrainingsAction.checkUserData(id, currentMessage);
-                    case YES -> usersOnTrainingsAction.signUpOnTraining(update);
-                    case NO -> mainMenuAction.wrongUserData(id);
+                    case SIGN_UP -> usersOnTrainingsAction.signUpOnTraining(update);
+//                    case YES -> usersOnTrainingsAction.signUpOnTraining(update);
+//                    case NO -> mainMenuAction.wrongUserData(id);
                     case MY_TRAININGS -> usersOnTrainingsAction.viewMyTrainings(id, currentMessage);
                     case ABORTING -> usersOnTrainingsAction.abortTrainings(update);
                     case IN_ARCHIVE -> coachAction.archiveTraining(update);
@@ -143,5 +143,13 @@ public class CallbackCommandController implements CommandController {
 
     public void handleCallbackRequest(WebhookController.CallbackRequest request) {
         usersOnTrainingsAction.reviewTraining(request.userId(), request.trainingId());
+    }
+
+    public void handleUpdateDateRequest(WebhookController.IdRequest request) {
+        mainMenuAction.updateUserData(request.userId());
+    }
+
+    public void handleOrderGiftRequest(WebhookController.IdRequest request) {
+        mainMenuAction.orderGift(request.userId());
     }
 }

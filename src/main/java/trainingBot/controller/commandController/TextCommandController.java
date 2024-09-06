@@ -23,9 +23,10 @@ public class TextCommandController implements CommandController {
     private final UsersOnTrainingsAction usersOnTrainingsAction;
     private final MarathonAction marathonAction;
     private final JumanjiAction jumanjiAction;
+    private final GiftAction giftAction;
 
     @Autowired
-    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, MarathonAction marathonAction, JumanjiAction jumanjiAction) {
+    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, MarathonAction marathonAction, JumanjiAction jumanjiAction, GiftAction giftAction) {
         this.userStateService = userStateService;
         this.startAction = startAction;
         this.adminAction = adminAction;
@@ -38,6 +39,7 @@ public class TextCommandController implements CommandController {
         this.usersOnTrainingsAction = usersOnTrainingsAction;
         this.marathonAction = marathonAction;
         this.jumanjiAction = jumanjiAction;
+        this.giftAction = giftAction;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class TextCommandController implements CommandController {
             for (Button button : Button.values()) {
                 if (button.getText().equals(text)) {
                     switch (button) {
-                        case BACK, ABORT, MARATHON_NO -> backAction.backAction(id);
+                        case BACK, ABORT, MARATHON_NO, GIFT_NO -> backAction.backAction(id);
                         //MainMenu
                         case TRAININGS -> mainMenuAction.trainingsAction(id);
                         case CZ_SEARCH -> mainMenuAction.czSearchMessage(id);
@@ -64,6 +66,10 @@ public class TextCommandController implements CommandController {
 //                         case JUMANJI -> mainMenuAction.jumanji(id);
 //                         case READY -> jumanjiAction.jumanjiUserData(id);
 //                         case MARATHON -> mainMenuAction.marathonInfo(id);
+
+                        ///GiftMenu
+                        case GIFT_YES -> giftAction.orderGiftName(id);
+
                         //MyData
                         case ITS_OK -> mainMenuAction.userDataOk(id);
                         case CHANGE -> mainMenuAction.wrongUserData(id);
@@ -143,17 +149,8 @@ public class TextCommandController implements CommandController {
                 }
             }
             switch (userState) {
-                case START -> startAction.inputName(update);
-
                 case LOGIN -> startAction.inputLogin(update);
                 case PASSWORD -> startAction.inputPassword(update);
-
-                case SET_NAME -> startAction.addName(update);
-                case SET_LASTNAME -> startAction.addLastName(update);
-                case SET_PHONE -> startAction.addPhone(update);
-                case SET_CITY -> startAction.addCity(update);
-                case SET_GALLERY -> startAction.addGallery(update);
-                case SET_RATE -> startAction.addRate(update);
                 case TRAINING_LINK -> coachAction.setTrainingLink(update);
                 case CZ_SEARCH -> {
                     if (!text.equals(Button.BACK.getText())) {
@@ -187,6 +184,7 @@ public class TextCommandController implements CommandController {
                 }
                 case MARATHON_TIME_CHOICE -> marathonAction.timeZoneMessage(id, text);
                 case MARATHON_TIMEZONE_CHOICE -> marathonAction.signUp(id, text);
+                case GIFT_MENU -> giftAction.orderGift(id, text);
 
             }
         } else {

@@ -47,6 +47,28 @@ public class WebhookController {
         return ResponseEntity.ok("Success baby");
     }
 
+    @PostMapping("/update_date")
+    public ResponseEntity<String> handleUpdateDate(@RequestBody IdRequest request) {
+        logger.info("User: {} change date from account", request.userId);
+        callBackCommandController.handleUpdateDateRequest(request);
+
+        webhookRequestsCounter.increment();
+        return ResponseEntity.ok("Success baby");
+    }
+
+    @PostMapping("/order_gift")
+    public ResponseEntity<String> handleOrderGift(@RequestBody IdRequest request) {
+        logger.info("User: {} ordered gift from account", request.userId);
+        callBackCommandController.handleOrderGiftRequest(request);
+
+        webhookRequestsCounter.increment();
+        return ResponseEntity.ok("Success baby");
+    }
+
+
     public record CallbackRequest(String trainingId, long userId) {
+    }
+
+    public record IdRequest(long userId) {
     }
 }

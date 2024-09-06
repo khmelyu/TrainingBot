@@ -8,17 +8,14 @@ public enum UserState {
     LOGIN,
     PASSWORD,
 
-    SET_NAME,
-    SET_LASTNAME,
-    SET_PHONE,
-    SET_CITY,
-    SET_GALLERY,
-    SET_RATE,
+    REGISTER,
 
     MAIN_MENU,
     CZ_SEARCH,
     USER_DATA,
     DOCUMENTS_MENU,
+
+    GIFT_MENU,
 
     WORK_NOTES_MENU,
     PATTERNS_MENU,
