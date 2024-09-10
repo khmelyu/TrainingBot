@@ -14,6 +14,8 @@ public enum Button {
     CONTACTS_SEARCH("Поиск контактов"),
     INFO_SEARCH("Где искать информацию?"),
     ADMIN("Админ панель"),
+    AMBASSADOR("Амбассадор"),
+
     MARATHON("За день до лета"),
 
     JUMANJI("Джуманджи"),

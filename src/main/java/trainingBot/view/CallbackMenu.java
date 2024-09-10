@@ -1,18 +1,17 @@
 package trainingBot.view;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import trainingBot.model.entity.Ambassador2024;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
 import trainingBot.model.entity.User;
-import trainingBot.model.rep.TrainingsListRepository;
-import trainingBot.model.rep.TrainingsRepository;
-import trainingBot.model.rep.UserRepository;
-import trainingBot.model.rep.UsersToTrainingsRepository;
+import trainingBot.model.rep.*;
 import trainingBot.service.UserListService;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
@@ -21,12 +20,14 @@ import java.util.*;
 
 
 @Component
+@RequiredArgsConstructor
 @PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")
 public class CallbackMenu {
     private final UserRepository userRepository;
     private final TrainingsListRepository trainingsListRepository;
     private final TrainingsRepository trainingsRepository;
     private final UsersToTrainingsRepository usersToTrainingsRepository;
+    private final Ambassador2024Repository ambassador2024Repository;
     private final UserStateService userStateService;
     private final UserListService userListService;
 
@@ -39,22 +40,17 @@ public class CallbackMenu {
     @Value("${account.link}")
     private String accountLink;
 
-    @Autowired
-    public CallbackMenu(UserRepository userRepository, TrainingsListRepository trainingsListRepository, TrainingsRepository trainingsRepository, UsersToTrainingsRepository usersToTrainingsRepository, UserStateService userStateService, UserListService userListService) {
-        this.userRepository = userRepository;
-        this.trainingsListRepository = trainingsListRepository;
-        this.trainingsRepository = trainingsRepository;
-        this.usersToTrainingsRepository = usersToTrainingsRepository;
-        this.userStateService = userStateService;
-        this.userListService = userListService;
-    }
-
     public InlineKeyboardButton createButton(Callback callback) {
         return InlineKeyboardButton.builder().text(callback.getCallbackText()).callbackData(callback.getCallbackData()).build();
 
     }
 
-    public InlineKeyboardButton createButton(String text, String url) {
+
+    private InlineKeyboardButton createButton(String text, String callbackData) {
+        return InlineKeyboardButton.builder().text(text).callbackData(callbackData).build();
+    }
+
+    public InlineKeyboardButton createLinkButton(String text, String url) {
         InlineKeyboardButton button = new InlineKeyboardButton();
         button.setText(text);
         button.setUrl(url);
@@ -88,11 +84,92 @@ public class CallbackMenu {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
-        keyboard.add(createRow(createButton(accountName, accountLink)));
+        keyboard.add(createRow(createLinkButton(accountName, accountLink)));
 
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
+
+
+    public InlineKeyboardMarkup ambassadorYes() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(Callback.AMBASSADOR_YES)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup ambassadorExcellent() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(Callback.AMBASSADOR_EXCELLENT)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup ambassadorReady() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(Callback.AMBASSADOR_READY)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup ambassadorCreateOrJoin() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        keyboard.add(createRow(createButton(Callback.AMBASSADOR_CREATE_TEAM), createButton(Callback.AMBASSADOR_JOIN_TEAM)));
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
+    public InlineKeyboardMarkup ambassadorChoseTeamMenu(int page) {
+        int buttonsPerPage = 10;
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+
+        List<String> allTeams = ambassador2024Repository.findAllDistinct();
+        int totalPages = (int) Math.ceil((double) allTeams.size() / buttonsPerPage);
+
+        if (page >= 1 && page <= totalPages) {
+            int startIndex = (page - 1) * buttonsPerPage;
+            int endIndex = Math.min(startIndex + buttonsPerPage, allTeams.size());
+
+            for (int i = startIndex; i < endIndex; i++) {
+                String team = allTeams.get(i);
+                keyboard.add(createRow(InlineKeyboardButton.builder().text(team).callbackData(team).build()));
+            }
+
+            List<InlineKeyboardButton> navigationButtons = new ArrayList<>();
+
+            if (page > 1) {
+                navigationButtons.add(createButton("◀️", "PAGE_" + (page - 1)));
+            }
+
+            if (page < totalPages) {
+                navigationButtons.add(createButton("▶️", "PAGE_" + (page + 1)));
+            }
+
+            keyboard.add(createRow(navigationButtons.toArray(new InlineKeyboardButton[0])));
+
+            keyboard.add(createRow((createButton(Callback.BACK))));
+
+            inlineKeyboardMarkup.setKeyboard(keyboard);
+        }
+
+        return inlineKeyboardMarkup;
+    }
+
+
+
 
 
     public InlineKeyboardMarkup trainingsMenu(long id) {
@@ -109,7 +186,7 @@ public class CallbackMenu {
             row.add(createButton(Callback.COACH_MENU));
         }
         keyboard.add(row);
-        keyboard.add(createRow(createButton(calendarName, calendarLink)));
+        keyboard.add(createRow(createLinkButton(calendarName, calendarLink)));
         inlineKeyboardMarkup.setKeyboard(keyboard);
 
         return inlineKeyboardMarkup;

@@ -1,20 +1,14 @@
 package trainingBot.service.action;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import trainingBot.model.entity.CantataZnaet;
-import trainingBot.model.entity.Jumanji;
-import trainingBot.model.entity.Marathon;
-import trainingBot.model.entity.User;
-import trainingBot.model.rep.CantataZnaetRepository;
-import trainingBot.model.rep.JumanjiRepository;
-import trainingBot.model.rep.MarathonRepository;
-import trainingBot.model.rep.UserRepository;
+import trainingBot.model.entity.*;
+import trainingBot.model.rep.*;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Sendler;
@@ -23,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:pictures.txt", encoding = "UTF-8"), @PropertySource(value = "classpath:jumanji.txt", encoding = "UTF-8")})
 public class MainMenuAction {
     private final Sendler sendler;
@@ -32,6 +27,7 @@ public class MainMenuAction {
     private final CantataZnaetRepository cantataZnaetRepository;
     private final MarathonRepository marathonRepository;
     private final JumanjiRepository jumanjiRepository;
+    private final Ambassador2024Repository ambassador2024Repository;
 
 
     @Value("${main.menu.message}")
@@ -68,27 +64,16 @@ public class MainMenuAction {
     private String jumanjiRepeat;
     @Value("${jumanji.pic.main}")
     private String jumanjiPicMain;
-
     @Value("${gift.menu.start.message}")
     private String giftMenuStartMessage;
+    @Value("${ambassador.start.message}")
+    private String ambassadorStartMessage;
+    @Value("${ambassador.reply.reg}")
+    private String ambassadorReplyReg;
+    @Value("${ambassador.pic}")
+    private String ambassadorPic;
 
 
-
-    @Autowired
-    public MainMenuAction(
-            Sendler sendler,
-            UserRepository userRepository,
-            UserStateService userStateService,
-            StartAction startAction, CantataZnaetRepository cantataZnaetRepository, MarathonRepository marathonRepository, JumanjiRepository jumanjiRepository
-    ) {
-        this.userRepository = userRepository;
-        this.sendler = sendler;
-        this.userStateService = userStateService;
-        this.startAction = startAction;
-        this.cantataZnaetRepository = cantataZnaetRepository;
-        this.marathonRepository = marathonRepository;
-        this.jumanjiRepository = jumanjiRepository;
-    }
 
     public void userData(long id) {
         if (!userRepository.departmentIsNull(id)) {
@@ -179,6 +164,20 @@ public class MainMenuAction {
         }
     }
 
+    public void ambassador(long id) {
+        Optional<Ambassador2024> optionalAmbassador2024 = ambassador2024Repository.findById(id);
+
+        if (optionalAmbassador2024.isPresent()) {
+            Ambassador2024 ambassador2024 = optionalAmbassador2024.get();
+            String team = ambassador2024.getTeam();
+            sendler.sendTextMessage(id, ambassadorReplyReg + team +"'");
+        } else {
+            sendler.sendAmbassadorMenu(id, ambassadorStartMessage, ambassadorPic);
+            userStateService.setUserState(id, UserState.AMBASSADOR);
+        }
+    }
+
+
     public void jumanji(long id) {
         Optional<Jumanji> optionalJumanji = jumanjiRepository.findById(id);
         if (optionalJumanji.isPresent()) {
@@ -196,7 +195,7 @@ public class MainMenuAction {
         }
     }
 
-    public void orderGift (long id) {
+    public void orderGift(long id) {
         sendler.sendGiftMenu(id, giftMenuStartMessage);
     }
 

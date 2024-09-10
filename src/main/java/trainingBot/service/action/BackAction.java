@@ -1,5 +1,6 @@
 package trainingBot.service.action;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -14,6 +15,7 @@ import trainingBot.view.Callback;
 import trainingBot.view.Sendler;
 
 @Service
+@RequiredArgsConstructor
 @PropertySources({@PropertySource(value = "classpath:messages.txt", encoding = "UTF-8")})
 public class BackAction {
 
@@ -25,6 +27,7 @@ public class BackAction {
     private final ContactSearchAction contactSearchAction;
     private final TrainingDataService trainingDataService;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
+    private final AmbassadorAction ambassadorAction;
 
     @Value("${main.menu.message}")
     private String mainMenuMessage;
@@ -37,19 +40,6 @@ public class BackAction {
     @Value("${training.city}")
     private String trainingCity;
 
-    @Autowired
-    public BackAction(
-            Sendler sendler,
-            UserStateService userStateService, CoachAction coachAction, MainMenuAction mainMenuAction, ContactSearchAction contactSearchAction, TrainingDataService trainingDataService, UsersOnTrainingsAction usersOnTrainingsAction
-    ) {
-        this.sendler = sendler;
-        this.userStateService = userStateService;
-        this.coachAction = coachAction;
-        this.mainMenuAction = mainMenuAction;
-        this.contactSearchAction = contactSearchAction;
-        this.trainingDataService = trainingDataService;
-        this.usersOnTrainingsAction = usersOnTrainingsAction;
-    }
 
     public void backAction(long id) {
         UserState userState = userStateService.getUserState(id);
@@ -58,7 +48,7 @@ public class BackAction {
                 case WORK_NOTES_MENU, CERTIFICATES_MENU, COMPETENCIES_MENU -> mainMenuAction.documents(id);
                 case CONTACT_SEARCH_NO, CONTACT_SEARCH_YES -> mainMenuAction.contactSearch(id);
                 case CONTACT_SEARCH_STAFFER, CONTACT_SEARCH_GALLERY -> contactSearchAction.yesMenu(id);
-                case MARATHON_FEEDBACK -> mainMenuAction.marathonInfo(id);
+//                case MARATHON_FEEDBACK -> mainMenuAction.marathonInfo(id);
 
                 default -> {
                     sendler.sendMainMenu(id, mainMenuMessage);
@@ -79,6 +69,10 @@ public class BackAction {
 
         if (userState != null) {
             switch (userState) {
+                case AMBASSADOR_JOIN_TEAM -> {
+                    ambassadorAction.ambassadorReady(id, currentMessage);
+                    userStateService.setUserState(id, UserState.AMBASSADOR);
+                }
                 case COACH_MENU, ONLINE_TRAININGS, OFFLINE_TRAININGS, MY_TRAININGS -> {
                     sendler.updateTrainingsMenu(id, trainingMenu, currentMessage);
                     userStateService.setUserState(id, UserState.TRAININGS_MENU);

@@ -1,5 +1,6 @@
 package trainingBot.controller.commandController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,6 +10,7 @@ import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Button;
 
 @Component
+@RequiredArgsConstructor
 public class TextCommandController implements CommandController {
 
     private final UserStateService userStateService;
@@ -24,23 +26,7 @@ public class TextCommandController implements CommandController {
     private final MarathonAction marathonAction;
     private final JumanjiAction jumanjiAction;
     private final GiftAction giftAction;
-
-    @Autowired
-    public TextCommandController(UserStateService userStateService, StartAction startAction, AdminAction adminAction, BackAction backAction, MainMenuAction mainMenuAction, DocumentsAction documentsAction, InfoSearchAction infoSearchAction, ContactSearchAction contactSearchAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, MarathonAction marathonAction, JumanjiAction jumanjiAction, GiftAction giftAction) {
-        this.userStateService = userStateService;
-        this.startAction = startAction;
-        this.adminAction = adminAction;
-        this.backAction = backAction;
-        this.mainMenuAction = mainMenuAction;
-        this.documentsAction = documentsAction;
-        this.infoSearchAction = infoSearchAction;
-        this.contactSearchAction = contactSearchAction;
-        this.coachAction = coachAction;
-        this.usersOnTrainingsAction = usersOnTrainingsAction;
-        this.marathonAction = marathonAction;
-        this.jumanjiAction = jumanjiAction;
-        this.giftAction = giftAction;
-    }
+    private final AmbassadorAction ambassadorAction;
 
     @Override
     public void handleMessage(Update update) {
@@ -63,6 +49,7 @@ public class TextCommandController implements CommandController {
                         case CONTACTS_SEARCH -> mainMenuAction.contactSearch(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
+                        case AMBASSADOR -> mainMenuAction.ambassador(id);
 //                         case JUMANJI -> mainMenuAction.jumanji(id);
 //                         case READY -> jumanjiAction.jumanjiUserData(id);
 //                         case MARATHON -> mainMenuAction.marathonInfo(id);
@@ -123,10 +110,10 @@ public class TextCommandController implements CommandController {
                         case GALLERY -> contactSearchAction.gallerySearchMessage(id);
 
                         //Jumanji
-
-                        case DATA_OK -> jumanjiAction.jumanjiOk(id);
-                        case FIND_TEAM -> jumanjiAction.jumanjiChoiceTeam(id);
-                        case JOIN_TEAM -> jumanjiAction.jumanjiEnd(id);
+//
+//                        case DATA_OK -> jumanjiAction.jumanjiOk(id);
+//                        case FIND_TEAM -> jumanjiAction.jumanjiChoiceTeam(id);
+//                        case JOIN_TEAM -> jumanjiAction.jumanjiEnd(id);
                         //Marathon
 //                        case SIGNUP -> marathonAction.marathonUserData(id);
 //                        case DATA_OK -> marathonAction.sexChoice(id);
@@ -170,6 +157,11 @@ public class TextCommandController implements CommandController {
                 case FEEDBACK_ANSWER -> {
                     if (!text.equals(Button.BACK.getText())) {
                         usersOnTrainingsAction.sendingFeedback(id, text);
+                    }
+                }
+                case AMBASSADOR_CREATE_TEAM -> {
+                    if (!text.equals(Button.ABORT.getText())) {
+                        ambassadorAction.saveNewTeam(id, text);
                     }
                 }
                 case SEX_CHOICE -> {

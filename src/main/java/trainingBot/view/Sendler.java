@@ -356,6 +356,45 @@ public class Sendler {
         }
     }
 
+    public void sendAmbassadorMenu(Long who, String what, String pic) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.ambassadorYes();
+
+        InputFile inputFile = new InputFile(pic);
+
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(who.toString());
+        sendPhoto.setPhoto(inputFile);
+        sendPhoto.setCaption(what);
+        sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            trainingBot.execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendAmbassadorYesMenu(long who, String pic, String caption, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.ambassadorExcellent();
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
+    }
+
+    public void sendAmbassadorExcellentMenu(long who, String pic, String caption, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.ambassadorReady();
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
+    }
+
+    public void sendAmbassadorReadyMenu(long who, String pic, String caption, Message currentMessage) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.ambassadorCreateOrJoin();
+        updateMenu(who, pic, currentMessage, updatedKeyboard, caption);
+    }
+
+    public void sendAmbassadorTeamListMenu(long who, String pic, Message currentMessage, int page) {
+        InlineKeyboardMarkup updatedKeyboard = callbackMenu.ambassadorChoseTeamMenu(page);
+        updateMenu(who, pic, currentMessage, updatedKeyboard);
+    }
+
+
+
     public void sendMyDataMenu(Long who, String what, String pic) {
         InlineKeyboardMarkup inlineKeyboardMarkup = callbackMenu.myDataMenu();
 

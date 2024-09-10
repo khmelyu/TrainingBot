@@ -1,6 +1,6 @@
 package trainingBot.controller.commandController;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,6 +13,7 @@ import trainingBot.service.redis.UserStateService;
 import trainingBot.view.Callback;
 
 @Component
+@RequiredArgsConstructor
 public class CallbackCommandController implements CommandController {
 
     private final BackAction backAction;
@@ -23,18 +24,8 @@ public class CallbackCommandController implements CommandController {
     private final UserStateService userStateService;
     private final MainMenuAction mainMenuAction;
     private final MarathonAction marathonAction;
+    private final AmbassadorAction ambassadorAction;
 
-    @Autowired
-    public CallbackCommandController(UserStateService userStateService, TrainingsListRepository trainingsListRepository, BackAction backAction, CoachAction coachAction, UsersOnTrainingsAction usersOnTrainingsAction, TrainingsRepository trainingsRepository, MainMenuAction mainMenuAction, MarathonAction marathonAction) {
-        this.backAction = backAction;
-        this.coachAction = coachAction;
-        this.usersOnTrainingsAction = usersOnTrainingsAction;
-        this.trainingsListRepository = trainingsListRepository;
-        this.userStateService = userStateService;
-        this.trainingsRepository = trainingsRepository;
-        this.mainMenuAction = mainMenuAction;
-        this.marathonAction = marathonAction;
-    }
 
     @Override
     public void handleMessage(Update update) {
@@ -80,6 +71,13 @@ public class CallbackCommandController implements CommandController {
                     case USERS_LIST -> coachAction.viewUserList(update);
                     case FEEDBACK_REQUEST -> coachAction.feedbackRequest(update);
                     case FEEDBACK_VIEW -> coachAction.viewPresenceList(id, currentMessage);
+
+                    case AMBASSADOR_YES -> ambassadorAction.ambassadorYes(id, currentMessage);
+                    case AMBASSADOR_EXCELLENT -> ambassadorAction.ambassadorExcellent(id, currentMessage);
+                    case AMBASSADOR_READY -> ambassadorAction.ambassadorReady(id, currentMessage);
+                    case AMBASSADOR_CREATE_TEAM -> ambassadorAction.createTeam(update);
+                    case AMBASSADOR_JOIN_TEAM -> ambassadorAction.joinTeam(id, currentMessage, 1);
+
                 }
             }
         }
@@ -112,6 +110,16 @@ public class CallbackCommandController implements CommandController {
                         coachAction.markUsers(id, currentMessage, data);
                     } else if (data.contains(Callback.SELECT_USER.getCallbackData())) {
                         coachAction.checkUserData(id, currentMessage, data);
+                    }
+                }
+                case AMBASSADOR_JOIN_TEAM -> {
+                    if (!data.equals("BACK") && !data.contains("PAGE_")) {
+                        ambassadorAction.saveJoinTeam(update);
+                    } else if (data.contains("PAGE_")) {
+                        String page = data.substring(5);
+                        ambassadorAction.joinTeam(id, currentMessage, Integer.parseInt(page));
+                    } else if (data.equals("BACK")) {
+                        backAction.backActionInline(update);
                     }
                 }
             }
