@@ -51,7 +51,7 @@ public class MainMenuAction {
     @Value("${info.search.message}")
     private String infoSearchMessage;
     @Value("${contact.search.message}")
-    private String contactSearchMessage;
+    private String telephonyMessage;
     @Value("${cz.search.message}")
     private String czSearchMessage;
     @Value("${cz.search.empty.message}")
@@ -77,8 +77,8 @@ public class MainMenuAction {
 
     public void userData(long id) {
         if (!userRepository.departmentIsNull(id)) {
-            User user = userRepository.findById(id).orElseThrow();
-            String msg = user.userData();
+            Users users = userRepository.findById(id).orElseThrow();
+            String msg = users.userData();
             sendler.sendMyDataMenu(id, msg, userData);
         } else {
             needUpdateUserData(id);
@@ -86,8 +86,8 @@ public class MainMenuAction {
     }
 
     public void updateUserData(long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        String msg = user.userData();
+        Users users = userRepository.findById(id).orElseThrow();
+        String msg = users.userData();
         if (userRepository.departmentIsNull(id)) {
             needUpdateUserData(id);
         } else if (!userRepository.departmentIsNull(id) && userStateService.getUserState(id).equals(UserState.REGISTER)) {
@@ -135,8 +135,8 @@ public class MainMenuAction {
         userStateService.setUserState(id, UserState.INFO_SEARCH);
     }
 
-    public void contactSearch(long id) {
-        sendler.sendContactSearchMenu(id, contactSearchMessage);
+    public void telephony(long id) {
+        sendler.sendTelephonyMenu(id, telephonyMessage);
         userStateService.setUserState(id, UserState.CONTACT_SEARCH);
     }
 

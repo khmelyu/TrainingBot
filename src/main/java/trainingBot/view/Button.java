@@ -11,7 +11,7 @@ public enum Button {
     TRAININGS("Тренинги"),
     DOCUMENTS("Документы"),
     CZ_SEARCH("Поиск на cantata-znaet.com"),
-    CONTACTS_SEARCH("Поиск контактов"),
+    TELEPHONY("Телефония"),
     INFO_SEARCH("Где искать информацию?"),
     ADMIN("Админ панель"),
     AMBASSADOR("Амбассадор"),
@@ -43,10 +43,12 @@ public enum Button {
     MARATHON_YES("Да, я сдаюсь"),
     MARATHON_NO("Буду продолжать!"),
 
+    GALLERY_SEARCH("Галерея"),
+    OTHER_DIVISION_SEARCH("Другое подразделение"),
+
     READY("Я готов!"),
     FIND_TEAM("Найти своих"),
     JOIN_TEAM("Присоединиться к стае"),
-
 
 
     YES("Да"),

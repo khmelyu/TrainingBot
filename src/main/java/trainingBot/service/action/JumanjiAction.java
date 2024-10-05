@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import trainingBot.model.entity.Jumanji;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.rep.JumanjiRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.view.Sendler;
@@ -56,8 +56,8 @@ public class JumanjiAction {
     }
 
     public void jumanjiUserData(long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        String msg = user.userData();
+        Users users = userRepository.findById(id).orElseThrow();
+        String msg = users.userData();
         sendler.sendMarathonDataMenu(id, msg);
     }
 

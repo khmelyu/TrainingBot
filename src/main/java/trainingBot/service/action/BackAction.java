@@ -24,10 +24,10 @@ public class BackAction {
     private final UserStateService userStateService;
     private final CoachAction coachAction;
     private final MainMenuAction mainMenuAction;
-    private final ContactSearchAction contactSearchAction;
     private final TrainingDataService trainingDataService;
     private final UsersOnTrainingsAction usersOnTrainingsAction;
     private final AmbassadorAction ambassadorAction;
+    private final ContactSearchAction contactSearchAction;
 
     @Value("${main.menu.message}")
     private String mainMenuMessage;
@@ -46,8 +46,8 @@ public class BackAction {
         if (userState != null) {
             switch (userState) {
                 case WORK_NOTES_MENU, CERTIFICATES_MENU, COMPETENCIES_MENU -> mainMenuAction.documents(id);
-                case CONTACT_SEARCH_NO, CONTACT_SEARCH_YES -> mainMenuAction.contactSearch(id);
-                case CONTACT_SEARCH_STAFFER, CONTACT_SEARCH_GALLERY -> contactSearchAction.yesMenu(id);
+                case CONTACT_SEARCH_NO, CONTACT_SEARCH_YES, CONTACT_SEARCH_STAFFER, CONTACT_SEARCH_GALLERY, CONTACT_SEARCH_OTHER_DIVISION -> mainMenuAction.telephony(id);
+                case CONTACT_SEARCH_DIVISION -> contactSearchAction.otherDivisionSearchMessage(id);
 //                case MARATHON_FEEDBACK -> mainMenuAction.marathonInfo(id);
 
                 default -> {

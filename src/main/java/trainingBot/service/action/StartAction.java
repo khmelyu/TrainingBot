@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
@@ -75,9 +75,9 @@ public class StartAction {
         String msg;
         if (userStateService.getUserState(id).equals(UserState.PASSWORD)) {
             msg = startMessage;
-            User user = userRepository.findById(id).orElse(new User());
-            user.setId(id);
-            userRepository.save(user);
+            Users users = userRepository.findById(id).orElse(new Users());
+            users.setId(id);
+            userRepository.save(users);
             sendler.sendMyDataMenu(id, msg);
             userStateService.setUserState(id, UserState.REGISTER);
         } else {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import trainingBot.model.entity.Marathon;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.rep.MarathonRepository;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.service.redis.MarathonDataService;
@@ -101,8 +101,8 @@ public class MarathonAction {
 
     public void marathonUserData(long id) {
         userStateService.setUserState(id, UserState.MARATHON_DATA);
-        User user = userRepository.findById(id).orElseThrow();
-        String msg = user.userData();
+        Users users = userRepository.findById(id).orElseThrow();
+        String msg = users.userData();
         sendler.sendMarathonDataMenu(id, msg);
     }
 
@@ -283,12 +283,12 @@ public class MarathonAction {
         StringBuilder message = new StringBuilder("Записано участников на марафон: " + marathons.size() + "\n\n");
 
         for (Marathon marathon : marathons) {
-            Optional<User> userOptional = userRepository.findById(marathon.getId());
+            Optional<Users> userOptional = userRepository.findById(marathon.getId());
 
             if (userOptional.isPresent()) {
-                User user = userOptional.get();
-                message.append("Имя: ").append(user.getName()).append("\n")
-                        .append("Фамилия: ").append(user.getLastname()).append("\n")
+                Users users = userOptional.get();
+                message.append("Имя: ").append(users.getName()).append("\n")
+                        .append("Фамилия: ").append(users.getLastname()).append("\n")
                         .append("Часовой пояс: +").append(marathon.getTime_zone()).append("\n")
                         .append("Время тренировки: ").append(marathon.getTraining_time()).append("\n")
                         .append("Очки: ").append(marathon.getPoints()).append("\n")

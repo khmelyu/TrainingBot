@@ -1,7 +1,6 @@
 package trainingBot.controller.commandController;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.service.action.*;
@@ -46,7 +45,7 @@ public class TextCommandController implements CommandController {
                         case CZ_SEARCH -> mainMenuAction.czSearchMessage(id);
                         case DOCUMENTS -> mainMenuAction.documents(id);
                         case INFO_SEARCH -> mainMenuAction.infoSearch(id);
-                        case CONTACTS_SEARCH -> mainMenuAction.contactSearch(id);
+                        case TELEPHONY -> mainMenuAction.telephony(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
                         case AMBASSADOR -> mainMenuAction.ambassador(id);
@@ -96,8 +95,9 @@ public class TextCommandController implements CommandController {
                         case IT -> infoSearchAction.it(id);
                         case CORPORATE_CULTURE -> infoSearchAction.corporateCulture(id);
                         //ContactSearch
-                        case YES -> contactSearchAction.yesMenu(id);
-                        case NO -> contactSearchAction.noMenu(id);
+                        case GALLERY_SEARCH -> contactSearchAction.gallerySearchMessage(id);
+                        case OTHER_DIVISION_SEARCH -> contactSearchAction.otherDivisionSearchMessage(id);
+
                         case PRODUCT_QUALITY -> contactSearchAction.productQuality(id);
                         case PROMOTION -> contactSearchAction.promotion(id);
                         case TECH -> contactSearchAction.tech(id);
@@ -139,6 +139,17 @@ public class TextCommandController implements CommandController {
                 case LOGIN -> startAction.inputLogin(update);
                 case PASSWORD -> startAction.inputPassword(update);
                 case TRAINING_LINK -> coachAction.setTrainingLink(update);
+                case CONTACT_SEARCH_OTHER_DIVISION -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        contactSearchAction.cityChoiceMessage(id, text);
+                    }
+                }
+                case CONTACT_SEARCH_DIVISION -> {
+                    if (!text.equals(Button.BACK.getText())) {
+                        contactSearchAction.contactViewMessage(id, text);
+                    }
+                }
+
                 case CZ_SEARCH -> {
                     if (!text.equals(Button.BACK.getText())) {
                         mainMenuAction.czSearchAction(id, text);

@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
-import trainingBot.controller.UpdateReceiver;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.rep.UserRepository;
 import trainingBot.service.redis.UserState;
 import trainingBot.service.redis.UserStateService;
@@ -39,16 +38,16 @@ public class GiftAction {
 
     public void orderGift(long id, String text) {
         userStateService.setUserState(id, UserState.MAIN_MENU);
-        User user = userRepository.findById(id).orElse(new User());
+        Users users = userRepository.findById(id).orElse(new Users());
         StringBuilder sb = new StringBuilder();
 
         sb.append("Заявка на подарок")
                 .append("\n")
                 .append(id)
                 .append("\n")
-                .append(user.getName())
+                .append(users.getName())
                 .append(" ")
-                .append(user.getLastname())
+                .append(users.getLastname())
                 .append("\n")
                 .append("\n")
                 .append(text);

@@ -1,16 +1,14 @@
 package trainingBot.view;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import trainingBot.model.entity.Ambassador2024;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.rep.*;
 import trainingBot.service.UserListService;
 import trainingBot.service.redis.UserState;
@@ -173,7 +171,7 @@ public class CallbackMenu {
 
 
     public InlineKeyboardMarkup trainingsMenu(long id) {
-        User user = userRepository.findById(id).orElse(null);
+        Users users = userRepository.findById(id).orElse(null);
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -182,7 +180,7 @@ public class CallbackMenu {
 
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(createButton(Callback.MY_TRAININGS));
-        if (user != null && user.isCoach()) {
+        if (users != null && users.isCoach()) {
             row.add(createButton(Callback.COACH_MENU));
         }
         keyboard.add(row);
@@ -358,8 +356,8 @@ public class CallbackMenu {
     public InlineKeyboardMarkup userListMenu(String trainingId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        for (User user : usersToTrainingsRepository.findActualUsersByTrainingId(UUID.fromString(trainingId))) {
-            keyboard.add(createRow(InlineKeyboardButton.builder().text(user.getLastname() + "\n" + user.getName()).callbackData(Callback.SELECT_FEEDBACK.getCallbackData() + user.getId()).build()));
+        for (Users users : usersToTrainingsRepository.findActualUsersByTrainingId(UUID.fromString(trainingId))) {
+            keyboard.add(createRow(InlineKeyboardButton.builder().text(users.getLastname() + "\n" + users.getName()).callbackData(Callback.SELECT_FEEDBACK.getCallbackData() + users.getId()).build()));
         }
         keyboard.add(createRow(createButton(Callback.BACK)));
 

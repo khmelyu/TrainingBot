@@ -5,12 +5,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import trainingBot.model.entity.Marathon;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.rep.MarathonRepository;
 import trainingBot.model.rep.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -61,22 +62,77 @@ public class ButtonMenu {
     }
 
     public static ReplyKeyboardMarkup mainMenu(long id) {
-        User user = userRepository.findById(id).orElse(null);
+        Users users = userRepository.findById(id).orElse(null);
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.CONTACTS_SEARCH));
+        keyboard.add(createKeyboardRow(Button.CZ_SEARCH, Button.INFO_SEARCH, Button.TELEPHONY));
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
-  //      keyboard.add(createKeyboardRow(Button.AMBASSADOR));
+//        keyboard.add(createKeyboardRow(Button.AMBASSADOR));
 //        keyboard.add(createKeyboardRow(Button.JUMANJI));
 
 //        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
 //        if (optionalMarathon.isPresent() && optionalMarathon.get().isActual()) {
 //                keyboard.add(createKeyboardRow(Button.MARATHON));
 //            }
-        if (user != null && user.isAdmin()) {
+        if (users != null && users.isAdmin()) {
             keyboard.add(createKeyboardRow(Button.ADMIN));
         }
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup telephonyMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.GALLERY_SEARCH, Button.OTHER_DIVISION_SEARCH));
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup otherDivisionMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        List<String> cities = userRepository.findCitiesOffice().stream()
+                .sorted((city1, city2) -> {
+                    if (city1.equals("Москва и МО")) return -1;
+                    if (city2.equals("Москва и МО")) return 1;
+                    if (city1.equals("Санкт-Петербург")) return -1;
+                    if (city2.equals("Санкт-Петербург")) return 1;
+                    return city1.compareTo(city2);
+                })
+                .toList();
+
+        for (String city : cities) {
+            KeyboardRow keyboardRow = new KeyboardRow();
+            keyboardRow.add(new KeyboardButton(city));
+            keyboard.add(keyboardRow);
+        }
+
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup divisionMenu(String city) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        List<String> divisions = userRepository.findDivisionsOnCity(city);
+
+        for (String division : divisions) {
+            if (!Objects.isNull(division)) {
+                KeyboardRow keyboardRow = new KeyboardRow();
+                keyboardRow.add(new KeyboardButton(division));
+                keyboard.add(keyboardRow);
+            }
+        }
+
+        keyboard.add(createKeyboardRow(Button.BACK));
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
@@ -292,11 +348,6 @@ public class ButtonMenu {
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
-
-
-
-
-
 
     public static ReplyKeyboardMarkup myData() {
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();

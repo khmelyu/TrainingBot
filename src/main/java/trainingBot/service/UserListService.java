@@ -2,7 +2,7 @@ package trainingBot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.entity.UsersToTrainings;
 import trainingBot.model.rep.UsersToTrainingsRepository;
 
@@ -29,10 +29,10 @@ public class UserListService {
         Map<String, String> userMap = new HashMap<>();
 
         for (UsersToTrainings ut : userTrainingsList) {
-            User user = ut.getUser();
-            String userId = String.valueOf(user.getId());
-            String name = user.getName();
-            String lastName = user.getLastname();
+            Users users = ut.getUser();
+            String userId = String.valueOf(users.getId());
+            String name = users.getName();
+            String lastName = users.getLastname();
             boolean presence = ut.isPresence();
 
             String userInfo = lastName + " " + name.charAt(0) + ".";

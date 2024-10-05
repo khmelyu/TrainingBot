@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity(name = "\"user\"")
-public class User {
+public class Users {
     @Id
     private long id;
     private String name;

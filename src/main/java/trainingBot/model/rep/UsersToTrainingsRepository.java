@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import trainingBot.model.entity.Trainings;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.entity.UsersToTrainings;
 
 import java.sql.Timestamp;
@@ -19,35 +19,35 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
     @Query("SELECT COUNT(u) FROM users_to_trainings u WHERE u.trainings = :trainings AND u.waiting_list = :waitingList AND u.actual = :actual")
     long countByTrainings(@Param("trainings") Trainings trainings, @Param("waitingList") boolean waitingList, @Param("actual") boolean actual);
 
-    boolean existsByUserAndTrainings(User user, Trainings training);
+    boolean existsByUserAndTrainings(Users users, Trainings training);
 
     @Query("SELECT u.waiting_list FROM users_to_trainings u WHERE u.user = :user AND u.trainings = :trainings")
-    Boolean isUserOnWaitingList(@Param("user") User user, @Param("trainings") Trainings trainings);
+    Boolean isUserOnWaitingList(@Param("user") Users users, @Param("trainings") Trainings trainings);
 
     @Query("SELECT u.actual FROM users_to_trainings u WHERE u.user = :user AND u.trainings = :trainings")
-    Boolean isUserOnActual(@Param("user") User user, @Param("trainings") Trainings trainings);
+    Boolean isUserOnActual(@Param("user") Users users, @Param("trainings") Trainings trainings);
 
     @Modifying
     @Query("update users_to_trainings u set u.waiting_list = false where u.user = :user and u.trainings = :trainings")
-    void removeUserFromWaitingList(@Param("user") User user, @Param("trainings") Trainings trainings);
+    void removeUserFromWaitingList(@Param("user") Users users, @Param("trainings") Trainings trainings);
 
     @Modifying
     @Query("update users_to_trainings u set u.waiting_list = true, u.actual = true where u.user = :user and u.trainings = :trainings")
-    void addUserFromWaitingList(@Param("user") User user, @Param("trainings") Trainings trainings);
+    void addUserFromWaitingList(@Param("user") Users users, @Param("trainings") Trainings trainings);
 
     @Modifying
     @Query("update users_to_trainings u set u.actual = true where u.user = :user and u.trainings = :trainings")
-    void reSignupUserFromTraining(@Param("user") User user, @Param("trainings") Trainings trainings);
+    void reSignupUserFromTraining(@Param("user") Users users, @Param("trainings") Trainings trainings);
 
     @Modifying
     @Query("update users_to_trainings u set u.actual = false, u.abort_time = :abort_time where u.user = :user and u.trainings = :trainings")
-    void abortUserFromTraining(@Param("user") User user, @Param("trainings") Trainings trainings, @Param("abort_time")Timestamp timestamp);
+    void abortUserFromTraining(@Param("user") Users users, @Param("trainings") Trainings trainings, @Param("abort_time")Timestamp timestamp);
 
     @Query("SELECT t FROM users_to_trainings u JOIN u.trainings t WHERE u.user.id = :userId AND u.actual = true AND t.actual = true AND t.archive = false AND u.waiting_list = false AND (t.date > current_date() OR (t.date = current_date() AND t.start_time > current_time())) ORDER BY t.date")
     List<Trainings> findByUserId(@Param("userId") Long userId);
 
     @Query("SELECT u.user FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.actual = true AND  u.presence = true AND u.waiting_list = false")
-    List<User> findActualUsersByTrainingId(@Param("trainingId") UUID trainingId);
+    List<Users> findActualUsersByTrainingId(@Param("trainingId") UUID trainingId);
 
     @Query("SELECT u.feedback FROM users_to_trainings u WHERE u.trainings.id = :trainingId AND u.user.id = :userId")
     String viewFeedback(@Param("trainingId") UUID trainingId, @Param("userId") long userId);
@@ -75,7 +75,7 @@ public interface UsersToTrainingsRepository extends JpaRepository<UsersToTrainin
     List<Long> findPresenceUsers(@Param("trainingId") UUID trainingId);
     @Modifying
     @Query("update users_to_trainings u set u.feedback = :feedback where u.user = :user and u.trainings = :trainings")
-    void saveFeedback(@Param("feedback") String feedback, @Param("user") User user, @Param("trainings") Trainings trainings);
+    void saveFeedback(@Param("feedback") String feedback, @Param("user") Users users, @Param("trainings") Trainings trainings);
 }
 
 

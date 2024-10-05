@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.model.entity.Trainings;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.entity.UsersToTrainings;
 import trainingBot.model.rep.TrainingsRepository;
 import trainingBot.model.rep.UserRepository;
@@ -161,8 +161,8 @@ public class UsersOnTrainingsAction {
     }
 
     public void checkUserData(long id, Message currentMessage) {
-        User user = userRepository.findById(id).orElseThrow();
-        String data = user.userData();
+        Users users = userRepository.findById(id).orElseThrow();
+        String data = users.userData();
         sendler.sendCheckMyData(id, actualData, currentMessage, data);
         userStateService.setUserState(id, UserState.CHECK_MY_DATA);
     }
@@ -170,17 +170,17 @@ public class UsersOnTrainingsAction {
     @Transactional
     public void signUpOnTraining(Update update) {
         long id = update.getCallbackQuery().getMessage().getChatId();
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        Users users = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         Trainings training = trainingsRepository.findById(UUID.fromString(trainingDataService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
         long currentUserCount = usersToTrainingsRepository.countByTrainings(training, false, true);
-        boolean exists = usersToTrainingsRepository.existsByUserAndTrainings(user, training);
+        boolean exists = usersToTrainingsRepository.existsByUserAndTrainings(users, training);
         boolean fullTraining = currentUserCount >= training.getMax_users();
-        Boolean actual = usersToTrainingsRepository.isUserOnActual(user, training);
-        Boolean waitingList = usersToTrainingsRepository.isUserOnWaitingList(user, training);
+        Boolean actual = usersToTrainingsRepository.isUserOnActual(users, training);
+        Boolean waitingList = usersToTrainingsRepository.isUserOnWaitingList(users, training);
 
         if (!exists) {
             UsersToTrainings usersToTrainings = new UsersToTrainings();
-            usersToTrainings.setUser(user);
+            usersToTrainings.setUser(users);
             usersToTrainings.setTrainings(training);
             usersToTrainings.setActual(true);
             usersToTrainings.setSignup_time(new Timestamp(System.currentTimeMillis()));
@@ -202,23 +202,23 @@ public class UsersOnTrainingsAction {
                 logger.info("User: {} tried to re-signup on training. Training id: {}", id, training.getId());
                 System.out.println(currentUserCount);
             } else {
-                usersToTrainingsRepository.addUserFromWaitingList(user, training);
+                usersToTrainingsRepository.addUserFromWaitingList(users, training);
                 sendler.sendTextMessage(id, waitingListMessage);
                 logger.info("User: {} tried to re-signup on training. Training id: {}", id, training.getId());
             }
         }
         if (exists && !fullTraining) {
             if (waitingList && actual) {
-                usersToTrainingsRepository.removeUserFromWaitingList(user, training);
+                usersToTrainingsRepository.removeUserFromWaitingList(users, training);
                 sendler.sendTextMessage(id, signUpMessage);
                 logger.info("User: {} signup on training. Training id: {}", id, training.getId());
 
             } else if (!waitingList && !actual) {
-                usersToTrainingsRepository.reSignupUserFromTraining(user, training);
+                usersToTrainingsRepository.reSignupUserFromTraining(users, training);
                 sendler.sendTextMessage(id, signUpMessage);
                 logger.info("User: {} signup on training. Training id: {}", id, training.getId());
             } else {
-                usersToTrainingsRepository.reSignupUserFromTraining(user, training);
+                usersToTrainingsRepository.reSignupUserFromTraining(users, training);
                 sendler.sendTextMessage(id, repeatSignupMessage);
                 logger.info("User: {} to re-signup on training . Training id: {}", id, training.getId());
             }
@@ -235,9 +235,9 @@ public class UsersOnTrainingsAction {
     @Transactional
     public void abortTrainings(Update update) {
         long id = update.getCallbackQuery().getMessage().getChatId();
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        Users users = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         Trainings training = trainingsRepository.findById(UUID.fromString(trainingDataService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
-        usersToTrainingsRepository.abortUserFromTraining(user, training, new Timestamp(System.currentTimeMillis()));
+        usersToTrainingsRepository.abortUserFromTraining(users, training, new Timestamp(System.currentTimeMillis()));
         sendler.sendTextMessage(id, trainingAbortMessage);
         logger.info("User: {} aborting on training. Training id: {}", id, training.getId());
         if (notificationUser.canCall(id)) {
@@ -258,9 +258,9 @@ public class UsersOnTrainingsAction {
 
     @Transactional
     public void sendingFeedback(long id, String feedback) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        Users users = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         Trainings training = trainingsRepository.findById(UUID.fromString(trainingDataService.getTrainingId(id))).orElseThrow(() -> new RuntimeException("Training not found"));
-        usersToTrainingsRepository.saveFeedback(feedback, user, training);
+        usersToTrainingsRepository.saveFeedback(feedback, users, training);
         logger.info("User: {} send feedback {} for training {}", id, feedback, training.getId());
         sendler.sendMainMenu(id, trainingFeedbackEnd);
         userStateService.setUserState(id, UserState.MAIN_MENU);

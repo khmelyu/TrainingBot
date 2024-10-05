@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.model.entity.Trainings;
 import trainingBot.model.entity.TrainingsList;
-import trainingBot.model.entity.User;
+import trainingBot.model.entity.Users;
 import trainingBot.model.entity.UsersToTrainings;
 import trainingBot.model.rep.TrainingsListRepository;
 import trainingBot.model.rep.TrainingsRepository;
@@ -89,7 +89,7 @@ public class CoachAction {
     private String markUser;
     @Value("${user.info}")
     private String userInfo;
-    @Value("${waiting.list.users}")
+    @Value("${waiting.list.user}")
     private String waitingListUsers;
     @Value("${user.list.empty}")
     private String userListEmpty;
@@ -236,11 +236,11 @@ public class CoachAction {
         String formattedStartTime = startTime.format(timeFormatter);
         String formattedEndTime = endTime.format(timeFormatter);
         String description = trainingDataService.getTrainingDescription(id);
-        User user = userRepository.findById(id).orElse(new User());
+        Users users = userRepository.findById(id).orElse(new Users());
         String trainingName = trainingDataService.getTrainingName(id);
         String formattedTrainingName = date + " - " + trainingName;
-        String coachName = user.getName();
-        String coachLastname = user.getLastname();
+        String coachName = users.getName();
+        String coachLastname = users.getLastname();
         String finalDescription = date + "\n" + formattedStartTime + " - " + formattedEndTime + "\n" + "\n" + description + "\n" + "\n" + "Тренер:" + "\n" + coachLastname + " " + coachName;
         Trainings training = new Trainings();
 
@@ -352,8 +352,8 @@ public class CoachAction {
 
     public void checkUserData(long id, Message currentMessage, String data) {
         long userId = Long.parseLong(data.substring(12));
-        User user = userRepository.findById(userId).orElseThrow();
-        String userData = user.userData();
+        Users users = userRepository.findById(userId).orElseThrow();
+        String userData = users.userData();
         sendler.sendCheckUserData(id, userInfo, currentMessage, userData);
         userStateService.setUserState(id, UserState.CHECK_USER_DATA);
     }
@@ -390,9 +390,9 @@ public class CoachAction {
         if (!userTrainingsList.isEmpty()) {
             for (UsersToTrainings ut : userTrainingsList) {
                 i++;
-                User user = ut.getUser();
-                String name = user.getName();
-                String lastname = user.getLastname();
+                Users users = ut.getUser();
+                String name = users.getName();
+                String lastname = users.getLastname();
                 String userMessage = i + ". " + lastname + " " + name + "\n";
                 userList.append(userMessage);
             }
@@ -401,9 +401,9 @@ public class CoachAction {
                 i = 0;
                 for (UsersToTrainings ut : userWaitingList) {
                     i++;
-                    User user = ut.getUser();
-                    String name = user.getName();
-                    String lastname = user.getLastname();
+                    Users users = ut.getUser();
+                    String name = users.getName();
+                    String lastname = users.getLastname();
                     String userMessage = i + ". " + lastname + " " + name + "\n";
                     userList.append(userMessage);
                 }
@@ -426,8 +426,8 @@ public class CoachAction {
         Message currentMessage = update.getCallbackQuery().getMessage();
         String data = update.getCallbackQuery().getData();
         long userId = Long.parseLong(data.substring(16));
-        User user = userRepository.findById(userId).orElseThrow();
-        String userData = user.userData();
+        Users users = userRepository.findById(userId).orElseThrow();
+        String userData = users.userData();
         String feedback = usersToTrainingsRepository.viewFeedback(UUID.fromString(trainingDataService.getTrainingId(id)), userId);
 
         StringBuilder message = new StringBuilder();

@@ -99,6 +99,22 @@ public class Sendler {
         sendTextAndImageAndButton(who, what, pic, replyKeyboardMarkup);
     }
 
+    public void sendTelephonyMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.telephonyMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendOtherDivisionMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.otherDivisionMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+    public void sendDivisionMenu(long who, String what, String city) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.divisionMenu(city);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+
+
     public void sendJumanjiOk(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.jumanjiOkMenu();
         sendMessageWithButton(who, what, replyKeyboardMarkup);

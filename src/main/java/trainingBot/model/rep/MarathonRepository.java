@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import trainingBot.model.entity.Marathon;
-import trainingBot.model.entity.User;
 
 import java.util.List;
 
