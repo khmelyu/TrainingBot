@@ -227,7 +227,7 @@ public class AmbassadorAction {
             }
             if (!word) {
                 currentAmbassador.setWord_1_answer(text);
-                if (text.equalsIgnoreCase("вопрос") || text.equalsIgnoreCase("уточнение")) {
+                if (text.equalsIgnoreCase("вопрос") || text.equalsIgnoreCase("уточнение") || text.equalsIgnoreCase("лайт-вопрос")) {
                     answer.append("✅").append("\n").append(ambassadorOneWordAnswer);
                     currentAmbassador.setPoints(currentAmbassador.getPoints() + 100);
                 } else {
