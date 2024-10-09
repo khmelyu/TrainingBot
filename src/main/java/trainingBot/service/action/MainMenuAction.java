@@ -168,12 +168,7 @@ public class MainMenuAction {
         Optional<Ambassador2024> optionalAmbassador2024 = ambassador2024Repository.findById(id);
 
         if (optionalAmbassador2024.isPresent()) {
-            Ambassador2024 ambassador2024 = optionalAmbassador2024.get();
-            String team = ambassador2024.getTeam();
-            sendler.sendTextMessage(id, ambassadorReplyReg + team +"'");
-        } else {
-            sendler.sendAmbassadorMenu(id, ambassadorStartMessage, ambassadorPic);
-            userStateService.setUserState(id, UserState.AMBASSADOR);
+            sendler.ambassadorMenu(id, ambassadorReplyReg);
         }
     }
 

@@ -1,5 +1,6 @@
 package trainingBot.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,24 +9,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import trainingBot.controller.commandController.CallbackCommandController;
 import trainingBot.controller.commandController.PhotoCommandController;
 import trainingBot.controller.commandController.TextCommandController;
+import trainingBot.controller.commandController.VoiceController;
 import trainingBot.service.AddUser;
 
 
 @Component
+@RequiredArgsConstructor
 public class UpdateReceiver {
     private final Logger logger = LoggerFactory.getLogger(UpdateReceiver.class);
     private final TextCommandController textCommandController;
     private final PhotoCommandController photoCommandController;
     private final CallbackCommandController callBackCommandController;
+    private final VoiceController voiceController;
     private final AddUser addUser;
 
-    @Autowired
-    public UpdateReceiver(TextCommandController textCommandController, PhotoCommandController photoCommandController, CallbackCommandController callBackCommandController, AddUser addUser) {
-        this.textCommandController = textCommandController;
-        this.photoCommandController = photoCommandController;
-        this.callBackCommandController = callBackCommandController;
-        this.addUser = addUser;
-    }
 
     public void handle(Update update) {
         addUser.registerUser(update);
@@ -69,6 +66,7 @@ public class UpdateReceiver {
     }
 
     private void handleVoiceMessage(Update update) {
+        voiceController.handleMessage(update);
         logger.info("User: " + update.getMessage().getChatId() + " upload voice");
     }
 }

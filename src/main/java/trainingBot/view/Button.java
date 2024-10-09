@@ -16,6 +16,19 @@ public enum Button {
     ADMIN("Админ панель"),
     AMBASSADOR("Амбассадор"),
 
+    MY_TEAM("Моя команда"),
+    PLAY_FIELD("Игровое поле"),
+
+    TEST("Тест"),
+    ONE_WORD("Одним словом"),
+    LETTER("Письмо"),
+    MEDIA("Медиа"),
+
+    TEST_1("1"),
+    TEST_2("2"),
+    TEST_3("3"),
+
+
     MARATHON("За день до лета"),
 
     JUMANJI("Джуманджи"),

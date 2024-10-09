@@ -7,11 +7,15 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVoice;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Voice;
+import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
+import org.telegram.telegrambots.meta.api.objects.media.InputMediaAudio;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -59,11 +63,21 @@ public class Sendler {
         }
     }
 
-
     public void sendTextMessage(Long who, String what) {
         SendMessage sm = SendMessage.builder().chatId(who.toString()).text(what).disableWebPagePreview(true).build();
         try {
             trainingBot.execute(sm);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendVoiceMessage(Long who, String text, String voice) {
+        InputFile inputFile = new InputFile(voice);
+        SendVoice sendVoice = new SendVoice(who.toString(), inputFile);
+        sendVoice.setCaption(text);
+        try {
+            trainingBot.execute(sendVoice);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
@@ -96,6 +110,19 @@ public class Sendler {
 
     public void sendJumanji(long who, String what, String pic) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.jumanjiMenu();
+        sendTextAndImageAndButton(who, what, pic, replyKeyboardMarkup);
+    }
+
+    public void ambassadorMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorMenu();
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+    public void ambassadorTasksMenu(long who, String what) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTaskMenu(who);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
+    }
+    public void ambassadorTestMenu(long who, String what, String pic) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTestMenu();
         sendTextAndImageAndButton(who, what, pic, replyKeyboardMarkup);
     }
 

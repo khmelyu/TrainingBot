@@ -12,4 +12,9 @@ public class Ambassador2024 {
     @Id
     private long id;
     private String team;
+    private String test_1_answer;
+    private String word_1_answer;
+    private String letter_1_answer;
+    private String media_1_answer;
+    private Integer points;
 }

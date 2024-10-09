@@ -48,6 +48,11 @@ public class BackAction {
                 case WORK_NOTES_MENU, CERTIFICATES_MENU, COMPETENCIES_MENU -> mainMenuAction.documents(id);
                 case CONTACT_SEARCH_NO, CONTACT_SEARCH_YES, CONTACT_SEARCH_STAFFER, CONTACT_SEARCH_GALLERY, CONTACT_SEARCH_OTHER_DIVISION -> mainMenuAction.telephony(id);
                 case CONTACT_SEARCH_DIVISION -> contactSearchAction.otherDivisionSearchMessage(id);
+                case AMBASSADOR_TEST, AMBASSADOR_ONE_WORD, AMBASSADOR_MEDIA, AMBASSADOR_LETTER -> ambassadorAction.ambassadorTasks(id);
+                case AMBASSADOR_TASKS -> {
+                    mainMenuAction.ambassador(id);
+                    userStateService.setUserState(id, UserState.MAIN_MENU);
+                }
 //                case MARATHON_FEEDBACK -> mainMenuAction.marathonInfo(id);
 
                 default -> {
