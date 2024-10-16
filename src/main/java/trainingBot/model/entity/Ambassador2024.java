@@ -16,5 +16,9 @@ public class Ambassador2024 {
     private String word_1_answer;
     private String letter_1_answer;
     private String media_1_answer;
+    private String test_2_answer;
+    private String word_2_answer;
+    private String letter_2_answer;
+    private String media_2_answer;
     private Integer points;
 }
