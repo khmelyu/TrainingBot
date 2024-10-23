@@ -152,7 +152,7 @@ public class AmbassadorAction {
                 }
             }
             if (!test) {
-                sendler.ambassadorTestMenu(id, ambassadorTest, ambassadorTestPic);
+                sendler.ambassadorTestMenu(id, ambassadorTest);
                 userStateService.setUserState(id, UserState.AMBASSADOR_TEST);
             } else {
                 sendler.sendTextMessage(id, ambassadorAgainAnswer);
@@ -175,8 +175,8 @@ public class AmbassadorAction {
                 }
             }
             if (!test) {
-                currentAmbassador.setTest_2_answer(text);
-                if (text.equals("1")) {
+                currentAmbassador.setTest_3_answer(text);
+                if (text.equals("2")) {
                     answer.append("✅").append("\n").append(ambassadorTestAnswer);
                     currentAmbassador.setPoints(currentAmbassador.getPoints() + 100);
                 } else {
@@ -226,8 +226,8 @@ public class AmbassadorAction {
                 }
             }
             if (!word) {
-                currentAmbassador.setWord_2_answer(text);
-                if (text.equalsIgnoreCase("реверанс")) {
+                currentAmbassador.setWord_3_answer(text);
+                if (text.equalsIgnoreCase("мнение")) {
                     answer.append("✅").append("\n").append(ambassadorOneWordAnswer);
                     currentAmbassador.setPoints(currentAmbassador.getPoints() + 100);
                 } else {
@@ -263,7 +263,7 @@ public class AmbassadorAction {
         }
     }
 
-    public void ambassadorMediaAction(Long id, String voice) {
+    public void ambassadorMediaAction(Long id, String photo) {
         Optional<Ambassador2024> ambassador = ambassador2024Repository.findById(id);
         if (ambassador.isPresent()) {
             Ambassador2024 currentAmbassador = ambassador.get();
@@ -276,9 +276,9 @@ public class AmbassadorAction {
                 }
             }
             if (!media) {
-                currentAmbassador.setMedia_2_answer(voice);
+                currentAmbassador.setMedia_3_answer(photo);
                 ambassador2024Repository.save(currentAmbassador);
-                sendler.sendVoiceMessage(353185452L, currentAmbassador.getTeam(), voice);
+                sendler.sendPhotoMessage(353185452L, currentAmbassador.getTeam(), photo);
                 sendler.sendMainMenu(id, ambassadorAccepted);
                 userStateService.setUserState(id, UserState.MAIN_MENU);
             } else {
@@ -321,7 +321,7 @@ public class AmbassadorAction {
                 }
             }
             if (!letter) {
-                currentAmbassador.setLetter_2_answer(text);
+                currentAmbassador.setLetter_3_answer(text);
                 ambassador2024Repository.save(currentAmbassador);
                 sendler.sendMainMenu(id, ambassadorAccepted);
                 userStateService.setUserState(id, UserState.MAIN_MENU);

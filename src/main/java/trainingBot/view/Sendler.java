@@ -13,9 +13,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMe
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.Voice;
-import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
-import org.telegram.telegrambots.meta.api.objects.media.InputMediaAudio;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -72,12 +69,12 @@ public class Sendler {
         }
     }
 
-    public void sendVoiceMessage(Long who, String text, String voice) {
-        InputFile inputFile = new InputFile(voice);
-        SendVoice sendVoice = new SendVoice(who.toString(), inputFile);
-        sendVoice.setCaption(text);
+    public void sendPhotoMessage(Long who, String text, String photo) {
+        InputFile inputFile = new InputFile(photo);
+        SendPhoto sendPhoto = new SendPhoto(who.toString(), inputFile);
+        sendPhoto.setCaption(text);
         try {
-            trainingBot.execute(sendVoice);
+            trainingBot.execute(sendPhoto);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
@@ -121,9 +118,9 @@ public class Sendler {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTaskMenu(who);
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
-    public void ambassadorTestMenu(long who, String what, String pic) {
+    public void ambassadorTestMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTestMenu();
-        sendTextAndImageAndButton(who, what, pic, replyKeyboardMarkup);
+        sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
 
     public void sendTelephonyMenu(long who, String what) {
