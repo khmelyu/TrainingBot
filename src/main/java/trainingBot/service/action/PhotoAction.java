@@ -34,9 +34,10 @@ public class PhotoAction {
 
                     sendler.sendTextMessage(id, photoSize.getFileId());
                     logger.info("User: " + id + " Got the picture id: " + photoSize.getFileId());
-                } else {
-                    sendler.sendTextMessage(id, "Бот пока не поддерживает загрузку изображений");
                 }
+//                else {
+//                    sendler.sendTextMessage(id, "Бот пока не поддерживает загрузку изображений");
+//                }
             }, () -> sendler.sendTextMessage(id, "Пользователь не найден или не является администратором."));
         }
     }
