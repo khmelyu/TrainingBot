@@ -24,5 +24,9 @@ public class Ambassador2024 {
     private String word_3_answer;
     private String letter_3_answer;
     private String media_3_answer;
+    private String test_4_answer;
+    private String word_4_answer;
+    private String letter_4_answer;
+    private String media_4_answer;
     private Integer points;
 }

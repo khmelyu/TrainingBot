@@ -175,7 +175,7 @@ public class AmbassadorAction {
                 }
             }
             if (!test) {
-                currentAmbassador.setTest_3_answer(text);
+                currentAmbassador.setTest_4_answer(text);
                 if (text.equals("2")) {
                     answer.append("✅").append("\n").append(ambassadorTestAnswer);
                     currentAmbassador.setPoints(currentAmbassador.getPoints() + 100);
@@ -226,8 +226,8 @@ public class AmbassadorAction {
                 }
             }
             if (!word) {
-                currentAmbassador.setWord_3_answer(text);
-                if (text.equalsIgnoreCase("мнение")) {
+                currentAmbassador.setWord_4_answer(text);
+                if (text.equalsIgnoreCase("шесть") || text.equalsIgnoreCase("6")) {
                     answer.append("✅").append("\n").append(ambassadorOneWordAnswer);
                     currentAmbassador.setPoints(currentAmbassador.getPoints() + 100);
                 } else {
@@ -276,7 +276,7 @@ public class AmbassadorAction {
                 }
             }
             if (!media) {
-                currentAmbassador.setMedia_3_answer(photo);
+                currentAmbassador.setMedia_4_answer(photo);
                 ambassador2024Repository.save(currentAmbassador);
                 sendler.sendPhotoMessage(353185452L, currentAmbassador.getTeam(), photo);
                 sendler.sendMainMenu(id, ambassadorAccepted);
@@ -321,7 +321,7 @@ public class AmbassadorAction {
                 }
             }
             if (!letter) {
-                currentAmbassador.setLetter_3_answer(text);
+                currentAmbassador.setLetter_4_answer(text);
                 ambassador2024Repository.save(currentAmbassador);
                 sendler.sendMainMenu(id, ambassadorAccepted);
                 userStateService.setUserState(id, UserState.MAIN_MENU);
