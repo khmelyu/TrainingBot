@@ -95,65 +95,65 @@ public class ButtonMenu {
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
 
-        keyboard.add(createKeyboardRow(Button.MY_TEAM, Button.PLAY_FIELD));
+        keyboard.add(createKeyboardRow(Button.MY_TEAM));
         keyboard.add(createKeyboardRow(Button.BACK));
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
 
-    public static ReplyKeyboardMarkup ambassadorTaskMenu(Long id) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        KeyboardRow keyboardRow = new KeyboardRow();
-        KeyboardRow keyboardRow2 = new KeyboardRow();
-        Optional<Ambassador2024> optionalAmbassador2024 = ambassador2024Repository.findById(id);
-        if (optionalAmbassador2024.isPresent()) {
-            Ambassador2024 ambassador2024 = optionalAmbassador2024.get();
-            List<Users> users = ambassador2024Repository.findMembersByTeam(ambassador2024.getTeam());
-            boolean test = false;
-            boolean oneWord = false;
-            boolean letter = false;
-            boolean media = false;
-            for (Users user : users) {
-                Optional<String> teamAnswerTest = Optional.ofNullable(ambassador2024Repository.teamAnswerTest(user.getId()));
-                Optional<String> teamAnswerWord = Optional.ofNullable(ambassador2024Repository.teamAnswerOneWord(user.getId()));
-                Optional<String> teamAnswerLetter = Optional.ofNullable(ambassador2024Repository.teamAnswerLetter(user.getId()));
-                Optional<String> teamAnswerMedia = Optional.ofNullable(ambassador2024Repository.teamAnswerMedia(user.getId()));
-
-                if (teamAnswerTest.isPresent()) {
-                    test = true;
-                }
-                if (teamAnswerWord.isPresent()) {
-                    oneWord = true;
-                }
-                if (teamAnswerLetter.isPresent()) {
-                    letter = true;
-                }
-                if (teamAnswerMedia.isPresent()) {
-                    media = true;
-                }
-            }
-            if (!test) {
-                keyboardRow.add(new KeyboardButton(Button.TEST.getText()));
-            }
-            if (!oneWord) {
-                keyboardRow.add(new KeyboardButton(Button.ONE_WORD.getText()));
-            }
-            if (!letter) {
-                keyboardRow2.add(new KeyboardButton(Button.LETTER.getText()));
-            }
-            if (!media) {
-                keyboardRow2.add(new KeyboardButton(Button.MEDIA.getText()));
-            }
-            keyboard.add(keyboardRow);
-            keyboard.add(keyboardRow2);
-            keyboard.add(createKeyboardRow(Button.BACK));
-
-            replyKeyboardMarkup.setKeyboard(keyboard);
-        }
-        return replyKeyboardMarkup;
-    }
+//    public static ReplyKeyboardMarkup ambassadorTaskMenu(Long id) {
+//        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+//        List<KeyboardRow> keyboard = new ArrayList<>();
+//        KeyboardRow keyboardRow = new KeyboardRow();
+//        KeyboardRow keyboardRow2 = new KeyboardRow();
+//        Optional<Ambassador2024> optionalAmbassador2024 = ambassador2024Repository.findById(id);
+//        if (optionalAmbassador2024.isPresent()) {
+//            Ambassador2024 ambassador2024 = optionalAmbassador2024.get();
+//            List<Users> users = ambassador2024Repository.findMembersByTeam(ambassador2024.getTeam());
+//            boolean test = false;
+//            boolean oneWord = false;
+//            boolean letter = false;
+//            boolean media = false;
+//            for (Users user : users) {
+//                Optional<String> teamAnswerTest = Optional.ofNullable(ambassador2024Repository.teamAnswerTest(user.getId()));
+//                Optional<String> teamAnswerWord = Optional.ofNullable(ambassador2024Repository.teamAnswerOneWord(user.getId()));
+//                Optional<String> teamAnswerLetter = Optional.ofNullable(ambassador2024Repository.teamAnswerLetter(user.getId()));
+//                Optional<String> teamAnswerMedia = Optional.ofNullable(ambassador2024Repository.teamAnswerMedia(user.getId()));
+//
+//                if (teamAnswerTest.isPresent()) {
+//                    test = true;
+//                }
+//                if (teamAnswerWord.isPresent()) {
+//                    oneWord = true;
+//                }
+//                if (teamAnswerLetter.isPresent()) {
+//                    letter = true;
+//                }
+//                if (teamAnswerMedia.isPresent()) {
+//                    media = true;
+//                }
+//            }
+//            if (!test) {
+//                keyboardRow.add(new KeyboardButton(Button.TEST.getText()));
+//            }
+//            if (!oneWord) {
+//                keyboardRow.add(new KeyboardButton(Button.ONE_WORD.getText()));
+//            }
+//            if (!letter) {
+//                keyboardRow2.add(new KeyboardButton(Button.LETTER.getText()));
+//            }
+//            if (!media) {
+//                keyboardRow2.add(new KeyboardButton(Button.MEDIA.getText()));
+//            }
+//            keyboard.add(keyboardRow);
+//            keyboard.add(keyboardRow2);
+//            keyboard.add(createKeyboardRow(Button.BACK));
+//
+//            replyKeyboardMarkup.setKeyboard(keyboard);
+//        }
+//        return replyKeyboardMarkup;
+//    }
 
     public static ReplyKeyboardMarkup ambassadorTestMenu() {
         ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();

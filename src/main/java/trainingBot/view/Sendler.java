@@ -115,8 +115,8 @@ public class Sendler {
         sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
     public void ambassadorTasksMenu(long who, String what) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTaskMenu(who);
-        sendMessageWithButton(who, what, replyKeyboardMarkup);
+//        ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTaskMenu(who);
+//        sendMessageWithButton(who, what, replyKeyboardMarkup);
     }
     public void ambassadorTestMenu(long who, String what) {
         ReplyKeyboardMarkup replyKeyboardMarkup = ButtonMenu.ambassadorTestMenu();

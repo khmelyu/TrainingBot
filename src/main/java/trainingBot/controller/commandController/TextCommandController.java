@@ -50,11 +50,11 @@ public class TextCommandController implements CommandController {
                         case FEEDBACK -> mainMenuAction.feedback(id);
                         case AMBASSADOR -> mainMenuAction.ambassador(id);
                         case MY_TEAM -> ambassadorAction.viewMyTeam(id);
-                        case PLAY_FIELD -> ambassadorAction.ambassadorTasks(id);
-                        case TEST -> ambassadorAction.ambassadorTest(id);
-                        case ONE_WORD -> ambassadorAction.ambassadorOneWord(id);
-                        case MEDIA -> ambassadorAction.ambassadorMedia(id);
-                        case LETTER -> ambassadorAction.ambassadorLetter(id);
+//                        case PLAY_FIELD -> ambassadorAction.ambassadorTasks(id);
+//                        case TEST -> ambassadorAction.ambassadorTest(id);
+//                        case ONE_WORD -> ambassadorAction.ambassadorOneWord(id);
+//                        case MEDIA -> ambassadorAction.ambassadorMedia(id);
+//                        case LETTER -> ambassadorAction.ambassadorLetter(id);
 //                         case JUMANJI -> mainMenuAction.jumanji(id);
 //                         case READY -> jumanjiAction.jumanjiUserData(id);
 //                         case MARATHON -> mainMenuAction.marathonInfo(id);
@@ -145,21 +145,21 @@ public class TextCommandController implements CommandController {
                 case LOGIN -> startAction.inputLogin(update);
                 case PASSWORD -> startAction.inputPassword(update);
                 case TRAINING_LINK -> coachAction.setTrainingLink(update);
-                case AMBASSADOR_LETTER -> {
-                    if (!text.equals(Button.BACK.getText())) {
-                        ambassadorAction.ambassadorLetterAction(id, text);
-                    }
-                }
-                case AMBASSADOR_ONE_WORD -> {
-                    if (!text.equals(Button.BACK.getText())) {
-                        ambassadorAction.ambassadorOneWordAction(id, text);
-                    }
-                }
-                case AMBASSADOR_TEST -> {
-                    if (!text.equals(Button.BACK.getText())) {
-                        ambassadorAction.ambassadorTestAction(id, text);
-                    }
-                }
+//                case AMBASSADOR_LETTER -> {
+//                    if (!text.equals(Button.BACK.getText())) {
+//                        ambassadorAction.ambassadorLetterAction(id, text);
+//                    }
+//                }
+//                case AMBASSADOR_ONE_WORD -> {
+//                    if (!text.equals(Button.BACK.getText())) {
+//                        ambassadorAction.ambassadorOneWordAction(id, text);
+//                    }
+//                }
+//                case AMBASSADOR_TEST -> {
+//                    if (!text.equals(Button.BACK.getText())) {
+//                        ambassadorAction.ambassadorTestAction(id, text);
+//                    }
+//                }
                 case CONTACT_SEARCH_OTHER_DIVISION -> {
                     if (!text.equals(Button.BACK.getText())) {
                         contactSearchAction.cityChoiceMessage(id, text);
