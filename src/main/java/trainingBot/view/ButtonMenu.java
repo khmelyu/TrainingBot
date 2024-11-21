@@ -73,10 +73,10 @@ public class ButtonMenu {
         keyboard.add(createKeyboardRow(Button.TRAININGS, Button.DOCUMENTS));
         keyboard.add(createKeyboardRow(Button.MY_DATA, Button.FEEDBACK));
 
-        Optional<Ambassador2024> ambassador = ambassador2024Repository.findById(id);
-        if (ambassador.isPresent()) {
-            keyboard.add(createKeyboardRow(Button.AMBASSADOR));
-        }
+//        Optional<Ambassador2024> ambassador = ambassador2024Repository.findById(id);
+//        if (ambassador.isPresent()) {
+//            keyboard.add(createKeyboardRow(Button.AMBASSADOR));
+//        }
 //        keyboard.add(createKeyboardRow(Button.JUMANJI));
 
 //        Optional<Marathon> optionalMarathon = marathonRepository.findById(id);
@@ -91,16 +91,16 @@ public class ButtonMenu {
         return replyKeyboardMarkup;
     }
 
-    public static ReplyKeyboardMarkup ambassadorMenu() {
-        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
-        List<KeyboardRow> keyboard = new ArrayList<>();
-
-        keyboard.add(createKeyboardRow(Button.MY_TEAM));
-        keyboard.add(createKeyboardRow(Button.BACK));
-
-        replyKeyboardMarkup.setKeyboard(keyboard);
-        return replyKeyboardMarkup;
-    }
+//    public static ReplyKeyboardMarkup ambassadorMenu() {
+//        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+//        List<KeyboardRow> keyboard = new ArrayList<>();
+//
+//        keyboard.add(createKeyboardRow(Button.MY_TEAM));
+//        keyboard.add(createKeyboardRow(Button.BACK));
+//
+//        replyKeyboardMarkup.setKeyboard(keyboard);
+//        return replyKeyboardMarkup;
+//    }
 
 //    public static ReplyKeyboardMarkup ambassadorTaskMenu(Long id) {
 //        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();

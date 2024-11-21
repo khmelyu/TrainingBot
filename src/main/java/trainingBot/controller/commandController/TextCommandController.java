@@ -48,8 +48,8 @@ public class TextCommandController implements CommandController {
                         case TELEPHONY -> mainMenuAction.telephony(id);
                         case MY_DATA -> mainMenuAction.userData(id);
                         case FEEDBACK -> mainMenuAction.feedback(id);
-                        case AMBASSADOR -> mainMenuAction.ambassador(id);
-                        case MY_TEAM -> ambassadorAction.viewMyTeam(id);
+//                        case AMBASSADOR -> mainMenuAction.ambassador(id);
+//                        case MY_TEAM -> ambassadorAction.viewMyTeam(id);
 //                        case PLAY_FIELD -> ambassadorAction.ambassadorTasks(id);
 //                        case TEST -> ambassadorAction.ambassadorTest(id);
 //                        case ONE_WORD -> ambassadorAction.ambassadorOneWord(id);
