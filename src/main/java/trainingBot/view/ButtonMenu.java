@@ -91,16 +91,16 @@ public class ButtonMenu {
         return replyKeyboardMarkup;
     }
 
-//    public static ReplyKeyboardMarkup ambassadorMenu() {
-//        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
-//        List<KeyboardRow> keyboard = new ArrayList<>();
-//
-//        keyboard.add(createKeyboardRow(Button.MY_TEAM));
-//        keyboard.add(createKeyboardRow(Button.BACK));
-//
-//        replyKeyboardMarkup.setKeyboard(keyboard);
-//        return replyKeyboardMarkup;
-//    }
+    public static ReplyKeyboardMarkup ambassadorMenu() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        keyboard.add(createKeyboardRow(Button.MY_TEAM));
+        keyboard.add(createKeyboardRow(Button.BACK));
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
 
 //    public static ReplyKeyboardMarkup ambassadorTaskMenu(Long id) {
 //        ReplyKeyboardMarkup replyKeyboardMarkup = createKeyboardMarkup();
